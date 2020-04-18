@@ -1,0 +1,25 @@
+﻿using RugbyRoyale.App.Model;
+using RugbyRoyale.App.Repository;
+using RugbyRoyale.Model;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RugbyRoyale.Repositories
+{
+    public class PlayerRepository : Repository, IPlayerRepository
+    {
+        public PlayerRepository(DataContext db) : base(db) { }
+
+        public Task<bool> ExistsAsync(string playerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync(Player player)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
