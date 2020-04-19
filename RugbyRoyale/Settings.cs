@@ -37,7 +37,6 @@ namespace RugbyRoyale
         public string BotToken { get; set; }
         public string CommandPrefix { get; set; }
         public string DBConnectionString { get; set; }
-        public string DefaultQuestionTime { get; set; }
 
         private static readonly Lazy<Settings> lazy = new Lazy<Settings>(() => new Settings());
 
