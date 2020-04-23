@@ -353,7 +353,7 @@ MigrationBackup/
 appsettings.json
 
 # DB and migrations
-quiz.db
+rr.db
 Migrations/
 
 # Sqlite db files
