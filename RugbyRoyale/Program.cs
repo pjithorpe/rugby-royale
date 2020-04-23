@@ -9,9 +9,9 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RugbyRoyale.App.Model;
 using RugbyRoyale.App.Repository;
 using RugbyRoyale.Commands;
-using RugbyRoyale.Model;
 using RugbyRoyale.Repositories;
 
 namespace RugbyRoyale
