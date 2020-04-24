@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RugbyRoyale.App.Model
+namespace RugbyRoyale.Model
 {
     public class Team
     {

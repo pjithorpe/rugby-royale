@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RugbyRoyale.App.Enums;
+using RugbyRoyale.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace RugbyRoyale.App.Model
+namespace RugbyRoyale.Model
 {
     public class Player
     {
@@ -26,7 +26,7 @@ namespace RugbyRoyale.App.Model
                 return _positionsPrimary
                     .Split(',')
                     .Select(s => (Position)Enum.Parse(typeof(Position), s))
-                    .ToList(); 
+                    .ToList();
             }
             set { _positionsPrimary = string.Join(',', value.Select(p => p.ToString())); }
         }

@@ -1,4 +1,4 @@
-﻿namespace RugbyRoyale.App.Enums
+﻿namespace RugbyRoyale.Enums
 {
     public enum PlayerFocus
     {

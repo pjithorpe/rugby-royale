@@ -9,15 +9,13 @@
     <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00684" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00684" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00684" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-preview.2.20159.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0-preview.2.20159.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0-preview.2.20159.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0-preview.2.20160.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0-preview.2.20160.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0-preview.2.20160.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RREntities\RugbyRoyaleEntities.csproj" />
   </ItemGroup>
 
 </Project>

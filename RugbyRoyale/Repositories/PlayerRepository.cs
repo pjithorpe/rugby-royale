@@ -1,5 +1,6 @@
-﻿using RugbyRoyale.App.Model;
+﻿using RugbyRoyale.App;
 using RugbyRoyale.App.Repository;
+using RugbyRoyale.Model;
 using System;
 using System.Threading.Tasks;
 

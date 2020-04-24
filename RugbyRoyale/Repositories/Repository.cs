@@ -1,4 +1,4 @@
-﻿using RugbyRoyale.App.Model;
+﻿using RugbyRoyale.App;
 
 namespace RugbyRoyale.Repositories
 {

@@ -1,4 +1,4 @@
-﻿using RugbyRoyale.App.Model;
+﻿using RugbyRoyale.Model;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.App.Repository
