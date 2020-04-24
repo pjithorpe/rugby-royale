@@ -1,7 +1,7 @@
-﻿using RugbyRoyale.Model;
+﻿using RugbyRoyale.Entities.Model;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.App.Repository
+namespace RugbyRoyale.Client.App.Repository
 {
     public interface IPlayerRepository
     {

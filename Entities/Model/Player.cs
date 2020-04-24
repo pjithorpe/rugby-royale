@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RugbyRoyale.Enums;
+using RugbyRoyale.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace RugbyRoyale.Model
+namespace RugbyRoyale.Entities.Model
 {
     public class Player
     {

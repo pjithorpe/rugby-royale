@@ -1,4 +1,4 @@
-﻿namespace RugbyRoyale.Enums
+﻿namespace RugbyRoyale.Entities.Enums
 {
     public enum Position
     {

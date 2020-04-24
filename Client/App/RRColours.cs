@@ -1,4 +1,4 @@
-﻿namespace RugbyRoyale.App
+﻿namespace RugbyRoyale.Client.App
 {
     public static class RRColours
     {

@@ -2,7 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.Commands
+namespace RugbyRoyale.Client.Commands
 {
     [Group("royale")]
     class Group_Royale : BaseCommandModule

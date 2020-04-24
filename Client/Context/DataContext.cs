@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RugbyRoyale.Model;
+using RugbyRoyale.Entities.Model;
 
-namespace RugbyRoyale.App
+namespace RugbyRoyale.Client.Context
 {
     public class DataContext : DbContext
     {

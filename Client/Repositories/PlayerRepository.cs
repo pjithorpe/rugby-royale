@@ -1,6 +1,7 @@
-﻿using RugbyRoyale.App;
-using RugbyRoyale.App.Repository;
-using RugbyRoyale.Model;
+﻿using RugbyRoyale.Client.App.Repository;
+using RugbyRoyale.Client.Context;
+using RugbyRoyale.Client.Repositories;
+using RugbyRoyale.Entities.Model;
 using System;
 using System.Threading.Tasks;
 

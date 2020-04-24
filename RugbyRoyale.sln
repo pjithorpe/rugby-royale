@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale", "RugbyRoyale.csproj", "{9BB38BDC-082F-4537-A986-99BD495FC8BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Client", "Client\RugbyRoyale.Client.csproj", "{9BB38BDC-082F-4537-A986-99BD495FC8BA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyaleEntities", "..\RREntities\RugbyRoyaleEntities.csproj", "{F0B6B1C7-F7A8-4139-8B49-BD295E16CD03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Entities", "Entities\RugbyRoyale.Entities.csproj", "{F0B6B1C7-F7A8-4139-8B49-BD295E16CD03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RRGameEngine", "..\RRGameEngine\RRGameEngine.csproj", "{079913FF-BD20-49A0-BD8B-423F49A30C77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.GameEngine", "GameEngine\RugbyRoyale.GameEngine.csproj", "{079913FF-BD20-49A0-BD8B-423F49A30C77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

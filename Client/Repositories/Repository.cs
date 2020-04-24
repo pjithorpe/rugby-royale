@@ -1,6 +1,6 @@
-﻿using RugbyRoyale.App;
+﻿using RugbyRoyale.Client.Context;
 
-namespace RugbyRoyale.Repositories
+namespace RugbyRoyale.Client.Repositories
 {
     public abstract class Repository
     {

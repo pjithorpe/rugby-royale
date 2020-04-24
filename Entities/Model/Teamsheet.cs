@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RugbyRoyale.Model
+namespace RugbyRoyale.Entities.Model
 {
     public class Teamsheet
     {
