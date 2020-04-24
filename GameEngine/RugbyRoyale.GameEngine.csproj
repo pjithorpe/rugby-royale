@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Entities\RugbyRoyale.Entities.csproj" />
+  </ItemGroup>
+
 </Project>
