@@ -1,8 +1,6 @@
 ﻿using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Model;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RugbyRoyale.Entities.Extensions
 {
