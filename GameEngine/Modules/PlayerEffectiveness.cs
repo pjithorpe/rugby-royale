@@ -22,22 +22,22 @@ namespace RugbyRoyale.GameEngine.Modules
                 return 0.9f;
             }
             // Playing in a common alternative of a primary position
-            else if (ContainsPositionOrAlternative(player.Positions_Primary, position, "common"))
+            else if (ContainsPositionOrCommonAlternative(player.Positions_Primary, position))
             {
                 return 0.85f;
             }
             // Playing in a common alternative of a secondary position
-            else if (ContainsPositionOrAlternative(player.Positions_Primary, position, "common"))
+            else if (ContainsPositionOrCommonAlternative(player.Positions_Primary, position))
             {
                 return 0.75f;
             }
             // Playing in an uncommon alternative of a primary position
-            else if (ContainsPositionOrAlternative(player.Positions_Primary, position, "uncommon"))
+            else if (ContainsPositionOrUncommonAlternative(player.Positions_Primary, position))
             {
                 return 0.65f;
             }
             // Playing in an uncommon alternative of a secondary position
-            else if (ContainsPositionOrAlternative(player.Positions_Primary, position, "uncommon"))
+            else if (ContainsPositionOrUncommonAlternative(player.Positions_Primary, position))
             {
                 return 0.55f;
             }
@@ -57,15 +57,17 @@ namespace RugbyRoyale.GameEngine.Modules
 
         private static bool ContainsPositionOrAlternative(IEnumerable<Position> positionCollection, Position positionToCheck, string alternativeRarity = null)
         {
-            switch (alternativeRarity)
-            {
-                case "common":
-                    return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.CommonAlternatives().Contains(positionToCheck));
-                case "uncommon":
-                    return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.UncommonAlternatives().Contains(positionToCheck));
-                default:
-                    return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.Alternatives().Contains(positionToCheck));
-            }
+            return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.Alternatives().Contains(positionToCheck));
+        }
+
+        private static bool ContainsPositionOrCommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck, string alternativeRarity = null)
+        {
+            return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.CommonAlternatives().Contains(positionToCheck));
+        }
+
+        private static bool ContainsPositionOrUncommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck, string alternativeRarity = null)
+        {
+            return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.UncommonAlternatives().Contains(positionToCheck));
         }
     }
 }
