@@ -55,17 +55,17 @@ namespace RugbyRoyale.GameEngine.Modules
             return 0.2f;
         }
 
-        private static bool ContainsPositionOrAlternative(IEnumerable<Position> positionCollection, Position positionToCheck, string alternativeRarity = null)
+        private static bool ContainsPositionOrAlternative(IEnumerable<Position> positionCollection, Position positionToCheck)
         {
             return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.Alternatives().Contains(positionToCheck));
         }
 
-        private static bool ContainsPositionOrCommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck, string alternativeRarity = null)
+        private static bool ContainsPositionOrCommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck)
         {
             return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.CommonAlternatives().Contains(positionToCheck));
         }
 
-        private static bool ContainsPositionOrUncommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck, string alternativeRarity = null)
+        private static bool ContainsPositionOrUncommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck)
         {
             return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.UncommonAlternatives().Contains(positionToCheck));
         }
