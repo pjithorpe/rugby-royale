@@ -3,7 +3,6 @@ using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine.Modules;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RugbyRoyale.GameEngine
 {
@@ -36,6 +35,19 @@ namespace RugbyRoyale.GameEngine
             }
 
             return teamEffectiveness;
+        }
+
+        private Dictionary<Position, float> CalculateTryScoringChanceForTeamsheet(Teamsheet teamsheet)
+        {
+            var teamTryChance = new Dictionary<Position, float>();
+
+            Dictionary<Position, Player> starters = teamsheet.GetStartersDict();
+            foreach (Position position in starters.Keys)
+            {
+                teamTryChance[position] = PlayerEffectiveness.CalculateEffectiveness(starters[position], position);
+            }
+
+            return teamTryChance;
         }
     }
 }
