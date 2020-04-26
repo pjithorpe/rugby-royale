@@ -12,5 +12,6 @@
         Leader,
         ScrumSpecialist,
         LineoutSpecialist,
+        Workhorse
     }
 }
