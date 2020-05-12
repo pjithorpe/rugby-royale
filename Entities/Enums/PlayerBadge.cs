@@ -4,14 +4,15 @@
     {
         Fast,
         Finisher,
-        Magician,
-        Jackler,
         HardHitter,
-        TacticalKicker,
-        PlaceKicker,
+        Jackler,
         Leader,
-        ScrumSpecialist,
         LineoutSpecialist,
-        Workhorse
+        Magician,
+        PlaceKicker,
+        ScrumSpecialist,
+        TacticalKicker,
+        Versatile,
+        Workhorse,
     }
 }
