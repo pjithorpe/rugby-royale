@@ -1,9 +1,6 @@
 ﻿using RugbyRoyale.Entities.Enums;
-using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RugbyRoyale.GameEngine.Modules
 {
@@ -11,11 +8,7 @@ namespace RugbyRoyale.GameEngine.Modules
     {
         public static float CalculateTryScoringChance(Player player, Position position)
         {
-            float scoringChance = GetTryScoringChanceForPosition(position);
-
-            scoringChance = scoringChance * GetBadgeModifier(player);
-
-            return scoringChance;
+            return GetTryScoringChanceForPosition(position);
         }
 
         private static float GetTryScoringChanceForPosition(Position position)
@@ -55,29 +48,6 @@ namespace RugbyRoyale.GameEngine.Modules
                 default:
                     throw new Exception("Try scoring chance not found for position: " + position.ToString());
             }
-        }
-
-        private static float GetBadgeModifier(Player player)
-        {
-            float modifier = 1.0f;
-            List<PlayerBadge> badgeCollection = player.Badges;
-
-            if (badgeCollection.Contains(PlayerBadge.Finisher))
-            {
-                modifier = 1.2f;
-            }
-
-            if (badgeCollection.Contains(PlayerBadge.Magician))
-            {
-                modifier *= 1.05f;
-            }
-
-            if (badgeCollection.Contains(PlayerBadge.Fast))
-            {
-                modifier *= 1.1f;
-            }
-
-            return modifier;
         }
     }
 }
