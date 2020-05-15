@@ -27,18 +27,23 @@ namespace RugbyRoyale.GameEngine
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromMinutes(duration);
 
-            // Run simulation for every in-game minute
+            // Run a simulated period for every in-game minute
+            int minute = 0;
+            var simTasks = new Queue<Task>();
             var timer = new Timer((e) =>
             {
-                SimulatePeriod();
-            }, null, startTimeSpan, periodTimeSpan);
+                var doSimulatePeriod = new Action(SimulatePeriod);
+                simTasks.Enqueue(Task.Run(doSimulatePeriod));
+                minute++;
+            },
+            null, startTimeSpan, periodTimeSpan);
 
             return null;
         }
 
         private void SimulatePeriod()
         {
-            //Match events
+            //Get all kinds of match event
         }
 
         private Dictionary<Position, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)
