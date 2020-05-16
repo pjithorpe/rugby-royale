@@ -2,13 +2,18 @@
 using RugbyRoyale.Entities.Model;
 using System;
 
-namespace RugbyRoyale.GameEngine.Modules
+namespace RugbyRoyale.GameEngine
 {
-    public static class ScoringChance
+    internal static class ScoringChance
     {
         public static float CalculateTryScoringChance(Player player, Position position)
         {
             return GetTryScoringChanceForPosition(position);
+        }
+
+        public static double CalculateConversionSuccessChance()
+        {
+            return 0.5f;
         }
 
         private static float GetTryScoringChanceForPosition(Position position)

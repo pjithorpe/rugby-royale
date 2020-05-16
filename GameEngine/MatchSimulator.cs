@@ -2,7 +2,6 @@
 using RugbyRoyale.Entities.Events;
 using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
-using RugbyRoyale.GameEngine.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,28 +52,6 @@ namespace RugbyRoyale.GameEngine
             var eventsInPeriod = new List<MatchEvent>();
 
             MatchEvent lastEvent = orderedMatchEvents.Last();
-            // Check last event and use it to inform this event
-            if (lastEvent is Event_Try)
-            {
-                var conversionEvent = new Event_Conversion(minute);
-
-                if (randomGenerator.NextDouble() <= CalculateConversionSuccessChance())
-                {
-                    conversionEvent.Successful = true;
-                }
-                else
-                {
-                    conversionEvent.Successful = false;
-                }
-            }
-            else if (lastEvent is Event_KnockOn || lastEvent is Event_ForwardPass)
-            {
-                //Event_Scrum
-            }
-            else if (lastEvent is Event_Conversion || lastEvent is Event_PenaltyTry)
-            {
-                //Event_Restart
-            }
 
             // Try
 
@@ -89,11 +66,6 @@ namespace RugbyRoyale.GameEngine
             // Forward Pass
 
             // Free Kick
-        }
-
-        private double CalculateConversionSuccessChance()
-        {
-            return 0.5f;
         }
 
         private Dictionary<Position, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)

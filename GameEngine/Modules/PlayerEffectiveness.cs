@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RugbyRoyale.GameEngine.Modules
+namespace RugbyRoyale.GameEngine
 {
-    public static class PlayerEffectiveness
+    internal static class PlayerEffectiveness
     {
         public static float CalculateEffectiveness(Player player, Position position)
         {
