@@ -13,10 +13,10 @@ namespace RugbyRoyale.GameEngine
 {
     public class MatchSimulator
     {
-        Teamsheet teamHome;
-        Teamsheet teamAway;
-        List<MatchEvent> orderedMatchEvents;
-        Random randomGenerator;
+        private Teamsheet teamHome;
+        private Teamsheet teamAway;
+        private List<MatchEvent> orderedMatchEvents;
+        private Random randomGenerator;
 
         public MatchSimulator(Teamsheet home, Teamsheet away)
         {
@@ -77,7 +77,7 @@ namespace RugbyRoyale.GameEngine
             }
 
             // Try
-            
+
             // Penalty
 
             // Penalty Try

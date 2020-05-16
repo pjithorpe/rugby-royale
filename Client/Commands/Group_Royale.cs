@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace RugbyRoyale.Client.Commands
 {
     [Group("royale")]
-    class Group_Royale : BaseCommandModule
+    internal class Group_Royale : BaseCommandModule
     {
         [Command("hi"), Aliases("hello", "howdy")]
         public async Task Hi(CommandContext context)

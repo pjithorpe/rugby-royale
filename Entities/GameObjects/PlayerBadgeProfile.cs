@@ -15,6 +15,8 @@ namespace RugbyRoyale.Entities.GameObjects
             Badge = badge;
         }
 
-        public PlayerBadgeProfile(PlayerBadge badge, string emoji) : this(badge, emoji, badge.ToString()) { }
+        public PlayerBadgeProfile(PlayerBadge badge, string emoji) : this(badge, emoji, badge.ToString())
+        {
+        }
     }
 }

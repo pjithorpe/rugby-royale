@@ -15,18 +15,18 @@ using System.Threading.Tasks;
 
 namespace RugbyRoyale.Client
 {
-    class Program
+    internal class Program
     {
-        static DiscordClient discord;
-        static CommandsNextExtension commands;
-        static InteractivityExtension interactivity;
+        private static DiscordClient discord;
+        private static CommandsNextExtension commands;
+        private static InteractivityExtension interactivity;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        static async Task MainAsync(string[] args)
+        private static async Task MainAsync(string[] args)
         {
             Settings settings = Settings.GetSettings();
 

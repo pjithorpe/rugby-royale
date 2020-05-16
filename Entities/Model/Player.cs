@@ -17,6 +17,7 @@ namespace RugbyRoyale.Entities.Model
         public PlayerFocus Focus { get; set; }
 
         private string _positionsPrimary;
+
         [NotMapped]
         [BackingField(nameof(_positionsPrimary))]
         public List<Position> Positions_Primary
@@ -32,6 +33,7 @@ namespace RugbyRoyale.Entities.Model
         }
 
         private string _positionsSecondary;
+
         [NotMapped]
         [BackingField(nameof(_positionsSecondary))]
         public List<Position> Positions_Secondary
@@ -47,6 +49,7 @@ namespace RugbyRoyale.Entities.Model
         }
 
         private string _badges;
+
         [NotMapped]
         [BackingField(nameof(_badges))]
         public List<PlayerBadge> Badges

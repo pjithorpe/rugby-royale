@@ -9,7 +9,9 @@ namespace RugbyRoyale.Repositories
 {
     public class PlayerRepository : Repository, IPlayerRepository
     {
-        public PlayerRepository(DataContext db) : base(db) { }
+        public PlayerRepository(DataContext db) : base(db)
+        {
+        }
 
         public Task<bool> ExistsAsync(string playerId)
         {
