@@ -7,5 +7,6 @@
         }
 
         public int Points => 3;
+        public bool Successful { get; set; }
     }
 }
