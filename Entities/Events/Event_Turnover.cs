@@ -4,8 +4,8 @@ using System.Text;
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_FreeKick : MatchEvent
+    public class Event_Turnover : MatchEvent
     {
-        public Event_FreeKick(int minute) : base(minute) { }
+        public Event_Turnover(int minute) : base(minute) { }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using RugbyRoyale.Entities.Enums;
+using RugbyRoyale.Entities.Events;
 using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine.Modules;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,12 +13,17 @@ namespace RugbyRoyale.GameEngine
 {
     public class MatchSimulator
     {
-        private Teamsheet teamHome;
-        private Teamsheet teamAway;
+        Teamsheet teamHome;
+        Teamsheet teamAway;
+        List<MatchEvent> orderedMatchEvents;
+        Random randomGenerator;
+
         public MatchSimulator(Teamsheet home, Teamsheet away)
         {
             teamHome = home;
             teamAway = away;
+            orderedMatchEvents = new List<MatchEvent>();
+            randomGenerator = new Random();
         }
 
         public async Task<MatchResult> SimulateMatch()
@@ -32,8 +39,8 @@ namespace RugbyRoyale.GameEngine
             var simTasks = new Queue<Task>();
             var timer = new Timer((e) =>
             {
-                var doSimulatePeriod = new Action(SimulatePeriod);
-                simTasks.Enqueue(Task.Run(doSimulatePeriod));
+                var doSimulatePeriod = new Action<int>(SimulatePeriod);
+                simTasks.Enqueue(Task.Run(() => doSimulatePeriod(minute)));
                 minute++;
             },
             null, startTimeSpan, periodTimeSpan);
@@ -41,9 +48,52 @@ namespace RugbyRoyale.GameEngine
             return null;
         }
 
-        private void SimulatePeriod()
+        private void SimulatePeriod(int minute)
         {
-            //Get all kinds of match event
+            var eventsInPeriod = new List<MatchEvent>();
+
+            MatchEvent lastEvent = orderedMatchEvents.Last();
+            // Check last event and use it to inform this event
+            if (lastEvent is Event_Try)
+            {
+                var conversionEvent = new Event_Conversion(minute);
+
+                if (randomGenerator.NextDouble() <= CalculateConversionSuccessChance())
+                {
+                    conversionEvent.Successful = true;
+                }
+                else
+                {
+                    conversionEvent.Successful = false;
+                }
+            }
+            else if (lastEvent is Event_KnockOn || lastEvent is Event_ForwardPass)
+            {
+                //Event_Scrum
+            }
+            else if (lastEvent is Event_Conversion || lastEvent is Event_PenaltyTry)
+            {
+                //Event_Restart
+            }
+
+            // Try
+            
+            // Penalty
+
+            // Penalty Try
+
+            // Drop Goal
+
+            // Knock On
+
+            // Forward Pass
+
+            // Free Kick
+        }
+
+        private double CalculateConversionSuccessChance()
+        {
+            return 0.5f;
         }
 
         private Dictionary<Position, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)
