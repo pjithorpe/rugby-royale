@@ -4,16 +4,16 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using RugbyRoyale.Client.App.Repository;
-using RugbyRoyale.Client.Context;
-using RugbyRoyale.Repositories;
+using RugbyRoyale.Discord.App.Repository;
+using RugbyRoyale.Discord.Context;
+using RugbyRoyale.Discord.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.Client
+namespace RugbyRoyale.Discord
 {
     internal class Program
     {

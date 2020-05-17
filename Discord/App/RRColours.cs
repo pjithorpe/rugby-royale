@@ -1,4 +1,4 @@
-﻿namespace RugbyRoyale.Client.App
+﻿namespace RugbyRoyale.Discord.App
 {
     public static class RRColours
     {

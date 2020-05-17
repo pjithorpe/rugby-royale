@@ -1,7 +1,7 @@
 ﻿using RugbyRoyale.Entities.Model;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.Client.App.Repository
+namespace RugbyRoyale.Discord.App.Repository
 {
     public interface IPlayerRepository
     {

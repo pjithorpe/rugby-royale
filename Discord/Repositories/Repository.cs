@@ -1,6 +1,6 @@
-﻿using RugbyRoyale.Client.Context;
+﻿using RugbyRoyale.Discord.Context;
 
-namespace RugbyRoyale.Client.Repositories
+namespace RugbyRoyale.Discord.Repositories
 {
     public abstract class Repository
     {

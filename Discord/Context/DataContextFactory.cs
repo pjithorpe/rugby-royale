@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace RugbyRoyale.Client.Context
+namespace RugbyRoyale.Discord.Context
 {
     public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     {

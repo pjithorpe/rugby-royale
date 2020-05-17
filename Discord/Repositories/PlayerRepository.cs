@@ -1,11 +1,10 @@
-﻿using RugbyRoyale.Client.App.Repository;
-using RugbyRoyale.Client.Context;
-using RugbyRoyale.Client.Repositories;
+﻿using RugbyRoyale.Discord.App.Repository;
+using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
 using System;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.Repositories
+namespace RugbyRoyale.Discord.Repositories
 {
     public class PlayerRepository : Repository, IPlayerRepository
     {
