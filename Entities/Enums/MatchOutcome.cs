@@ -2,8 +2,8 @@
 {
     public enum MatchOutcome
     {
-        Win_Home,
-        Win_Away,
+        HomeWin,
+        AwayWin,
         Draw
     }
 }

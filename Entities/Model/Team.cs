@@ -12,9 +12,11 @@ namespace RugbyRoyale.Entities.Model
         public string Colour { get; set; }
 
         public string UserID { get; set; }
+        public Guid LeagueID { get; set; }
         public Guid TeamsheetID { get; set; }
 
         public User User { get; set; }
+        public League League { get; set; }
         public Teamsheet Teamsheet { get; set; }
     }
 }

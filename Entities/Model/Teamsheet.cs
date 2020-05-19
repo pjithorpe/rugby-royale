@@ -5,6 +5,7 @@ namespace RugbyRoyale.Entities.Model
     public class Teamsheet
     {
         public Guid TeamsheetID { get; set; }
+
         public Guid TightheadPropID { get; set; }
         public Guid HookerID { get; set; }
         public Guid LooseheadPropID { get; set; }
