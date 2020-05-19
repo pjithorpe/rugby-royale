@@ -1,12 +1,15 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RugbyRoyale.Discord.App;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Discord.Repositories;
+using RugbyRoyale.GameEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +33,6 @@ namespace RugbyRoyale.Discord
         {
             Settings settings = Settings.GetSettings();
 
-            ServiceProvider dependencies = new ServiceCollection()
-                .AddSingleton(settings)
-                .AddDbContext<DataContext>(options => options.UseSqlite(settings.DBConnectionString))
-                .AddScoped<IPlayerRepository, PlayerRepository>()
-                .BuildServiceProvider();
-
             discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = settings.BotToken,
@@ -43,6 +40,24 @@ namespace RugbyRoyale.Discord
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug,
             });
+
+            // Connect and get match thread channels
+            await discord.ConnectAsync();
+            DiscordChannel[] matchChannels = settings.MatchChannels
+                .Select(async mc => await discord.GetChannelAsync(ulong.Parse(mc)))
+                .Select(t => t.Result)
+                .ToArray();
+
+            MatchCoordinator coordinator = MatchCoordinator.GetCoordinator();
+            coordinator.Initialise(matchChannels);
+
+            ServiceProvider dependencies = new ServiceCollection()
+                .AddSingleton(settings)
+                .AddSingleton(coordinator)
+                .AddScoped<IClient, Client>()
+                .AddDbContext<DataContext>(options => options.UseSqlite(settings.DBConnectionString))
+                .AddScoped<IPlayerRepository, PlayerRepository>()
+                .BuildServiceProvider();
 
             interactivity = discord.UseInteractivity(new InteractivityConfiguration
             {
@@ -61,11 +76,10 @@ namespace RugbyRoyale.Discord
             // Register all commands in the Commands namespace
             var assembly = Assembly.GetExecutingAssembly();
             assembly.GetTypes()
-                .Where(t => t.Namespace == $"{nameof(RugbyRoyale)}.Commands" && t.IsVisible).ToList()
+                .Where(t => t.Namespace == $"{nameof(RugbyRoyale.Discord.App.Commands)}" && t.IsVisible).ToList()
                 .ForEach(cmd => { commands.RegisterCommands(cmd); });
 
-            // Connect and wait for events
-            await discord.ConnectAsync();
+            // Wait for events
             await Task.Delay(-1);
         }
     }

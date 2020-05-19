@@ -11,6 +11,7 @@
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00691" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0-preview.3.20181.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0-preview.3.20215.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0-preview.3.20215.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0-preview.3.20215.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0-preview.3.20215.2" />
   </ItemGroup>
@@ -18,6 +19,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Entities\RugbyRoyale.Entities.csproj" />
     <ProjectReference Include="..\GameEngine\RugbyRoyale.GameEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

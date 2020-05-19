@@ -2,7 +2,8 @@
 {
     public interface IScoreEvent
     {
-        bool Successful { get; set; }
+        string Abbreviation { get; }
         int Points { get; }
+        bool Successful { get; set; }
     }
 }

@@ -12,15 +12,19 @@ namespace RugbyRoyale.GameEngine
 {
     public class MatchSimulator
     {
+        private Guid id;
         private Teamsheet teamHome;
         private Teamsheet teamAway;
+        private IClient clientInterface;
         private List<MatchEvent> orderedMatchEvents;
         private Random randomGenerator;
 
-        public MatchSimulator(Teamsheet home, Teamsheet away)
+        public MatchSimulator(Guid matchID, Teamsheet home, Teamsheet away, IClient client)
         {
+            id = matchID;
             teamHome = home;
             teamAway = away;
+            clientInterface = client;
             orderedMatchEvents = new List<MatchEvent>();
             randomGenerator = new Random();
         }
@@ -38,8 +42,7 @@ namespace RugbyRoyale.GameEngine
             var simTasks = new Queue<Task>();
             var timer = new Timer((e) =>
             {
-                var doSimulatePeriod = new Action<int>(SimulatePeriod);
-                simTasks.Enqueue(Task.Run(() => doSimulatePeriod(minute)));
+                SimulatePeriod(minute);
                 minute++;
             },
             null, startTimeSpan, periodTimeSpan);
@@ -51,7 +54,18 @@ namespace RugbyRoyale.GameEngine
         {
             var eventsInPeriod = new List<MatchEvent>();
 
-            MatchEvent lastEvent = orderedMatchEvents.Last();
+            if (orderedMatchEvents.Count > 0)
+            {
+                MatchEvent lastEvent = orderedMatchEvents.Last();
+                MatchEvent nextEvent = Events.GetNextEventFromPrevious(lastEvent, minute, randomGenerator);
+                if (nextEvent != null)
+                {
+                    clientInterface.OutputMatchEvent(nextEvent);
+                }
+            }
+
+            //TEST
+            clientInterface.OutputMatchEvent(new Event_Try(id, minute) { Successful = true });
 
             // Try
 

@@ -1,4 +1,5 @@
 ﻿using RugbyRoyale.Entities.Enums;
+using System;
 
 namespace RugbyRoyale.Entities.Events
 {
@@ -6,8 +7,10 @@ namespace RugbyRoyale.Entities.Events
     {
         public PenaltyOffence Offence { get; set; }
 
-        public Event_PenaltyAwarded(int minute) : base(minute)
+        public Event_PenaltyAwarded(Guid matchID, int minute) : base(matchID, minute)
         {
         }
+
+        public override string Name { get => "Penalty Awarded"; }
     }
 }

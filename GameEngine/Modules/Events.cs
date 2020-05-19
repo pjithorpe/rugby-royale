@@ -10,7 +10,7 @@ namespace RugbyRoyale.GameEngine
             // Check last event and use it to inform this event
             if (previousEvent is Event_Try)
             {
-                var conversionEvent = new Event_Conversion(minute);
+                var conversionEvent = new Event_Conversion(previousEvent.MatchID, minute);
 
                 if (randomGenerator.NextDouble() <= ScoringChance.CalculateConversionSuccessChance())
                 {
@@ -27,24 +27,20 @@ namespace RugbyRoyale.GameEngine
             {
                 if (scoreEvent.Successful || scoreEvent is Event_Conversion)
                 {
-                    return new Event_Restart(minute);
+                    return new Event_Restart(previousEvent.MatchID, minute);
                 }
                 else
                 {
-                    return new Event_DropOut(minute);
+                    return new Event_DropOut(previousEvent.MatchID, minute);
                 }
             }
             else if (previousEvent is Event_KnockOn || previousEvent is Event_ForwardPass)
             {
-                return new Event_Scrum(minute);
-            }
-            else if (previousEvent is Event_Conversion || previousEvent is Event_PenaltyTry)
-            {
-                return new Event_Restart(minute);
+                return new Event_Scrum(previousEvent.MatchID, minute);
             }
             else if (previousEvent is Event_PenaltyAwarded || previousEvent is Event_DropGoal)
             {
-                return new Event_PenaltyGoal(minute);
+                return new Event_PenaltyGoal(previousEvent.MatchID, minute);
             }
 
             return null;
