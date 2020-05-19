@@ -15,6 +15,12 @@ namespace RugbyRoyale.Entities.Model
         public string LastName { get; set; }
         public int Rating { get; set; }
         public PlayerFocus Focus { get; set; }
+        public int Attack { get; set; }
+        public int Defence { get; set; }
+        public int Physicality { get; set; }
+        public int Stamina { get; set; }
+        public int Handling { get; set; }
+        public int Kicking { get; set; }
 
         private string _positionsPrimary;
 
