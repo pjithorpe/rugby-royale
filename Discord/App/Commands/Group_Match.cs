@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
@@ -23,6 +24,7 @@ namespace RugbyRoyale.Discord.App.Commands
         }
 
         [Command("start"), Aliases("st")]
+        [MainChannel]
         public async Task Start(CommandContext context, DiscordMember opponent)
         {
             var matchID = new Guid();

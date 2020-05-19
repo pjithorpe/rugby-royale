@@ -11,6 +11,8 @@ namespace RugbyRoyale.Discord
         public string BotToken { get; set; }
         public string CommandPrefix { get; set; }
         public string DBConnectionString { get; set; }
+        public string MainChannel { get; set; }
+        public string TransferChannel { get; set; }
         public List<string> MatchChannels { get; set; }
 
         private Settings()
@@ -28,6 +30,8 @@ namespace RugbyRoyale.Discord
 
             BotToken = GetConfigItem(config, "BotToken");
             DBConnectionString = GetConfigItem(config, "DBConnectionString");
+            MainChannel = GetConfigItem(config, "MainChannel");
+            TransferChannel = GetConfigItem(config, "TransferChannel");
             MatchChannels = GetConfigItemList(config, "MatchChannels");
 
             CommandPrefix = GetConfigItem(settings, "CommandPrefix");
