@@ -47,6 +47,7 @@ namespace RugbyRoyale.Discord
                 .Select(async mc => await discord.GetChannelAsync(ulong.Parse(mc)))
                 .Select(t => t.Result)
                 .ToArray();
+            await discord.DisconnectAsync();
 
             MatchCoordinator coordinator = MatchCoordinator.GetCoordinator();
             coordinator.Initialise(matchChannels);
@@ -76,10 +77,11 @@ namespace RugbyRoyale.Discord
             // Register all commands in the Commands namespace
             var assembly = Assembly.GetExecutingAssembly();
             assembly.GetTypes()
-                .Where(t => t.Namespace == $"{nameof(RugbyRoyale.Discord.App.Commands)}" && t.IsVisible).ToList()
+                .Where(t => t.Namespace == "RugbyRoyale.Discord.App.Commands" && t.IsSubclassOf(typeof(BaseCommandModule))).ToList()
                 .ForEach(cmd => { commands.RegisterCommands(cmd); });
 
             // Wait for events
+            await discord.ConnectAsync();
             await Task.Delay(-1);
         }
     }
