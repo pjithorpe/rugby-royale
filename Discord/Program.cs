@@ -77,7 +77,7 @@ namespace RugbyRoyale.Discord
             // Register all commands in the Commands namespace
             var assembly = Assembly.GetExecutingAssembly();
             assembly.GetTypes()
-                .Where(t => t.Namespace == "RugbyRoyale.Discord.App.Commands" && t.IsSubclassOf(typeof(BaseCommandModule))).ToList()
+                .Where(t => t.IsSubclassOf(typeof(BaseCommandModule))).ToList()
                 .ForEach(cmd => { commands.RegisterCommands(cmd); });
 
             // Wait for events
