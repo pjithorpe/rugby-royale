@@ -21,6 +21,7 @@ namespace RugbyRoyale.Discord.App.Commands
         {
             client = gameEngineClient;
             coordinator = matchCoordinator;
+            playerRepo = playerRepository;
         }
 
         [Command("start"), Aliases("st")]
