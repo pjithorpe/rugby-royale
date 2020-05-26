@@ -8,5 +8,10 @@ namespace RugbyRoyale.Entities.LeagueTypes
     {
         public override string Name => "Straight Knockout";
         public override string Description => "TODO";
+
+        public override int MinSize => 8;
+        public override int MaxSize => 64;
+
+        public override Enums.LeagueType Enumerate() => Enums.LeagueType.Knockout;
     }
 }
