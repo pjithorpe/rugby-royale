@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RugbyRoyale.Entities.LeagueTypes
 {
-    public class LeagueType_Knockout : LeagueRules
+    public class LeagueRules_Knockout : LeagueRules
     {
         public override string Name => "Straight Knockout";
         public override string Description => "TODO";

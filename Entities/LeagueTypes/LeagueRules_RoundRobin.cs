@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RugbyRoyale.Entities.LeagueTypes
 {
-    public class LeagueType_RoundRobin : LeagueRules
+    public class LeagueRules_RoundRobin : LeagueRules
     {
         public override string Name => "Round-Robin";
         public override string Description => "Over the course of a season, each team plays all other teams once, either home or away.";
