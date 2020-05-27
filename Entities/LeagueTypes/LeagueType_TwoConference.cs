@@ -1,17 +1,18 @@
-﻿using System;
+﻿using RugbyRoyale.Entities.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace RugbyRoyale.Entities.LeagueTypes
 {
-    public class LeagueType_TwoConference : LeagueType
+    public class LeagueType_TwoConference : LeagueRules
     {
         public override string Name => "Two Conference";
         public override string Description => "Over the course of a season, each team plays all other teams in their conference both home and away, and once against each team in the other conference, either home or away.";
-        
+        public override LeagueType LeagueType => LeagueType.TwoConference;
+
         public override int Conferences => 2;
         public override int MaxSize => 20;
 
-        public override Enums.LeagueType Enumerate() => Enums.LeagueType.TwoConference;
     }
 }
