@@ -32,7 +32,12 @@ namespace RugbyRoyale.Discord.App
                 // Check that neither player is already in a game
                 if (!memberMatchPairings.ContainsKey(home) && !memberMatchPairings.ContainsKey(away))
                 {
-                    matchChannelPairings[matchID] = availableMatchChannels.First();
+                    DiscordChannel matchChannel = availableMatchChannels.First();
+                    if (!availableMatchChannels.TryRemove(matchChannel))
+                    {
+                        return false;
+                    }
+                    matchChannelPairings[matchID] = matchChannel;
                     memberMatchPairings[home] = matchID;
                     memberMatchPairings[away] = matchID;
                 }
