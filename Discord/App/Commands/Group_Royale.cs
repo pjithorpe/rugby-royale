@@ -10,7 +10,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     [Group("royale")]
     [MainChannel]
-    internal class Group_Royale : BaseCommandModule
+    public class Group_Royale : BaseCommandModule
     {
         [Command("new"), Aliases("newteam", "nt")]
         public async Task New(CommandContext context)

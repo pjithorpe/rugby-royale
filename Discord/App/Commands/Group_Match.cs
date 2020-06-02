@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace RugbyRoyale.Discord.App.Commands
 {
     [Group("match")]
-    internal class Group_Match : BaseCommandModule
+    public class Group_Match : BaseCommandModule
     {
         private IClient client;
         private MatchCoordinator coordinator;

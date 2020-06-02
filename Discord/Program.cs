@@ -74,11 +74,8 @@ namespace RugbyRoyale.Discord
                 Services = dependencies
             });
 
-            // Register all commands in the Commands namespace
-            var assembly = Assembly.GetExecutingAssembly();
-            assembly.GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(BaseCommandModule))).ToList()
-                .ForEach(cmd => { commands.RegisterCommands(cmd); });
+            // Register all commands in the assembly
+            commands.RegisterCommands(Assembly.GetExecutingAssembly());
 
             // Wait for events
             await discord.ConnectAsync();
