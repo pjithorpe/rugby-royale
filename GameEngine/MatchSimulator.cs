@@ -82,27 +82,27 @@ namespace RugbyRoyale.GameEngine
             // Free Kick
         }
 
-        private Dictionary<Position, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)
+        private Dictionary<TeamsheetPosition, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)
         {
-            var teamEffectiveness = new Dictionary<Position, float>();
+            var teamEffectiveness = new Dictionary<TeamsheetPosition, float>();
 
-            Dictionary<Position, Player> starters = teamsheet.GetStartersDict();
-            foreach (Position position in starters.Keys)
+            Dictionary<TeamsheetPosition, Player> starters = teamsheet.GetStartersDict();
+            foreach (TeamsheetPosition tp in starters.Keys)
             {
-                teamEffectiveness[position] = PlayerEffectiveness.CalculateEffectiveness(starters[position], position);
+                teamEffectiveness[tp] = PlayerEffectiveness.CalculateEffectiveness(starters[tp], tp.ToPosition());
             }
 
             return teamEffectiveness;
         }
 
-        private Dictionary<Position, float> CalculateTryScoringChanceForTeamsheet(Teamsheet teamsheet)
+        private Dictionary<TeamsheetPosition, float> CalculateTryScoringChanceForTeamsheet(Teamsheet teamsheet)
         {
-            var teamTryChance = new Dictionary<Position, float>();
+            var teamTryChance = new Dictionary<TeamsheetPosition, float>();
 
-            Dictionary<Position, Player> starters = teamsheet.GetStartersDict();
-            foreach (Position position in starters.Keys)
+            Dictionary<TeamsheetPosition, Player> starters = teamsheet.GetStartersDict();
+            foreach (TeamsheetPosition ts in starters.Keys)
             {
-                teamTryChance[position] = ScoringChance.CalculateTryScoringChance(starters[position], position);
+                teamTryChance[ts] = ScoringChance.CalculateTryScoringChance(starters[ts], ts);
             }
 
             return teamTryChance;

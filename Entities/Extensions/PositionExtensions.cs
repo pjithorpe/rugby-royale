@@ -8,15 +8,11 @@ namespace RugbyRoyale.Entities.Extensions
     public static class PositionExtensions
     {
         private static readonly Position[] forwardsPositions = new Position[] {
-            Position.LooseheadProp, Position.Hooker, Position.TightheadProp,
-            Position.Number4Lock, Position.Number5Lock,
-            Position.BlindsideFlanker, Position.Number8, Position.OpensideFlanker
+            Position.Prop, Position.Hooker, Position.Lock, Position.Flanker, Position.Number8,
         };
 
         private static readonly Position[] backsPositions = new Position[] {
-            Position.ScrumHalf, Position.FlyHalf,
-            Position.InsideCentre, Position.OutsideCentre,
-            Position.LeftWing, Position.FullBack, Position.RightWing
+            Position.ScrumHalf, Position.FlyHalf, Position.Centre, Position.Wing, Position.FullBack,
         };
 
         private static readonly Position[] spinePositions = new Position[]
@@ -24,49 +20,27 @@ namespace RugbyRoyale.Entities.Extensions
             Position.Hooker, Position.Number8, Position.ScrumHalf, Position.FlyHalf, Position.FullBack
         };
 
-        private static readonly Dictionary<Position, Position[]> altPositions = new Dictionary<Position, Position[]>()
-        {
-            { Position.Number4Lock, new[]{ Position.Number5Lock } },
-            { Position.Number5Lock, new[]{ Position.Number4Lock } },
-            { Position.BlindsideFlanker, new[]{ Position.OpensideFlanker } },
-            { Position.OpensideFlanker, new[]{ Position.BlindsideFlanker } },
-            { Position.LeftWing, new[]{ Position.RightWing } },
-            { Position.RightWing, new[]{ Position.LeftWing } },
-        };
-
         private static readonly Dictionary<Position, Position[]> commonAltPositions = new Dictionary<Position, Position[]>()
         {
-            { Position.LooseheadProp, new[]{ Position.TightheadProp } },
-            { Position.TightheadProp, new[]{ Position.LooseheadProp } },
-            { Position.Number4Lock, new[]{ Position.BlindsideFlanker } },
-            { Position.Number5Lock, new[]{ Position.BlindsideFlanker } },
-            { Position.BlindsideFlanker, new[]{ Position.OpensideFlanker, Position.Number8 } },
-            { Position.OpensideFlanker, new[]{ Position.BlindsideFlanker, Position.Number8 } },
-            { Position.Number8, new[]{ Position.BlindsideFlanker, Position.OpensideFlanker } },
-            { Position.FlyHalf, new[]{ Position.InsideCentre } },
-            { Position.InsideCentre, new[]{ Position.OutsideCentre } },
-            { Position.OutsideCentre, new[]{ Position.InsideCentre } },
-            { Position.LeftWing, new[]{ Position.FullBack } },
-            { Position.RightWing, new[]{ Position.FullBack } },
-            { Position.FullBack, new[]{ Position.LeftWing, Position.RightWing } },
+            { Position.Lock, new[]{ Position.Flanker } },
+            { Position.Flanker, new[]{ Position.Number8 } },
+            { Position.Number8, new[]{ Position.Flanker } },
+            { Position.FlyHalf, new[]{ Position.Centre } },
+            { Position.Wing, new[]{ Position.FullBack } },
+            { Position.FullBack, new[]{ Position.Wing } },
         };
 
         private static readonly Dictionary<Position, Position[]> uncommonAltPositions = new Dictionary<Position, Position[]>()
         {
-            { Position.LooseheadProp, new[]{ Position.Hooker } },
-            { Position.TightheadProp, new[]{ Position.Hooker } },
-            { Position.Hooker, new[]{ Position.BlindsideFlanker, Position.Number8, Position.TightheadProp, Position.LooseheadProp } },
-            { Position.Number4Lock, new[]{ Position.OpensideFlanker, Position.Number8 } },
-            { Position.Number5Lock, new[]{ Position.OpensideFlanker, Position.Number8 } },
-            { Position.BlindsideFlanker, new[]{ Position.Hooker } },
-            { Position.OpensideFlanker, new[]{ Position.Hooker } },
-            { Position.Number8, new[]{ Position.Number4Lock, Position.Number5Lock } },
-            { Position.ScrumHalf, new[]{ Position.FlyHalf, Position.LeftWing, Position.RightWing } },
-            { Position.FlyHalf, new[]{ Position.ScrumHalf, Position.OutsideCentre, Position.FullBack, Position.LeftWing, Position.RightWing } },
-            { Position.InsideCentre, new[]{ Position.FullBack, Position.LeftWing, Position.RightWing } },
-            { Position.OutsideCentre, new[]{ Position.FullBack, Position.LeftWing, Position.RightWing } },
-            { Position.LeftWing, new[]{ Position.OutsideCentre } },
-            { Position.RightWing, new[]{ Position.OutsideCentre } },
+            { Position.Prop, new[]{ Position.Hooker } },
+            { Position.Hooker, new[]{ Position.Flanker, Position.Number8, Position.Prop } },
+            { Position.Lock, new[]{ Position.Flanker, Position.Number8 } },
+            { Position.Flanker, new[]{ Position.Hooker } },
+            { Position.Number8, new[]{ Position.Lock } },
+            { Position.ScrumHalf, new[]{ Position.FlyHalf, Position.Wing } },
+            { Position.FlyHalf, new[]{ Position.ScrumHalf, Position.Centre, Position.FullBack, Position.Wing } },
+            { Position.Centre, new[]{ Position.FullBack, Position.Wing } },
+            { Position.Wing, new[]{ Position.Centre } },
             { Position.FullBack, new[]{ Position.FlyHalf } }
         };
 
@@ -85,19 +59,24 @@ namespace RugbyRoyale.Entities.Extensions
             return spinePositions.Contains(position);
         }
 
-        public static Position[] Alternatives(this Position position)
-        {
-            return altPositions[position];
-        }
-
         public static Position[] CommonAlternatives(this Position position)
         {
-            return commonAltPositions[position];
+            Position[] result;
+            if (commonAltPositions.TryGetValue(position, out result))
+            {
+                return result;
+            }
+            return new Position[] { };
         }
 
         public static Position[] UncommonAlternatives(this Position position)
         {
-            return uncommonAltPositions[position];
+            Position[] result;
+            if (uncommonAltPositions.TryGetValue(position, out result))
+            {
+                return result;
+            }
+            return new Position[] { };
         }
     }
 }

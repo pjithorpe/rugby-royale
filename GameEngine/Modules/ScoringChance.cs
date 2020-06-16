@@ -6,7 +6,7 @@ namespace RugbyRoyale.GameEngine
 {
     internal static class ScoringChance
     {
-        public static float CalculateTryScoringChance(Player player, Position position)
+        public static float CalculateTryScoringChance(Player player, TeamsheetPosition position)
         {
             return GetTryScoringChanceForPosition(position);
         }
@@ -16,53 +16,53 @@ namespace RugbyRoyale.GameEngine
             return 0.5f;
         }
 
-        private static float GetTryScoringChanceForPosition(Position position)
+        private static float GetTryScoringChanceForPosition(TeamsheetPosition position)
         {
             switch (position)
             {
-                case Position.LooseheadProp:
+                case TeamsheetPosition.LooseheadProp:
                     return 0.13f;
 
-                case Position.Hooker:
+                case TeamsheetPosition.Hooker:
                     return 0.25f;
 
-                case Position.TightheadProp:
+                case TeamsheetPosition.TightheadProp:
                     return 0.12f;
 
-                case Position.Number4Lock:
+                case TeamsheetPosition.Number4Lock:
                     return 0.15f;
 
-                case Position.Number5Lock:
+                case TeamsheetPosition.Number5Lock:
                     return 0.15f;
 
-                case Position.BlindsideFlanker:
+                case TeamsheetPosition.BlindsideFlanker:
                     return 0.27f;
 
-                case Position.OpensideFlanker:
+                case TeamsheetPosition.OpensideFlanker:
                     return 0.33f;
 
-                case Position.Number8:
+                case TeamsheetPosition.Number8:
                     return 0.4f;
 
-                case Position.ScrumHalf:
+                case TeamsheetPosition.ScrumHalf:
                     return 0.34f;
 
-                case Position.FlyHalf:
+                case TeamsheetPosition.FlyHalf:
                     return 0.33f;
 
-                case Position.InsideCentre:
+                case TeamsheetPosition.InsideCentre:
                     return 0.4f;
 
-                case Position.OutsideCentre:
+                case TeamsheetPosition.OutsideCentre:
                     return 0.5f;
 
-                case Position.LeftWing:
+                case TeamsheetPosition.LeftWing:
                     return 0.94f;
 
-                case Position.RightWing:
+                case TeamsheetPosition.RightWing:
                     return 0.91f;
 
-                case Position.FullBack:
+                case TeamsheetPosition.FullBack:
                     return 0.57f;
 
                 default:

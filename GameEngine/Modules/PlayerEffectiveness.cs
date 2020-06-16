@@ -12,12 +12,12 @@ namespace RugbyRoyale.GameEngine
         public static float CalculateEffectiveness(Player player, Position position)
         {
             // Playing in one of their primary positions
-            if (ContainsPositionOrAlternative(player.Positions_Primary, position))
+            if (player.Positions_Primary.Contains(position))
             {
                 return 1.0f;
             }
             // Playing in one of their secondary positions
-            else if (ContainsPositionOrAlternative(player.Positions_Secondary, position))
+            else if (player.Positions_Secondary.Contains(position))
             {
                 return 0.9f;
             }
@@ -53,11 +53,6 @@ namespace RugbyRoyale.GameEngine
             }
             // Playing completely out of position and in the spine
             return 0.2f;
-        }
-
-        private static bool ContainsPositionOrAlternative(IEnumerable<Position> positionCollection, Position positionToCheck)
-        {
-            return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.Alternatives().Contains(positionToCheck));
         }
 
         private static bool ContainsPositionOrCommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck)

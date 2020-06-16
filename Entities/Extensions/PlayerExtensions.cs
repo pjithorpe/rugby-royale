@@ -1,4 +1,5 @@
-﻿using RugbyRoyale.Entities.Model;
+﻿using RugbyRoyale.Entities.Enums;
+using RugbyRoyale.Entities.Model;
 using System.Linq;
 
 namespace RugbyRoyale.Entities.Extensions
@@ -18,6 +19,35 @@ namespace RugbyRoyale.Entities.Extensions
         public static int TotalStats(this Player player)
         {
             return player.Attack + player.Defence + player.Physicality + player.Stamina + player.Handling + player.Kicking;
+        }
+
+        public static PlayerFocus CalculateFocus(this Player player)
+        {
+            // Significant difference between attack and defence stats
+            if (player.Attack >= player.Defence + 20)
+            {
+                return PlayerFocus.Attacking;
+            }
+            else if (player.Defence >= player.Attack + 20)
+            {
+                return PlayerFocus.Defending;
+            }
+
+            // Nuanced difference
+            // TODO: Too naive, needs work
+            double attPoints = player.Attack + player.Handling * 0.75 + player.Kicking * 0.5;
+            double defPoints = player.Defence + player.Physicality * 0.75 + player.Stamina * 0.5;
+
+            if (attPoints >= defPoints + 20)
+            {
+                return PlayerFocus.Attacking;
+            }
+            else if (defPoints >= attPoints + 20)
+            {
+                return PlayerFocus.Defending;
+            }
+
+            return PlayerFocus.Versatile;
         }
     }
 }

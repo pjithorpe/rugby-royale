@@ -2,20 +2,15 @@
 {
     public enum Position
     {
-        TightheadProp,
+        Prop,
         Hooker,
-        LooseheadProp,
-        Number4Lock,
-        Number5Lock,
-        BlindsideFlanker,
-        OpensideFlanker,
+        Lock,
+        Flanker,
         Number8,
         ScrumHalf,
         FlyHalf,
-        InsideCentre,
-        OutsideCentre,
-        LeftWing,
-        RightWing,
-        FullBack
+        Centre,
+        Wing,
+        FullBack,
     }
 }
