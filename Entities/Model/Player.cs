@@ -30,10 +30,14 @@ namespace RugbyRoyale.Entities.Model
         {
             get
             {
-                return _positionsPrimary
-                    .Split(',')
-                    .Select(s => (Position)Enum.Parse(typeof(Position), s))
-                    .ToList();
+                if (_positionsPrimary != null)
+                {
+                    return _positionsPrimary
+                        .Split(',')
+                        .Select(s => (Position)Enum.Parse(typeof(Position), s))
+                        .ToList();
+                }
+                return new List<Position>();
             }
             set { _positionsPrimary = string.Join(',', value.Select(p => p.ToString())); }
         }

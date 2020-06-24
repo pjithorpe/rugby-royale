@@ -3,7 +3,9 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using RugbyRoyale.Discord.App.Attributes;
+using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Model;
+using RugbyRoyale.GameEngine;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
@@ -45,5 +47,16 @@ namespace RugbyRoyale.Discord.App.Commands
                 Name_Short = shortName
             };
         }
+
+        /* For dev purposes
+        [Command("test")]
+        public async Task Test(CommandContext context)
+        {
+            await context.RespondAsync($"Testing...");
+            var testGen = new PlayerGenerator(50);
+            var testPlayer = await testGen.GeneratePlayer(Position.FlyHalf);
+            await context.RespondAsync($"Done!");
+        }
+        */
     }
 }

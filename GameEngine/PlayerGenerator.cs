@@ -2,7 +2,9 @@
 using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
+using RugbyRoyale.GameEngine.Modules;
 using System;
+using System.Threading.Tasks;
 
 namespace RugbyRoyale.GameEngine
 {
@@ -19,19 +21,32 @@ namespace RugbyRoyale.GameEngine
             rand = new Random();
         }
 
-        public Player GeneratePlayer(Position position)
+        public async Task<Player> GeneratePlayer(Position position)
         {
-            var player = new Player();
+            var player = new Player()
+            {
+                Positions_Primary = { position },
+            };
 
-            player = AddExtraPositions(player, position);
+            player = await GenerateName(player);
+            player = AddExtraPositions(player);
             player = GenerateStats(player);
+
             player.Focus = player.CalculateFocus();
 
             return player;
         }
 
-        private Player AddExtraPositions(Player player, Position position)
+        private async Task<Player> GenerateName(Player player)
         {
+            // TODO: nationality
+
+            return await NameGeneration.GenerateRandomName(player, Nationality.French);
+        }
+
+        private Player AddExtraPositions(Player player)
+        {
+            Position position = player.Positions_Primary[0];
             switch (position)
             {
                 case Position.Prop:
