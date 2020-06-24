@@ -351,6 +351,7 @@ MigrationBackup/
 
 # Application settings file
 appsettings.json
+App.config
 
 # DB and migrations
 rr.db
