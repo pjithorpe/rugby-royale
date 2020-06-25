@@ -141,11 +141,60 @@ namespace RugbyRoyale.GameEngine
         {
             if (rand.NextDouble() < primaryChance)
             {
-                player.Positions_Primary.Add(position);
+                // Check primary positions full
+                if (player.Positions_Primary.Count == 2)
+                {
+                    // 50% chance of overwriting a random primary position
+                    if (rand.NextDouble() < 0.5)
+                    {
+                        // First move a random primary position to secondary positions
+                        int overwriteIndex = rand.Next(0, 2);
+                        // If secondary positions full, randomly overwrite one
+                        if (player.Positions_Secondary.Count == 2)
+                        {
+                            player.Positions_Secondary[rand.Next(0, 2)] = player.Positions_Primary[overwriteIndex];
+                        }
+                        else
+                        {
+                            player.Positions_Secondary.Add(player.Positions_Primary[overwriteIndex]);
+                        }
+                        // Now overwrite primary with new position
+                        player.Positions_Primary[overwriteIndex] = position;
+                    }
+                    // otherwise add to secondary positions
+                    else
+                    {
+                        // If secondary positions also full, randomly discard one and add this
+                        if (player.Positions_Secondary.Count == 2)
+                        {
+                            player.Positions_Secondary[rand.Next(0, 2)] = position;
+                        }
+                        else
+                        {
+                            player.Positions_Secondary.Add(position);
+                        }
+                    }
+                }
+                else
+                {
+                    player.Positions_Primary.Add(position);
+                }
             }
             else
             {
-                player.Positions_Secondary.Add(position);
+                // Check primary positions full
+                if (player.Positions_Secondary.Count == 2)
+                {
+                    // 50% chance of overwriting a random secondary position
+                    if (rand.NextDouble() < 0.5)
+                    {
+                        player.Positions_Secondary[rand.Next(0, 2)] = position;
+                    }
+                }
+                else
+                {
+                    player.Positions_Secondary.Add(position);
+                }
             }
 
             return player;
