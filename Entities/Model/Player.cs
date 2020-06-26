@@ -39,7 +39,10 @@ namespace RugbyRoyale.Entities.Model
                 }
                 return new List<Position>();
             }
-            set { _positionsPrimary = string.Join(',', value.Select(p => p.ToString())); }
+            set
+            {
+                _positionsPrimary = string.Join(',', value.Select(p => p.ToString()));
+            }
         }
 
         private string _positionsSecondary;
@@ -50,10 +53,14 @@ namespace RugbyRoyale.Entities.Model
         {
             get
             {
-                return _positionsSecondary
-                    .Split(',')
-                    .Select(s => (Position)Enum.Parse(typeof(Position), s))
-                    .ToList();
+                if (_positionsSecondary != null)
+                {
+                    return _positionsSecondary
+                        .Split(',')
+                        .Select(s => (Position)Enum.Parse(typeof(Position), s))
+                        .ToList();
+                }
+                return new List<Position>();
             }
             set { _positionsSecondary = string.Join(',', value.Select(p => p.ToString())); }
         }

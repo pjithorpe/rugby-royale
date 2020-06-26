@@ -4,6 +4,7 @@ using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine.Modules;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.GameEngine
@@ -43,31 +44,31 @@ namespace RugbyRoyale.GameEngine
 
         private Player AddPositions(Player player, Position position)
         {
-            player.Positions_Primary.Add(position);
+            player.AddPrimaryPosition(position);
             switch (position)
             {
                 case Position.Prop:
                     if (rand.NextDouble() < 0.005)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Hooker);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Hooker);
                     }
                     break;
 
                 case Position.Hooker:
                     if (rand.NextDouble() < 0.04)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Prop);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Prop);
                     }
                     // If also a prop, unlikely they will be the kind of player who will also play in the back row
                     else
                     {
                         if (rand.NextDouble() < 0.06)
                         {
-                            return AddToPrimaryOrSecondaryPositions(player, Position.Flanker, 0.45);
+                            player = AddToPrimaryOrSecondaryPositions(player, Position.Flanker, 0.45);
                         }
                         if (rand.NextDouble() < 0.025)
                         {
-                            return AddToPrimaryOrSecondaryPositions(player, Position.Number8, 0.2);
+                            player = AddToPrimaryOrSecondaryPositions(player, Position.Number8, 0.2);
                         }
                     }
                     break;
@@ -75,11 +76,11 @@ namespace RugbyRoyale.GameEngine
                 case Position.Lock:
                     if (rand.NextDouble() < 0.33)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Flanker, 0.67);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Flanker, 0.67);
                     }
                     if (rand.NextDouble() < 0.09)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Number8, 0.67);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Number8, 0.67);
                     }
                     break;
 
@@ -98,22 +99,22 @@ namespace RugbyRoyale.GameEngine
                 case Position.FlyHalf:
                     if (rand.NextDouble() < 0.02)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.ScrumHalf, 0.67);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.ScrumHalf, 0.67);
                     }
                     // If also a scrum half, unlikely they will be capable of other positions
                     else
                     {
                         if (rand.NextDouble() < 0.28)
                         {
-                            return AddToPrimaryOrSecondaryPositions(player, Position.Centre);
+                            player = AddToPrimaryOrSecondaryPositions(player, Position.Centre);
                         }
                         if (rand.NextDouble() < 0.33)
                         {
-                            return AddToPrimaryOrSecondaryPositions(player, Position.FullBack, 0.4);
+                            player = AddToPrimaryOrSecondaryPositions(player, Position.FullBack, 0.4);
                         }
                         if (rand.NextDouble() < 0.035)
                         {
-                            return AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.1);
+                            player = AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.1);
                         }
                     }
                     break;
@@ -121,19 +122,19 @@ namespace RugbyRoyale.GameEngine
                 case Position.Centre:
                     if (rand.NextDouble() < 0.3)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.6);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.6);
                     }
                     if (rand.NextDouble() < 0.125)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.FullBack, 0.6);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.FullBack, 0.6);
                     }
                     if (rand.NextDouble() < 0.12)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.FlyHalf, 0.6);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.FlyHalf, 0.6);
                     }
                     if (rand.NextDouble() < 0.0075)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Flanker, 0.33);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Flanker, 0.33);
                     }
                     break;
 
@@ -144,19 +145,19 @@ namespace RugbyRoyale.GameEngine
                 case Position.FullBack:
                     if (rand.NextDouble() < 0.5)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.75);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.75);
                     }
                     if (rand.NextDouble() < 0.275)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.FlyHalf, 0.4);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.FlyHalf, 0.4);
                     }
                     if (rand.NextDouble() < 0.25)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.Centre, 0.45);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.Centre, 0.45);
                     }
                     if (rand.NextDouble() < 0.0075)
                     {
-                        return AddToPrimaryOrSecondaryPositions(player, Position.ScrumHalf);
+                        player = AddToPrimaryOrSecondaryPositions(player, Position.ScrumHalf);
                     }
                     break;
             }
@@ -166,6 +167,7 @@ namespace RugbyRoyale.GameEngine
 
         private Player AddToPrimaryOrSecondaryPositions(Player player, Position position, double primaryChance = 0.5)
         {
+            List<Position> newPositions;
             if (rand.NextDouble() < primaryChance)
             {
                 // Check primary positions full
@@ -179,14 +181,19 @@ namespace RugbyRoyale.GameEngine
                         // If secondary positions full, randomly overwrite one
                         if (player.Positions_Secondary.Count == 2)
                         {
-                            player.Positions_Secondary[rand.Next(0, 2)] = player.Positions_Primary[overwriteIndex];
+                            newPositions = player.Positions_Secondary;
+                            newPositions[rand.Next(0, 2)] = player.Positions_Primary[overwriteIndex];
+                            player.Positions_Secondary = newPositions;
                         }
                         else
                         {
-                            player.Positions_Secondary.Add(player.Positions_Primary[overwriteIndex]);
+                            player.AddSecondaryPosition(player.Positions_Primary[overwriteIndex]);
                         }
+
                         // Now overwrite primary with new position
-                        player.Positions_Primary[overwriteIndex] = position;
+                        newPositions = player.Positions_Primary;
+                        newPositions[overwriteIndex] = position;
+                        player.Positions_Primary = newPositions;
                     }
                     // otherwise add to secondary positions
                     else
@@ -194,33 +201,37 @@ namespace RugbyRoyale.GameEngine
                         // If secondary positions also full, randomly discard one and add this
                         if (player.Positions_Secondary.Count == 2)
                         {
-                            player.Positions_Secondary[rand.Next(0, 2)] = position;
+                            newPositions = player.Positions_Secondary;
+                            newPositions[rand.Next(0, 2)] = position;
+                            player.Positions_Secondary = newPositions;
                         }
                         else
                         {
-                            player.Positions_Secondary.Add(position);
+                            player.AddSecondaryPosition(position);
                         }
                     }
                 }
                 else
                 {
-                    player.Positions_Primary.Add(position);
+                    player.AddPrimaryPosition(position);
                 }
             }
             else
             {
-                // Check primary positions full
+                // Check secondary positions full
                 if (player.Positions_Secondary.Count == 2)
                 {
                     // 50% chance of overwriting a random secondary position
                     if (rand.NextDouble() < 0.5)
                     {
-                        player.Positions_Secondary[rand.Next(0, 2)] = position;
+                        newPositions = player.Positions_Secondary;
+                        newPositions[rand.Next(0, 2)] = position;
+                        player.Positions_Secondary = newPositions;
                     }
                 }
                 else
                 {
-                    player.Positions_Secondary.Add(position);
+                    player.AddSecondaryPosition(position);
                 }
             }
 

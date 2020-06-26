@@ -4,8 +4,10 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Entities.Enums;
+using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
@@ -48,15 +50,44 @@ namespace RugbyRoyale.Discord.App.Commands
             };
         }
 
-        /* For dev purposes
-        [Command("test")]
+        /* For dev purposes */
+        [Command("generate")]
         public async Task Test(CommandContext context)
         {
-            await context.RespondAsync($"Testing...");
+            await context.RespondAsync($"Generating random team...");
             var testGen = new PlayerGenerator(50);
-            var testPlayer = await testGen.GeneratePlayer(Position.FlyHalf);
-            await context.RespondAsync($"Done!");
+            var testTeam = new Teamsheet()
+            {
+                LooseheadProp = await testGen.GeneratePlayer(Position.Prop),
+                Hooker = await testGen.GeneratePlayer(Position.Hooker),
+                TightheadProp = await testGen.GeneratePlayer(Position.Prop),
+                Number4Lock = await testGen.GeneratePlayer(Position.Lock),
+                Number5Lock = await testGen.GeneratePlayer(Position.Lock),
+                BlindsideFlanker = await testGen.GeneratePlayer(Position.Flanker),
+                OpensideFlanker = await testGen.GeneratePlayer(Position.Flanker),
+                Number8 = await testGen.GeneratePlayer(Position.Number8),
+                ScrumHalf = await testGen.GeneratePlayer(Position.ScrumHalf),
+                FlyHalf = await testGen.GeneratePlayer(Position.FlyHalf),
+                InsideCentre = await testGen.GeneratePlayer(Position.Centre),
+                OutsideCentre = await testGen.GeneratePlayer(Position.Centre),
+                LeftWing = await testGen.GeneratePlayer(Position.Wing),
+                RightWing = await testGen.GeneratePlayer(Position.Wing),
+                FullBack = await testGen.GeneratePlayer(Position.FullBack),
+            };
+
+            string output = "";
+            int number = 1;
+            foreach(Player player in testTeam.GetPlayers())
+            {
+                output += $"{number}. {player.FirstName} {player.LastName}";
+                output += $"   Primary: {string.Join(' ', player.Positions_Primary.Select(p => p.ToString()))}";
+                output += $"   Secondary: {string.Join(' ', player.Positions_Secondary.Select(p => p.ToString()))}";
+                output += $"   Stats: ATT {player.Attack}   DEF {player.Defence}   STA {player.Stamina}   PHY {player.Physicality}   HAN {player.Handling}   KIC {player.Kicking}\n";
+                number++;
+            }
+
+            await context.RespondAsync(output);
         }
-        */
+        /**/
     }
 }

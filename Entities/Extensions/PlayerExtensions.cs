@@ -1,5 +1,6 @@
 ﻿using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Model;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RugbyRoyale.Entities.Extensions
@@ -19,6 +20,20 @@ namespace RugbyRoyale.Entities.Extensions
         public static int TotalStats(this Player player)
         {
             return player.Attack + player.Defence + player.Physicality + player.Stamina + player.Handling + player.Kicking;
+        }
+
+        public static void AddPrimaryPosition(this Player player, Position position)
+        {
+            List<Position> newPositions = player.Positions_Primary;
+            newPositions.Add(position);
+            player.Positions_Primary = newPositions;
+        }
+
+        public static void AddSecondaryPosition(this Player player, Position position)
+        {
+            List<Position> newPositions = player.Positions_Secondary;
+            newPositions.Add(position);
+            player.Positions_Secondary = newPositions;
         }
 
         public static PlayerFocus CalculateFocus(this Player player)

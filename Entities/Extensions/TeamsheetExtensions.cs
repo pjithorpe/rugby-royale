@@ -27,5 +27,27 @@ namespace RugbyRoyale.Entities.Extensions
                 { TeamsheetPosition.FullBack, teamsheet.FullBack },
             };
         }
+
+        public static List<Player> GetPlayers(this Teamsheet teamsheet)
+        {
+            return new List<Player>()
+            {
+                teamsheet.LooseheadProp,
+                teamsheet.Hooker,
+                teamsheet.TightheadProp,
+                teamsheet.Number4Lock,
+                teamsheet.Number5Lock,
+                teamsheet.BlindsideFlanker,
+                teamsheet.OpensideFlanker,
+                teamsheet.Number8,
+                teamsheet.ScrumHalf,
+                teamsheet.FlyHalf,
+                teamsheet.LeftWing,
+                teamsheet.InsideCentre,
+                teamsheet.OutsideCentre,
+                teamsheet.RightWing,
+                teamsheet.FullBack,
+            };
+        }
     }
 }
