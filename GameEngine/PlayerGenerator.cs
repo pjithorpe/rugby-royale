@@ -23,13 +23,10 @@ namespace RugbyRoyale.GameEngine
 
         public async Task<Player> GeneratePlayer(Position position)
         {
-            var player = new Player()
-            {
-                Positions_Primary = { position },
-            };
+            var player = new Player();
 
             player = await GenerateName(player);
-            player = AddExtraPositions(player);
+            player = AddPositions(player, position);
             player = GenerateStats(player);
 
             player.Focus = player.CalculateFocus();
@@ -44,9 +41,9 @@ namespace RugbyRoyale.GameEngine
             return await NameGeneration.GenerateRandomName(player, Nationality.French);
         }
 
-        private Player AddExtraPositions(Player player)
+        private Player AddPositions(Player player, Position position)
         {
-            Position position = player.Positions_Primary[0];
+            player.Positions_Primary.Add(position);
             switch (position)
             {
                 case Position.Prop:
@@ -122,7 +119,22 @@ namespace RugbyRoyale.GameEngine
                     break;
 
                 case Position.Centre:
-                    //TODO
+                    if (rand.NextDouble() < 0.3)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.6);
+                    }
+                    if (rand.NextDouble() < 0.125)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.FullBack, 0.6);
+                    }
+                    if (rand.NextDouble() < 0.12)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.FlyHalf, 0.6);
+                    }
+                    if (rand.NextDouble() < 0.0075)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.Flanker, 0.33);
+                    }
                     break;
 
                 case Position.Wing:
@@ -130,7 +142,22 @@ namespace RugbyRoyale.GameEngine
                     break;
 
                 case Position.FullBack:
-                    //TODO
+                    if (rand.NextDouble() < 0.5)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.Wing, 0.75);
+                    }
+                    if (rand.NextDouble() < 0.275)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.FlyHalf, 0.4);
+                    }
+                    if (rand.NextDouble() < 0.25)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.Centre, 0.45);
+                    }
+                    if (rand.NextDouble() < 0.0075)
+                    {
+                        return AddToPrimaryOrSecondaryPositions(player, Position.ScrumHalf);
+                    }
                     break;
             }
 
