@@ -11,9 +11,12 @@ namespace RugbyRoyale.Discord
         public string BotToken { get; set; }
         public string CommandPrefix { get; set; }
         public string DBConnectionString { get; set; }
+        public string LeagueNameLongMaxLength { get; set; }
+        public string LeagueNameShortMaxLength { get; set; }
         public string MainChannel { get; set; }
         public string TransferChannel { get; set; }
-        public List<string> MatchChannels { get; set; }
+        public string[] MatchChannels { get; set; }
+        public string[] PollReactions { get; set; }
 
         private Settings()
         {
@@ -22,10 +25,12 @@ namespace RugbyRoyale.Discord
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            IEnumerable<IConfigurationSection> config = configuration.GetSection("Config")
+            IEnumerable<IConfigurationSection> config = configuration
+                .GetSection("Config")
                 .GetChildren();
 
-            IEnumerable<IConfigurationSection> settings = configuration.GetSection("Settings")
+            IEnumerable<IConfigurationSection> settings = configuration
+                .GetSection("Settings")
                 .GetChildren();
 
             BotToken = GetConfigItem(config, "BotToken");
@@ -35,6 +40,9 @@ namespace RugbyRoyale.Discord
             MatchChannels = GetConfigItemList(config, "MatchChannels");
 
             CommandPrefix = GetConfigItem(settings, "CommandPrefix");
+            LeagueNameLongMaxLength = GetConfigItem(settings, "LeagueNameLongMaxLength");
+            LeagueNameShortMaxLength = GetConfigItem(settings, "LeagueNameShortMaxLength");
+            PollReactions = GetConfigItemList(settings, "PollReactions");
         }
 
         private static string GetConfigItem(IEnumerable<IConfigurationSection> configSection, string itemID)
@@ -42,9 +50,9 @@ namespace RugbyRoyale.Discord
             return configSection.Where(cs => cs.Key == itemID).First().Value;
         }
 
-        private static List<string> GetConfigItemList(IEnumerable<IConfigurationSection> configSection, string itemID)
+        private static string[] GetConfigItemList(IEnumerable<IConfigurationSection> configSection, string itemID)
         {
-            return configSection.Where(cs => cs.Key == itemID).First().Get<List<string>>();
+            return configSection.Where(cs => cs.Key == itemID).First().Get<string[]>();
         }
 
         private static readonly Lazy<Settings> lazy = new Lazy<Settings>(() => new Settings());

@@ -17,9 +17,9 @@ namespace RugbyRoyale.Discord.App.Commands
         private MatchCoordinator coordinator;
         private IPlayerRepository playerRepo;
 
-        public Group_Match(IClient gameEngineClient, MatchCoordinator matchCoordinator, IPlayerRepository playerRepository)
+        public Group_Match(IClient gameClient, MatchCoordinator matchCoordinator, IPlayerRepository playerRepository)
         {
-            client = gameEngineClient;
+            client = gameClient;
             coordinator = matchCoordinator;
             playerRepo = playerRepository;
         }

@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Attributes
