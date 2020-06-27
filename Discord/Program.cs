@@ -56,8 +56,9 @@ namespace RugbyRoyale.Discord
                 .AddSingleton(settings)
                 .AddSingleton(coordinator)
                 .AddScoped<IClient, Client>()
-                .AddDbContext<DataContext>(options => options.UseSqlite(settings.DBConnectionString))
+                .AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={Environment.CurrentDirectory}/players.db"))
                 .AddScoped<IPlayerRepository, PlayerRepository>()
+                .AddScoped<ILeagueRepository, LeagueRepository>()
                 .BuildServiceProvider();
 
             interactivity = discord.UseInteractivity(new InteractivityConfiguration

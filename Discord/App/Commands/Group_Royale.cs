@@ -6,6 +6,7 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.EventHandling;
 using RugbyRoyale.Discord.App.Attributes;
+using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
@@ -25,11 +26,13 @@ namespace RugbyRoyale.Discord.App.Commands
     {
         private IClient client;
         private Settings settings;
+        private ILeagueRepository leagueRepo;
 
-        public Group_Royale(IClient gameClient, Settings appSettings)
+        public Group_Royale(IClient gameClient, Settings appSettings, ILeagueRepository leagueRepository)
         {
             client = gameClient;
             settings = appSettings;
+            leagueRepo = leagueRepository;
         }
 
         [Command("new"), Aliases("newteam", "nt")]
@@ -118,7 +121,14 @@ namespace RugbyRoyale.Discord.App.Commands
                 LeagueType = leagueType
             };
 
-            await dmChannel.SendMessageAsync("Success");
+            // Save to DB
+            if (!await leagueRepo.SaveAsync(newLeague))
+            {
+                await dmChannel.SendMessageAsync("Failed to save new league. Cancelling.");
+                return;
+            }
+
+            await dmChannel.SendMessageAsync("League created successfully.");
         }
 
         /* For dev purposes */
