@@ -358,6 +358,7 @@ rr.db
 Migrations/
 
 # Sqlite db files
+*.db
 *.sqlite
 *.sqlite3
 *.db-wal
