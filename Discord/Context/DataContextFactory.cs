@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System;
 
 namespace RugbyRoyale.Discord.Context
 {
@@ -8,7 +9,7 @@ namespace RugbyRoyale.Discord.Context
         public DataContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-            optionsBuilder.UseSqlite(Settings.GetSettings().DBConnectionString);
+            optionsBuilder.UseSqlite($"Data Source={Environment.CurrentDirectory}/players.db");
 
             return new DataContext(optionsBuilder.Options);
         }

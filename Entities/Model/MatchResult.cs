@@ -5,7 +5,7 @@ namespace RugbyRoyale.Entities.Model
 {
     public class MatchResult
     {
-        public Guid ResultID { get; set; }
+        public Guid MatchResultID { get; set; }
         public MatchOutcome Outcome { get; set; }
 
         public Guid TeamID_Home { get; set; }

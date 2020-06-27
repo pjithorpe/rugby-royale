@@ -6,8 +6,6 @@ namespace RugbyRoyale.Entities.Model
     {
         public string UserID { get; set; }
 
-        public Guid TeamID { get; set; }
-
         public Team Team { get; set; }
     }
 }

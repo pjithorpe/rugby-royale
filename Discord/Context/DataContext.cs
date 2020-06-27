@@ -9,6 +9,11 @@ namespace RugbyRoyale.Discord.Context
         {
         }
 
+        public DbSet<League> Leagues { get; set; }
+        public DbSet<MatchResult> MatchResult { get; set; }
         public DbSet<Player> Players { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Teamsheet> Teamsheets { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
