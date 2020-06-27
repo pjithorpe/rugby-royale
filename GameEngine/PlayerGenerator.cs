@@ -11,13 +11,14 @@ namespace RugbyRoyale.GameEngine
 {
     public class PlayerGenerator
     {
-        private double baseRating;
-        private double stdDev = Configuration.PLAYER_GEN_STD_DEV;
+        private int baseRating;
+        private Nationality nat;
         private Random rand;
 
-        public PlayerGenerator(double basePlayerRating)
+        public PlayerGenerator(int basePlayerRating, Nationality nationality)
         {
             baseRating = basePlayerRating;
+            nat = nationality;
 
             rand = new Random();
         }
@@ -26,44 +27,11 @@ namespace RugbyRoyale.GameEngine
         {
             var player = new Player();
 
-            player = await GenerateName(player);
+            player = await NameGeneration.GenerateRandomName(player, nat);
             player = PositionsGeneration.AddPositions(player, position, rand);
-            player = GenerateStats(player);
+            player = StatsGeneration.GenerateStats(player, baseRating);
 
             player.Focus = player.CalculateFocus();
-
-            return player;
-        }
-
-        private async Task<Player> GenerateName(Player player)
-        {
-            // TODO: nationality
-
-            return await NameGeneration.GenerateRandomName(player, Nationality.French);
-        }
-
-        private Player GenerateStats(Player player)
-        {
-            // Fast normal distribution sampling algorithm
-            var distribution = new ZigguratGaussianSampler(baseRating, stdDev);
-
-            player.Attack = Convert.ToInt32(distribution.Sample());
-            player.Defence = Convert.ToInt32(distribution.Sample());
-            player.Physicality = Convert.ToInt32(distribution.Sample());
-            player.Stamina = Convert.ToInt32(distribution.Sample());
-            player.Handling = Convert.ToInt32(distribution.Sample());
-            player.Kicking = Convert.ToInt32(distribution.Sample());
-
-            // Check if player is overpowered
-            if (player.TotalStats() > (baseRating + stdDev) * 6)
-            {
-                return GenerateStats(player);
-            }
-            // or underpowered
-            else if (player.TotalStats() < (baseRating - stdDev) * 6)
-            {
-                return GenerateStats(player);
-            }
 
             return player;
         }

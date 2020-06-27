@@ -133,7 +133,15 @@ namespace RugbyRoyale.Discord.App.Commands
         public async Task Test(CommandContext context)
         {
             await context.RespondAsync($"Generating random team...");
-            var testGen = new PlayerGenerator(50);
+
+            var nationalities = new Nationality[]
+            {
+                Nationality.Argentine, Nationality.English, Nationality.French, Nationality.SouthAfrican, Nationality.Georgian,
+                Nationality.Irish, Nationality.Scottish, Nationality.Japanese, Nationality.Italian, Nationality.NewZealander,
+                Nationality.Russian, Nationality.Welsh, Nationality.Romanian
+            };
+
+            var testGen = new PlayerGenerator(50,  nationalities[new Random().Next(0, nationalities.Length)]);
             var testTeam = new Teamsheet()
             {
                 LooseheadProp = await testGen.GeneratePlayer(Position.Prop),
