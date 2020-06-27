@@ -166,9 +166,10 @@ namespace RugbyRoyale.Discord.App.Commands
             foreach(Player player in testTeam.GetPlayers())
             {
                 output += $"{number}. {player.FirstName} {player.LastName}";
-                output += $"   Primary: {string.Join(' ', player.Positions_Primary.Select(p => p.ToString()))}";
-                output += $"   Secondary: {string.Join(' ', player.Positions_Secondary.Select(p => p.ToString()))}";
-                output += $"   Stats: ATT {player.Attack}   DEF {player.Defence}   STA {player.Stamina}   PHY {player.Physicality}   HAN {player.Handling}   KIC {player.Kicking}\n";
+                output += $"\n   Primary: {string.Join(' ', player.Positions_Primary.Select(p => p.ToString()))}";
+                output += $"\n   Secondary: {string.Join(' ', player.Positions_Secondary.Select(p => p.ToString()))}";
+                output += $"\n   Focus: {player.Focus}";
+                output += $"\n   Stats: ATT {player.Attack}   DEF {player.Defence}   STA {player.Stamina}   PHY {player.Physicality}   HAN {player.Handling}   KIC {player.Kicking}\n";
                 number++;
             }
 
