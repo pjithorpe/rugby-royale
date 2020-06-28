@@ -7,6 +7,7 @@ using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Extensions;
+using RugbyRoyale.Entities.LeagueTypes;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
 using System;
@@ -52,7 +53,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 return;
             }
             await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. The Gallagher Premiership):");
-            result = await dmChannel.GetNextMessageAsync();
+            result = await dmChannel.GetNextMessageAsync(context.Member);
 
             if (!await result.CheckValid(dmChannel, 40)) return;
             string longName = result.Result.Content.Trim();
@@ -64,7 +65,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 return;
             }
             await dmChannel.SendMessageAsync($"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters):");
-            result = await dmChannel.GetNextMessageAsync();
+            result = await dmChannel.GetNextMessageAsync(context.Member);
 
             if (!await result.CheckValid(dmChannel, 10)) return;
             string shortName = result.Result.Content.Trim();
@@ -73,25 +74,32 @@ namespace RugbyRoyale.Discord.App.Commands
             DiscordEmoji[] pollEmojis = settings.PollReactions
                 .Select(s => DiscordEmoji.FromName(context.Client, s))
                 .ToArray();
-            string[] leagueTypeStrings = Enum.GetNames(typeof(LeagueType))
-                .Select(s => string.Join(" ", Regex.Split(s, @"(?<!^)(?=[A-Z])")))
-                .ToArray();
-
-            // build message
-            string messageContent = "Thanks! Now choose a league type by reacting to this message:\n";
-
-            for (int i = 0; i < leagueTypeStrings.Length; i++)
-            {
-                messageContent += $"\n{pollEmojis[i]} - {leagueTypeStrings[i]}";
-            }
-
-            DiscordMessage pollMessage = await dmChannel.SendMessageAsync(messageContent);
-
-            // add reactions
             LeagueType[] leagueTypes = Enum.GetValues(typeof(LeagueType))
                 .Cast<LeagueType>()
                 .ToArray();
+            LeagueRules[] leagueTypeRules = leagueTypes
+                .Select(lt => lt.GetRules())
+                .ToArray();
 
+            // build embed
+            var leaguesEmbed = new DiscordEmbedBuilder()
+            {
+                Title = "Available League Types",
+                Description = "Thanks! Now choose a league type by reacting to this message."
+            };
+            for (int i = 0; i < leagueTypeRules.Length; i++)
+            {
+                string fieldValue = $"\n   {leagueTypeRules[i].Description}";
+                if (leagueTypeRules[i].Conferences > 1) fieldValue += $"\n   Conferences: {leagueTypeRules[i].Conferences}";
+                fieldValue += $"\n   Teams: {leagueTypeRules[i].MinSize} - {leagueTypeRules[i].MaxSize}";
+
+                // add league type as field in embed
+                leaguesEmbed.AddField($"{pollEmojis[i]} - {leagueTypeRules[i].Name}", fieldValue);
+            }
+
+            DiscordMessage pollMessage = await dmChannel.SendMessageAsync(embed: leaguesEmbed);
+
+            // add reactions
             var emojiLeagueMappings = new Dictionary<DiscordEmoji, LeagueType>();
             for (int i = 0; i < leagueTypes.Length; i++)
             {
