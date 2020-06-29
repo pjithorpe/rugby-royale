@@ -49,7 +49,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new team (max. {longNameMax} characters, e.g. \"Leicester Tigers\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, longNameMax)) return;
+            if (!await result.CheckValid(dmChannel, 5, longNameMax)) return;
             string longName = result.Result.Content.Trim();
 
             // Short name
@@ -61,7 +61,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Thanks! Now respond with a **shortened version** of the team's name (max. {shortNameMax} characters e.g. \"Tigers\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, shortNameMax)) return;
+            if (!await result.CheckValid(dmChannel, 5, shortNameMax)) return;
             string shortName = result.Result.Content.Trim();
 
             // Abbreviation
@@ -96,7 +96,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 await dmChannel.SendMessageAsync($"Respond with your preferred abbreviation (max. 3 characters e.g. \"LEI\"):");
                 result = await dmChannel.GetNextMessageAsync(context.Member);
 
-                if (!await result.CheckValid(dmChannel, 3)) return;
+                if (!await result.CheckValid(dmChannel, 3, 3)) return;
                 abbreviatedName = result.Result.Content.Trim();
             }
 
@@ -126,7 +126,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, longNameMax)) return;
+            if (!await result.CheckValid(dmChannel, 5, longNameMax)) return;
             string longName = result.Result.Content.Trim();
 
             // Short name
@@ -138,7 +138,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters, e.g. \"The Prem\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, shortNameMax)) return;
+            if (!await result.CheckValid(dmChannel, 5, shortNameMax)) return;
             string shortName = result.Result.Content.Trim();
 
             // League Type

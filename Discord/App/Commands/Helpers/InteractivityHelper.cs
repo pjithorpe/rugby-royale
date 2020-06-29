@@ -8,7 +8,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     internal static class InteractivityHelper
     {
-        public async static Task<bool> CheckValid(this InteractivityResult<DiscordMessage> result, DiscordChannel channel, int maxLength)
+        public async static Task<bool> CheckValid(this InteractivityResult<DiscordMessage> result, DiscordChannel channel, int? minLength = null, int? maxLength = null)
         {
             if (result.TimedOut)
             {
@@ -23,7 +23,13 @@ namespace RugbyRoyale.Discord.App.Commands
                 return false;
             }
 
-            if (message.Content.Trim().Length > maxLength)
+            if (minLength != null && message.Content.Trim().Length < minLength)
+            {
+                await channel.SendMessageAsync($"Cannot be under {minLength} characters. Cancelling.");
+                return false;
+            }
+
+            if (maxLength != null && message.Content.Trim().Length > maxLength)
             {
                 await channel.SendMessageAsync($"Cannot be over {maxLength} characters. Cancelling.");
                 return false;
@@ -32,7 +38,7 @@ namespace RugbyRoyale.Discord.App.Commands
             return true;
         }
 
-        public async static Task<bool> CheckValid(this InteractivityResult<MessageReactionAddEventArgs> result, DiscordChannel channel, DiscordEmoji[] validEmojis)
+        public async static Task<bool> CheckValid(this InteractivityResult<MessageReactionAddEventArgs> result, DiscordChannel channel, DiscordEmoji[] validEmojis = null)
         {
             if (result.TimedOut || result.Result == null)
             {
@@ -47,7 +53,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 return false;
             }
 
-            if (!validEmojis.Any(e => e == emoji))
+            if (validEmojis != null && !validEmojis.Any(e => e == emoji))
             {
                 await channel.SendMessageAsync($"{emoji.GetDiscordName()} is not a valid response. Cancelling.");
                 return false;
