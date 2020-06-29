@@ -14,6 +14,8 @@ namespace RugbyRoyale.Discord
         public string LeagueNameLongMaxLength { get; set; }
         public string LeagueNameShortMaxLength { get; set; }
         public string MainChannel { get; set; }
+        public string TeamNameLongMaxLength { get; set; }
+        public string TeamNameShortMaxLength { get; set; }
         public string TransferChannel { get; set; }
         public string[] MatchChannels { get; set; }
         public string[] PollReactions { get; set; }
@@ -42,6 +44,8 @@ namespace RugbyRoyale.Discord
             CommandPrefix = GetConfigItem(settings, "CommandPrefix");
             LeagueNameLongMaxLength = GetConfigItem(settings, "LeagueNameLongMaxLength");
             LeagueNameShortMaxLength = GetConfigItem(settings, "LeagueNameShortMaxLength");
+            TeamNameLongMaxLength = GetConfigItem(settings, "LeagueNameShortMaxLength");
+            TeamNameShortMaxLength = GetConfigItem(settings, "LeagueNameShortMaxLength");
             PollReactions = GetConfigItemList(settings, "PollReactions");
         }
 

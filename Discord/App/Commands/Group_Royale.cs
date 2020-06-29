@@ -33,10 +33,81 @@ namespace RugbyRoyale.Discord.App.Commands
             leagueRepo = leagueRepository;
         }
 
-        [Command("new"), Aliases("newteam", "nt")]
+        [Command("newteam"), Aliases("nt")]
         public async Task New(CommandContext context)
         {
-            await context.RespondAsync($"👋 Hi, {context.User.Mention}!");
+            InteractivityExtension interactivity = context.Client.GetInteractivity();
+            DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
+            InteractivityResult<DiscordMessage> result;
+
+            // Long name
+            if (!int.TryParse(settings.LeagueNameLongMaxLength, out int longNameMax))
+            {
+                // ERROR
+                return;
+            }
+            await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new team (max. {longNameMax} characters, e.g. \"Leicester Tigers\"):");
+            result = await dmChannel.GetNextMessageAsync(context.Member);
+
+            if (!await result.CheckValid(dmChannel, longNameMax)) return;
+            string longName = result.Result.Content.Trim();
+
+            // Short name
+            if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax))
+            {
+                // ERROR
+                return;
+            }
+            await dmChannel.SendMessageAsync($"Thanks! Now respond with a **shortened version** of the team's name (max. {shortNameMax} characters e.g. \"Tigers\"):");
+            result = await dmChannel.GetNextMessageAsync(context.Member);
+
+            if (!await result.CheckValid(dmChannel, shortNameMax)) return;
+            string shortName = result.Result.Content.Trim();
+
+            // Abbreviation
+            string acceptEmojiName = ":white_check_mark:";
+            string rejectEmojiName = ":x:";
+            var acceptEmoji = DiscordEmoji.FromName(context.Client, acceptEmojiName);
+            var rejectEmoji = DiscordEmoji.FromName(context.Client, rejectEmojiName);
+
+            string abbreviatedName = shortName.Substring(0, 3).ToUpper();
+
+            var abbreviationEmbed = new DiscordEmbedBuilder()
+            {
+                Title = "Abbreviated Team Name",
+                Description = $"Thanks! An **abbreviated version** of your team's name will sometimes be used.\n\nDefault: **{abbreviatedName}**."
+            }
+            .AddField(acceptEmojiName, "Accept default.")
+            .AddField(rejectEmojiName, "Reject and enter different abbreviation.");
+
+            DiscordMessage pollMessage = await dmChannel.SendMessageAsync(embed: abbreviationEmbed);
+            await pollMessage.CreateReactionAsync(acceptEmoji);
+            await pollMessage.CreateReactionAsync(rejectEmoji);
+
+            // collect and check result
+            InteractivityResult<MessageReactionAddEventArgs> pollResult = await pollMessage.WaitForReactionAsync(context.Member);
+
+            if (!await pollResult.CheckValid(dmChannel, new DiscordEmoji[] { acceptEmoji, rejectEmoji })) return;
+            DiscordEmoji emojiChosen = pollResult.Result.Emoji;
+
+            if (emojiChosen == rejectEmoji)
+            {
+                // rejected, ask for different abbreviation
+                await dmChannel.SendMessageAsync($"Respond with your preferred abbreviation (max. 3 characters e.g. \"LEI\"):");
+                result = await dmChannel.GetNextMessageAsync(context.Member);
+
+                if (!await result.CheckValid(dmChannel, 3)) return;
+                abbreviatedName = result.Result.Content.Trim();
+            }
+
+            var newTeam = new Team()
+            {
+                Name_Long = longName,
+                Name_Short = shortName,
+                Name_Abbreviated = abbreviatedName
+            };
+
+            await dmChannel.SendMessageAsync("Team created successfully.");
         }
 
         [Command("newleague"), Aliases("nl")]
@@ -52,10 +123,10 @@ namespace RugbyRoyale.Discord.App.Commands
                 // ERROR
                 return;
             }
-            await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. The Gallagher Premiership):");
+            await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, 40)) return;
+            if (!await result.CheckValid(dmChannel, longNameMax)) return;
             string longName = result.Result.Content.Trim();
 
             // Short name
@@ -64,10 +135,10 @@ namespace RugbyRoyale.Discord.App.Commands
                 // ERROR
                 return;
             }
-            await dmChannel.SendMessageAsync($"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters):");
+            await dmChannel.SendMessageAsync($"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters, e.g. \"The Prem\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, 10)) return;
+            if (!await result.CheckValid(dmChannel, shortNameMax)) return;
             string shortName = result.Result.Content.Trim();
 
             // League Type

@@ -47,9 +47,9 @@ namespace RugbyRoyale.Discord.App.Commands
                 return false;
             }
 
-            if (!validEmojis.Any(e => e.Id == emoji.Id))
+            if (!validEmojis.Any(e => e == emoji))
             {
-                await channel.SendMessageAsync($"{emoji.Id} is not a valid response. Cancelling.");
+                await channel.SendMessageAsync($"{emoji.GetDiscordName()} is not a valid response. Cancelling.");
                 return false;
             }
 
