@@ -75,7 +75,7 @@ namespace RugbyRoyale.Discord.App.Commands
             var abbreviationEmbed = new DiscordEmbedBuilder()
             {
                 Title = "Abbreviated Team Name",
-                Description = $"Thanks! An **abbreviated version** of your team's name will sometimes be used.\n\nDefault: **{abbreviatedName}**."
+                Description = $"Thanks! An abbreviated version of your team's name will sometimes be used.\n\nDefault: **{abbreviatedName}**."
             }
             .AddField(acceptEmojiName, "Accept default.")
             .AddField(rejectEmojiName, "Reject and enter different abbreviation.");
@@ -100,11 +100,95 @@ namespace RugbyRoyale.Discord.App.Commands
                 abbreviatedName = result.Result.Content.Trim();
             }
 
+            // Colour
+            string skipEmojiName = ":leftwards_arrow_with_hook:";
+            var skipEmoji = DiscordEmoji.FromName(context.Client, skipEmojiName);
+
+            var colourEmbed = new DiscordEmbedBuilder()
+            {
+                Title = "Team Colours",
+                Description = $"Thanks! Now we will set your teams colours. This will be done using HEX colour codes (e.g. #ff0090 for pink)."
+            }
+            .AddField("Colour picker", "You can use a colour picker such as [this one](https://www.google.com/search?q=color+picker) to get HEX codes.")
+            .AddField("Responses", $"Optional responses can be skipped by reacting with {skipEmoji}.");
+
+            await dmChannel.SendMessageAsync(embed: colourEmbed);
+
+            // primary
+            await dmChannel.SendMessageAsync($"Respond with your **primary** colour:");
+            result = await dmChannel.GetNextMessageAsync(context.Member);
+
+            string regex = "#*[a-zA-Z0-9]{6}";
+            if (!await result.CheckValid(dmChannel, regexExp: regex)) return;
+            string primaryColour = result.Result.Content.Trim();
+
+            // secondary
+            string secondaryColour;
+
+            DiscordMessage colourMessage = await dmChannel.SendMessageAsync($"Respond with your **secondary** colour (optional, {skipEmoji} to skip):");
+            await colourMessage.CreateReactionAsync(skipEmoji);
+
+            Tuple<Task<InteractivityResult<MessageReactionAddEventArgs>>, Task<InteractivityResult<DiscordMessage>>> reactionOrMessageResult
+                = await dmChannel.WaitForReactionOrMessage(colourMessage, rejectEmoji, context.Member);
+            // reaction
+            if (reactionOrMessageResult.Item1 != null)
+            {
+                InteractivityResult<MessageReactionAddEventArgs> rejectResult = await reactionOrMessageResult.Item1;
+                if (!await rejectResult.CheckValid(dmChannel)) return;
+
+                // optional colour skipped - use primary colour
+                secondaryColour = primaryColour;
+            }
+            // message
+            else if (reactionOrMessageResult.Item2 != null)
+            {
+                InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.Item2;
+                if (!await result.CheckValid(dmChannel, regexExp: regex)) return;
+                secondaryColour = result.Result.Content.Trim();
+            }
+            else
+            {
+                await dmChannel.SendMessageAsync("No response. Cancelling");
+                return;
+            }
+
+            // tertiary
+            string tertiaryColour;
+
+            colourMessage = await dmChannel.SendMessageAsync($"Respond with your **tertiary** colour (optional, {skipEmoji} to skip):");
+            await colourMessage.CreateReactionAsync(skipEmoji);
+
+            reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(colourMessage, rejectEmoji, context.Member);
+            // reaction
+            if (reactionOrMessageResult.Item1 != null)
+            {
+                InteractivityResult<MessageReactionAddEventArgs> rejectResult = await reactionOrMessageResult.Item1;
+                if (!await rejectResult.CheckValid(dmChannel)) return;
+
+                // optional colour skipped - use primary colour
+                tertiaryColour = primaryColour;
+            }
+            // message
+            else if (reactionOrMessageResult.Item2 != null)
+            {
+                InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.Item2;
+                if (!await result.CheckValid(dmChannel, regexExp: regex)) return;
+                tertiaryColour = result.Result.Content.Trim();
+            }
+            else
+            {
+                await dmChannel.SendMessageAsync("No response. Cancelling");
+                return;
+            }
+
             var newTeam = new Team()
             {
                 Name_Long = longName,
                 Name_Short = shortName,
-                Name_Abbreviated = abbreviatedName
+                Name_Abbreviated = abbreviatedName,
+                Colour_Primary = primaryColour,
+                Colour_Secondary = secondaryColour,
+                Colour_Tertiary = tertiaryColour
             };
 
             await dmChannel.SendMessageAsync("Team created successfully.");

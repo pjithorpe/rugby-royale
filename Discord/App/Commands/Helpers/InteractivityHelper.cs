@@ -1,14 +1,16 @@
 ﻿using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
 {
     internal static class InteractivityHelper
     {
-        public async static Task<bool> CheckValid(this InteractivityResult<DiscordMessage> result, DiscordChannel channel, int? minLength = null, int? maxLength = null)
+        public async static Task<bool> CheckValid(this InteractivityResult<DiscordMessage> result, DiscordChannel channel, int? minLength = null, int? maxLength = null, string regexExp = null)
         {
             if (result.TimedOut)
             {
@@ -23,15 +25,22 @@ namespace RugbyRoyale.Discord.App.Commands
                 return false;
             }
 
-            if (minLength != null && message.Content.Trim().Length < minLength)
+            string content = message.Content.Trim();
+            if (minLength != null && content.Length < minLength)
             {
                 await channel.SendMessageAsync($"Cannot be under {minLength} characters. Cancelling.");
                 return false;
             }
 
-            if (maxLength != null && message.Content.Trim().Length > maxLength)
+            if (maxLength != null && content.Length > maxLength)
             {
                 await channel.SendMessageAsync($"Cannot be over {maxLength} characters. Cancelling.");
+                return false;
+            }
+
+            if (regexExp != null && !Regex.IsMatch(content, regexExp))
+            {
+                await channel.SendMessageAsync($"Response not valid. Cancelling.");
                 return false;
             }
 
@@ -60,6 +69,26 @@ namespace RugbyRoyale.Discord.App.Commands
             }
 
             return true;
+        }
+
+        public async static Task<Tuple<Task<InteractivityResult<MessageReactionAddEventArgs>>, Task<InteractivityResult<DiscordMessage>>>> WaitForReactionOrMessage(this DiscordChannel discordChannel, DiscordMessage message, DiscordEmoji emoji, DiscordMember member = null)
+        {
+            // wait for reaction or message response
+            Task<InteractivityResult<DiscordMessage>> messageTask = discordChannel.GetNextMessageAsync(member);
+            Task<InteractivityResult<MessageReactionAddEventArgs>> reactionTask = message.WaitForReactionAsync(member, emoji);
+
+            Task firstResponse = await Task.WhenAny(messageTask, reactionTask);
+
+            if (firstResponse is Task<InteractivityResult<MessageReactionAddEventArgs>> reactionResponse)
+            {
+                return Tuple.Create<Task<InteractivityResult<MessageReactionAddEventArgs>>, Task<InteractivityResult<DiscordMessage>>>(reactionResponse, null);
+            }
+            else if (firstResponse is Task<InteractivityResult<DiscordMessage>> messageResponse)
+            {
+                return Tuple.Create<Task<InteractivityResult<MessageReactionAddEventArgs>>, Task<InteractivityResult<DiscordMessage>>>(null, messageResponse);
+            }
+
+            return null;
         }
     }
 }

@@ -9,7 +9,9 @@ namespace RugbyRoyale.Entities.Model
         public string Name_Short { get; set; }
         public string Name_Abbreviated { get; set; }
         public string Emoji { get; set; }
-        public string Colour { get; set; }
+        public string Colour_Primary { get; set; }
+        public string Colour_Secondary { get; set; }
+        public string Colour_Tertiary { get; set; }
 
         public string UserID { get; set; }
         public Guid LeagueID { get; set; }
