@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
 {
-    internal static class InteractivityHelper
+    internal static class InteractivityExtensions
     {
         public async static Task<bool> CheckValid(this InteractivityResult<DiscordMessage> result, DiscordChannel channel, int? minLength = null, int? maxLength = null, string regexExp = null)
         {
@@ -71,24 +71,13 @@ namespace RugbyRoyale.Discord.App.Commands
             return true;
         }
 
-        public async static Task<Tuple<Task<InteractivityResult<MessageReactionAddEventArgs>>, Task<InteractivityResult<DiscordMessage>>>> WaitForReactionOrMessage(this DiscordChannel discordChannel, DiscordMessage message, DiscordEmoji emoji, DiscordMember member = null)
+        public async static Task<ReactionOrMessageTask> WaitForReactionOrMessage(this DiscordChannel discordChannel, DiscordMessage message, DiscordEmoji emoji, DiscordMember member = null)
         {
             // wait for reaction or message response
             Task<InteractivityResult<DiscordMessage>> messageTask = discordChannel.GetNextMessageAsync(member);
             Task<InteractivityResult<MessageReactionAddEventArgs>> reactionTask = message.WaitForReactionAsync(member, emoji);
 
-            Task firstResponse = await Task.WhenAny(messageTask, reactionTask);
-
-            if (firstResponse is Task<InteractivityResult<MessageReactionAddEventArgs>> reactionResponse)
-            {
-                return Tuple.Create<Task<InteractivityResult<MessageReactionAddEventArgs>>, Task<InteractivityResult<DiscordMessage>>>(reactionResponse, null);
-            }
-            else if (firstResponse is Task<InteractivityResult<DiscordMessage>> messageResponse)
-            {
-                return Tuple.Create<Task<InteractivityResult<MessageReactionAddEventArgs>>, Task<InteractivityResult<DiscordMessage>>>(null, messageResponse);
-            }
-
-            return null;
+            return new ReactionOrMessageTask (await Task.WhenAny(messageTask, reactionTask));
         }
     }
 }
