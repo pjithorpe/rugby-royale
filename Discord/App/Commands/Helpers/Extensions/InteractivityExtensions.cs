@@ -73,11 +73,10 @@ namespace RugbyRoyale.Discord.App.Commands
 
         public async static Task<ReactionOrMessageTask> WaitForReactionOrMessage(this DiscordChannel discordChannel, DiscordMessage message, DiscordEmoji emoji, DiscordMember member = null)
         {
-            // wait for reaction or message response
             Task<InteractivityResult<DiscordMessage>> messageTask = discordChannel.GetNextMessageAsync(member);
             Task<InteractivityResult<MessageReactionAddEventArgs>> reactionTask = message.WaitForReactionAsync(member, emoji);
 
-            return new ReactionOrMessageTask (await Task.WhenAny(messageTask, reactionTask));
+            return new ReactionOrMessageTask(await Task.WhenAny(messageTask, reactionTask));
         }
     }
 }

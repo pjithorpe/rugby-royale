@@ -184,7 +184,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 Colour_Primary = primaryColour,
                 Colour_Secondary = secondaryColour,
                 Colour_Tertiary = tertiaryColour,
-                UserID = context.Member.Id.ToString()
+                UserID = context.User.Id.ToString()
             };
 
             await dmChannel.SendMessageAsync("Team created successfully.");
@@ -274,7 +274,8 @@ namespace RugbyRoyale.Discord.App.Commands
             {
                 Name_Long = longName,
                 Name_Short = shortName,
-                LeagueType = leagueType
+                LeagueType = leagueType,
+                UserID = context.User.Id.ToString()
             };
 
             // Save to DB
@@ -285,6 +286,31 @@ namespace RugbyRoyale.Discord.App.Commands
             }
 
             await dmChannel.SendMessageAsync("League created successfully.");
+        }
+
+        [Command("myleague"), Aliases("ml")]
+        public async Task MyLeague(CommandContext context)
+        {
+            League league = await leagueRepo.GetAsync(context.User.Id.ToString());
+
+            // If not yet started, advertise for people to join
+            if (league.HasStarted)
+            {
+                //TODO
+                var leagueAdvert = new DiscordEmbedBuilder()
+                {
+                    Title = "A New League",
+                    Color = new DiscordColor(league.Colour),
+                    Description = "",
+
+                };
+                await context.Channel.SendMessageAsync();
+            }
+            // otherwise, show league table
+            else
+            {
+                await context.Channel.SendMessageAsync("TODO: League Table");
+            }
         }
 
         /* For dev purposes */
