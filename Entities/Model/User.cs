@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RugbyRoyale.Entities.Model
 {
@@ -8,5 +9,7 @@ namespace RugbyRoyale.Entities.Model
 
         public Team Team { get; set; }
         public League League { get; set; }
+
+        public ICollection<LeagueUser> LeagueUsers { get; set; }
     }
 }

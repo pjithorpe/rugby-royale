@@ -100,6 +100,8 @@ namespace RugbyRoyale.Discord.App.Commands
                 Name_Long = longName,
                 Name_Short = shortName,
                 LeagueType = leagueType,
+                DaysPerRound = 3,
+                HasStarted = false,
                 UserID = context.User.Id.ToString()
             };
 

@@ -15,5 +15,14 @@ namespace RugbyRoyale.Discord.Context
         public DbSet<Team> Teams { get; set; }
         public DbSet<Teamsheet> Teamsheets { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<LeagueUser> LeagueUsers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Relationships
+            modelBuilder.Entity<LeagueUser>()
+                .HasKey(lu => new { lu.LeagueID, lu.UserID });
+        }
     }
 }

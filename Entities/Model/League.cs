@@ -10,12 +10,15 @@ namespace RugbyRoyale.Entities.Model
         public string Name_Long { get; set; }
         public string Name_Short { get; set; }
         public LeagueType LeagueType { get; set; }
-        public string Colour { get; set; }
         public bool HasStarted { get; set; }
+        public int DaysPerRound { get; set; }
+        public int Size { get; set; }
 
         public string UserID { get; set; }
 
         public User User { get; set; }
         public List<Team> Teams { get; set; }
+
+        public ICollection<LeagueUser> LeagueUsers { get; set; }
     }
 }

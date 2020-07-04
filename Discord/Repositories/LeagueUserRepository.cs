@@ -3,21 +3,23 @@ using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.Repositories
 {
-    public class LeagueRepository : Repository, ILeagueRepository
+    public class LeagueUserRepository : Repository, ILeagueUserRepository
     {
-        public LeagueRepository(DataContext db) : base(db)
+        public LeagueUserRepository(DataContext db) : base(db)
         {
         }
 
-        public async Task<bool> SaveAsync(League league)
+        public async Task<bool> SaveAsync(LeagueUser leagueUser)
         {
             try
             {
-                db.Add(league);
+                db.Add(leagueUser);
                 return (await db.SaveChangesAsync()) == 1;
             }
             catch (Exception e)
@@ -27,11 +29,11 @@ namespace RugbyRoyale.Discord.Repositories
             }
         }
 
-        public async Task<League> GetAsync(Guid leagueID)
+        public async Task<LeagueUser> GetAsync(Guid leagueID, string userID)
         {
             try
             {
-                return await db.Leagues.FirstOrDefaultAsync(l => l.LeagueID == leagueID);
+                return await db.LeagueUsers.FirstOrDefaultAsync(lu => lu.LeagueID == leagueID && lu.UserID == userID);
             }
             catch (Exception e)
             {
@@ -40,16 +42,16 @@ namespace RugbyRoyale.Discord.Repositories
             }
         }
 
-        public async Task<League> GetAsync(string userID)
+        public async Task<int> CountAsync(Guid leagueID)
         {
             try
             {
-                return await db.Leagues.FirstOrDefaultAsync(l => l.UserID == userID);
+                return await db.LeagueUsers.Where(lu => lu.LeagueID == leagueID).CountAsync();
             }
             catch (Exception e)
             {
                 // TODO: LOG ERROR
-                return null;
+                return 0;
             }
         }
     }

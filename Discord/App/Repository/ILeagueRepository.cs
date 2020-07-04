@@ -8,6 +8,8 @@ namespace RugbyRoyale.Discord.App.Repository
     {
         Task<bool> SaveAsync(League league);
 
+        Task<League> GetAsync(Guid leagueID);
+
         Task<League> GetAsync(string userID);
     }
 }
