@@ -11,6 +11,8 @@ namespace RugbyRoyale.Discord.App.Repository
 
         Task<LeagueUser> GetAsync(Guid leagueID, string userID);
 
+        Task<List<LeagueUser>> ListAsync(Guid leagueID);
+
         Task<int> CountAsync(Guid leagueID);
     }
 }

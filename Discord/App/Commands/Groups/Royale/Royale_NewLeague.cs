@@ -16,7 +16,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     static class Royale_NewLeague
     {
-        public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo)
+        public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
             InteractivityExtension interactivity = context.Client.GetInteractivity();
             DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
@@ -115,7 +115,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync("League created successfully.");
 
             // Send an advert for the league to the main channel
-            await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo);
+            await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo, leagueUserRepo);
         }
     }
 }

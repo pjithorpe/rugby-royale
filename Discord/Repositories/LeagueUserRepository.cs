@@ -42,6 +42,19 @@ namespace RugbyRoyale.Discord.Repositories
             }
         }
 
+        public async Task<List<LeagueUser>> ListAsync(Guid leagueID)
+        {
+            try
+            {
+                return await db.LeagueUsers.Where(lu => lu.LeagueID == leagueID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+                // TODO: LOG ERROR
+                return null;
+            }
+        }
+
         public async Task<int> CountAsync(Guid leagueID)
         {
             try

@@ -25,12 +25,14 @@ namespace RugbyRoyale.Discord.App.Commands
         private IClient client;
         private Settings settings;
         private ILeagueRepository leagueRepo;
+        private ILeagueUserRepository leagueUserRepo;
 
-        public Group_Royale(IClient gameClient, Settings appSettings, ILeagueRepository leagueRepository)
+        public Group_Royale(IClient gameClient, Settings appSettings, ILeagueRepository leagueRepository, ILeagueUserRepository leagueUserRepository)
         {
             client = gameClient;
             settings = appSettings;
             leagueRepo = leagueRepository;
+            leagueUserRepo = leagueUserRepository;
         }
 
         [Command("newteam"), Aliases("nt")]
@@ -42,13 +44,13 @@ namespace RugbyRoyale.Discord.App.Commands
         [Command("newleague"), Aliases("nl")]
         public async Task NewLeague(CommandContext context)
         {
-            await Royale_NewLeague.ExecuteAsync(context, settings, leagueRepo);
+            await Royale_NewLeague.ExecuteAsync(context, settings, leagueRepo, leagueUserRepo);
         }
 
         [Command("myleague"), Aliases("ml")]
         public async Task MyLeague(CommandContext context)
         {
-            await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo);
+            await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo, leagueUserRepo);
         }
 
         /* For dev purposes */
