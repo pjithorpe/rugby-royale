@@ -15,7 +15,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     static class Royale_MyLeague
     {
-        public static async Task ExecuteAsync(CommandContext context, ILeagueRepository leagueRepo)
+        public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo)
         {
             League league = await leagueRepo.GetAsync(context.User.Id.ToString());
             LeagueRules rules = league.LeagueType.GetRules();
@@ -33,7 +33,8 @@ namespace RugbyRoyale.Discord.App.Commands
                 .AddField("Requirements", $"This competition needs at least {rules.MinSize} to start. Players will be expected to play at least 1 game every {league.DaysPerRound}.")
                 .AddField("Players Joined", "-");
 
-                DiscordMessage message = await context.Channel.SendMessageAsync(embed: leagueAdvert);
+                DiscordChannel mainChannel = context.Guild.GetChannel(ulong.Parse(settings.MainChannel));
+                DiscordMessage message = await mainChannel.SendMessageAsync(embed: leagueAdvert);
                 await message.CreateReactionAsync(DiscordEmoji.FromName(context.Client, ":white_check_mark:"));
                 await message.CreateReactionAsync(DiscordEmoji.FromName(context.Client, ":x:"));
             }

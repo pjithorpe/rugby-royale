@@ -48,7 +48,7 @@ namespace RugbyRoyale.Discord.App.Commands
         [Command("myleague"), Aliases("ml")]
         public async Task MyLeague(CommandContext context)
         {
-            await Royale_MyLeague.ExecuteAsync(context, leagueRepo);
+            await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo);
         }
 
         /* For dev purposes */

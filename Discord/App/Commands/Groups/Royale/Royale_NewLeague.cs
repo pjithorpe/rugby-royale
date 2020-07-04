@@ -113,6 +113,9 @@ namespace RugbyRoyale.Discord.App.Commands
             }
 
             await dmChannel.SendMessageAsync("League created successfully.");
+
+            // Send an advert for the league to the main channel
+            await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo);
         }
     }
 }
