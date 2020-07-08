@@ -13,6 +13,8 @@ namespace RugbyRoyale.Entities.Model
         public bool HasStarted { get; set; }
         public int DaysPerRound { get; set; }
         public int Size { get; set; }
+        public int Size_Min { get; set; }
+        public int Size_Max { get; set; }
 
         public string UserID { get; set; }
 

@@ -26,7 +26,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new team (max. {longNameMax} characters, e.g. \"Leicester Tigers\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, 5, longNameMax)) return;
+            if (!await result.CheckValidString(dmChannel, 5, longNameMax)) return;
             string longName = result.Result.Content.Trim();
 
             // Short name
@@ -38,7 +38,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Thanks! Now respond with a **shortened version** of the team's name (max. {shortNameMax} characters e.g. \"Tigers\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, 5, shortNameMax)) return;
+            if (!await result.CheckValidString(dmChannel, 5, shortNameMax)) return;
             string shortName = result.Result.Content.Trim();
 
             // Abbreviation
@@ -73,7 +73,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 await dmChannel.SendMessageAsync($"Respond with your preferred abbreviation (max. 3 characters e.g. \"LEI\"):");
                 result = await dmChannel.GetNextMessageAsync(context.Member);
 
-                if (!await result.CheckValid(dmChannel, 3, 3)) return;
+                if (!await result.CheckValidString(dmChannel, 3, 3)) return;
                 abbreviatedName = result.Result.Content.Trim();
             }
 
@@ -96,7 +96,7 @@ namespace RugbyRoyale.Discord.App.Commands
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
             string regex = "#*[a-zA-Z0-9]{6}";
-            if (!await result.CheckValid(dmChannel, regexExp: regex)) return;
+            if (!await result.CheckValidString(dmChannel, regexExp: regex)) return;
             string primaryColour = result.Result.Content.Trim();
 
             // secondary
@@ -105,11 +105,11 @@ namespace RugbyRoyale.Discord.App.Commands
             DiscordMessage colourMessage = await dmChannel.SendMessageAsync($"Respond with your **secondary** colour (optional, {skipEmoji} to skip):");
             await colourMessage.CreateReactionAsync(skipEmoji);
 
-            ReactionOrMessageTask reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(colourMessage, rejectEmoji, context.Member);
+            ReactionOrMessageTask reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(colourMessage, skipEmoji, context.Member);
             if (reactionOrMessageResult.ReactionTask != null)
             {
-                InteractivityResult<MessageReactionAddEventArgs> rejectResult = await reactionOrMessageResult.ReactionTask;
-                if (!await rejectResult.CheckValid(dmChannel)) return;
+                InteractivityResult<MessageReactionAddEventArgs> skipResult = await reactionOrMessageResult.ReactionTask;
+                if (!await skipResult.CheckValid(dmChannel)) return;
 
                 // optional colour skipped - use primary colour
                 secondaryColour = primaryColour;
@@ -117,7 +117,7 @@ namespace RugbyRoyale.Discord.App.Commands
             else if (reactionOrMessageResult.MessageTask != null)
             {
                 InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.MessageTask;
-                if (!await messageResult.CheckValid(dmChannel, regexExp: regex)) return;
+                if (!await messageResult.CheckValidString(dmChannel, regexExp: regex)) return;
                 secondaryColour = result.Result.Content.Trim();
             }
             else
@@ -132,11 +132,11 @@ namespace RugbyRoyale.Discord.App.Commands
             colourMessage = await dmChannel.SendMessageAsync($"Respond with your **tertiary** colour (optional, {skipEmoji} to skip):");
             await colourMessage.CreateReactionAsync(skipEmoji);
 
-            reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(colourMessage, rejectEmoji, context.Member);
+            reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(colourMessage, skipEmoji, context.Member);
             if (reactionOrMessageResult.ReactionTask != null)
             {
-                InteractivityResult<MessageReactionAddEventArgs> rejectResult = await reactionOrMessageResult.ReactionTask;
-                if (!await rejectResult.CheckValid(dmChannel)) return;
+                InteractivityResult<MessageReactionAddEventArgs> skipResult = await reactionOrMessageResult.ReactionTask;
+                if (!await skipResult.CheckValid(dmChannel)) return;
 
                 // optional colour skipped - use primary colour
                 tertiaryColour = primaryColour;
@@ -144,7 +144,7 @@ namespace RugbyRoyale.Discord.App.Commands
             else if (reactionOrMessageResult.MessageTask != null)
             {
                 InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.MessageTask;
-                if (!await messageResult.CheckValid(dmChannel, regexExp: regex)) return;
+                if (!await messageResult.CheckValidString(dmChannel, regexExp: regex)) return;
                 tertiaryColour = result.Result.Content.Trim();
             }
             else

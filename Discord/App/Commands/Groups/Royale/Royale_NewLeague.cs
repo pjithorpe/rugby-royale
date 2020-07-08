@@ -31,7 +31,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, 5, longNameMax)) return;
+            if (!await result.CheckValidString(dmChannel, 5, longNameMax)) return;
             string longName = result.Result.Content.Trim();
 
             // Short name
@@ -43,7 +43,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync($"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters, e.g. \"The Prem\"):");
             result = await dmChannel.GetNextMessageAsync(context.Member);
 
-            if (!await result.CheckValid(dmChannel, 5, shortNameMax)) return;
+            if (!await result.CheckValidString(dmChannel, 5, shortNameMax)) return;
             string shortName = result.Result.Content.Trim();
 
             // League Type
@@ -95,6 +95,69 @@ namespace RugbyRoyale.Discord.App.Commands
 
             LeagueType leagueType = emojiLeagueMappings[emojiChosen];
 
+            // League size
+            LeagueRules leagueRules = leagueType.GetRules();
+            int defaultMinSize = leagueRules.MinSize;
+            int defaultMaxSize = leagueRules.MaxSize;
+
+            string skipEmojiName = ":leftwards_arrow_with_hook:";
+            var skipEmoji = DiscordEmoji.FromName(context.Client, skipEmojiName);
+
+            // minimum size
+            DiscordMessage sizeMessage = await dmChannel.SendMessageAsync($"Please respond with the **minimum size** (no. of teams) of the new league (default: {leagueRules.MinSize}). Cannot be less than the default value. {skipEmoji} to skip):");
+            await sizeMessage.CreateReactionAsync(skipEmoji);
+
+            ReactionOrMessageTask reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(sizeMessage, skipEmoji, context.Member);
+
+            int minSize;
+            if (reactionOrMessageResult.ReactionTask != null)
+            {
+                InteractivityResult<MessageReactionAddEventArgs> skipResult = await reactionOrMessageResult.ReactionTask;
+                if (!await skipResult.CheckValid(dmChannel)) return;
+
+                // skipped - use default
+                minSize = defaultMinSize;
+            }
+            else if (reactionOrMessageResult.MessageTask != null)
+            {
+                InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.MessageTask;
+                if (!await messageResult.CheckValidInt(dmChannel, minValue: defaultMinSize)) return;
+                minSize = int.Parse(messageResult.Result.Content.Trim());
+            }
+            else
+            {
+                await dmChannel.SendMessageAsync("No response. Cancelling");
+                return;
+            }
+
+
+            // maximum size
+            sizeMessage = await dmChannel.SendMessageAsync($"Thanks! Now respond with the **maximum size** of the new league (default: {leagueRules.MaxSize}). Cannot be more than the default value. {skipEmoji} to skip):");
+            await sizeMessage.CreateReactionAsync(skipEmoji);
+
+            reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(sizeMessage, skipEmoji, context.Member);
+
+            int maxSize;
+            if (reactionOrMessageResult.ReactionTask != null)
+            {
+                InteractivityResult<MessageReactionAddEventArgs> skipResult = await reactionOrMessageResult.ReactionTask;
+                if (!await skipResult.CheckValid(dmChannel)) return;
+
+                // skipped - use default
+                maxSize = defaultMaxSize;
+            }
+            else if (reactionOrMessageResult.MessageTask != null)
+            {
+                InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.MessageTask;
+                if (!await messageResult.CheckValidInt(dmChannel, maxValue: defaultMaxSize)) return;
+                maxSize = int.Parse(messageResult.Result.Content.Trim());
+            }
+            else
+            {
+                await dmChannel.SendMessageAsync("No response. Cancelling");
+                return;
+            }
+
             var newLeague = new League()
             {
                 Name_Long = longName,
@@ -102,6 +165,8 @@ namespace RugbyRoyale.Discord.App.Commands
                 LeagueType = leagueType,
                 DaysPerRound = 3,
                 HasStarted = false,
+                Size_Min = minSize,
+                Size_Max = maxSize,
                 UserID = context.User.Id.ToString()
             };
 
