@@ -44,8 +44,8 @@ namespace RugbyRoyale.Discord
             CommandPrefix = GetConfigItem(settings, "CommandPrefix");
             LeagueNameLongMaxLength = GetConfigItem(settings, "LeagueNameLongMaxLength");
             LeagueNameShortMaxLength = GetConfigItem(settings, "LeagueNameShortMaxLength");
-            TeamNameLongMaxLength = GetConfigItem(settings, "LeagueNameShortMaxLength");
-            TeamNameShortMaxLength = GetConfigItem(settings, "LeagueNameShortMaxLength");
+            TeamNameLongMaxLength = GetConfigItem(settings, "TeamNameLongMaxLength");
+            TeamNameShortMaxLength = GetConfigItem(settings, "TeamNameShortMaxLength");
             PollReactions = GetConfigItemList(settings, "PollReactions");
         }
 

@@ -1,7 +1,7 @@
-﻿using DSharpPlus.Entities;
+﻿using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
-using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -102,14 +102,6 @@ namespace RugbyRoyale.Discord.App.Commands
             }
 
             return true;
-        }
-
-        public async static Task<ReactionOrMessageTask> WaitForReactionOrMessage(this DiscordChannel discordChannel, DiscordMessage message, DiscordEmoji emoji, DiscordMember member = null)
-        {
-            Task<InteractivityResult<DiscordMessage>> messageTask = discordChannel.GetNextMessageAsync(member);
-            Task<InteractivityResult<MessageReactionAddEventArgs>> reactionTask = message.WaitForReactionAsync(member, emoji);
-
-            return new ReactionOrMessageTask(await Task.WhenAny(messageTask, reactionTask));
         }
     }
 }

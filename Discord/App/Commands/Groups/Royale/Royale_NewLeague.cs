@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
@@ -18,37 +19,24 @@ namespace RugbyRoyale.Discord.App.Commands
     {
         public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
-            InteractivityExtension interactivity = context.Client.GetInteractivity();
+            DiscordClient discordClient = context.Client;
+            InteractivityExtension interactivity = discordClient.GetInteractivity();
             DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
-            InteractivityResult<DiscordMessage> result;
+
+            if (!int.TryParse(settings.LeagueNameLongMaxLength, out int longNameMax)) throw new Exception("Failed to read setting: LeagueNameLongMaxLength");
+            if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: LeagueNameShortMaxLength");
 
             // Long name
-            if (!int.TryParse(settings.LeagueNameLongMaxLength, out int longNameMax))
-            {
-                // ERROR
-                return;
-            }
-            await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):");
-            result = await dmChannel.GetNextMessageAsync(context.Member);
-
-            if (!await result.CheckValidString(dmChannel, 5, longNameMax)) return;
-            string longName = result.Result.Content.Trim();
+            string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):", 5, longNameMax);
+            if (longName == null) return;
 
             // Short name
-            if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax))
-            {
-                // ERROR
-                return;
-            }
-            await dmChannel.SendMessageAsync($"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters, e.g. \"The Prem\"):");
-            result = await dmChannel.GetNextMessageAsync(context.Member);
-
-            if (!await result.CheckValidString(dmChannel, 5, shortNameMax)) return;
-            string shortName = result.Result.Content.Trim();
+            string shortName = await dmChannel.GetInputString(context.Member, $"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters, e.g. \"The Prem\"):", 5, shortNameMax);
+            if (shortName == null) return;
 
             // League Type
             DiscordEmoji[] pollEmojis = settings.PollReactions
-                .Select(s => DiscordEmoji.FromName(context.Client, s))
+                .Select(s => DiscordEmoji.FromName(discordClient, s))
                 .ToArray();
             LeagueType[] leagueTypes = Enum.GetValues(typeof(LeagueType))
                 .Cast<LeagueType>()
@@ -99,9 +87,7 @@ namespace RugbyRoyale.Discord.App.Commands
             LeagueRules leagueRules = leagueType.GetRules();
             int defaultMinSize = leagueRules.MinSize;
             int defaultMaxSize = leagueRules.MaxSize;
-
-            string skipEmojiName = ":leftwards_arrow_with_hook:";
-            var skipEmoji = DiscordEmoji.FromName(context.Client, skipEmojiName);
+            DiscordEmoji skipEmoji = discordClient.SkipEmoji();
 
             // minimum size
             DiscordMessage sizeMessage = await dmChannel.SendMessageAsync($"Please respond with the **minimum size** (no. of teams) of the new league (default: {leagueRules.MinSize}). Cannot be less than the default value. {skipEmoji} to skip):");

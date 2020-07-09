@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
@@ -13,73 +14,41 @@ namespace RugbyRoyale.Discord.App.Commands
     {
         public static async Task ExecuteAsync(CommandContext context, Settings settings)
         {
-            InteractivityExtension interactivity = context.Client.GetInteractivity();
+            DiscordClient discordClient = context.Client;
             DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
-            InteractivityResult<DiscordMessage> result;
+
+            if (!int.TryParse(settings.TeamNameLongMaxLength, out int longNameMax)) throw new Exception("Failed to read setting: TeamNameLongMaxLength");
+            if (!int.TryParse(settings.TeamNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: TeamNameShortMaxLength");
 
             // Long name
-            if (!int.TryParse(settings.LeagueNameLongMaxLength, out int longNameMax))
-            {
-                // ERROR
-                return;
-            }
-            await dmChannel.SendMessageAsync($"Please respond with the **full name** of the new team (max. {longNameMax} characters, e.g. \"Leicester Tigers\"):");
-            result = await dmChannel.GetNextMessageAsync(context.Member);
-
-            if (!await result.CheckValidString(dmChannel, 5, longNameMax)) return;
-            string longName = result.Result.Content.Trim();
+            string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new team (max. {longNameMax} characters, e.g. \"Leicester Tigers\"):", 5, longNameMax);
+            if (longName == null) return;
 
             // Short name
-            if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax))
-            {
-                // ERROR
-                return;
-            }
-            await dmChannel.SendMessageAsync($"Thanks! Now respond with a **shortened version** of the team's name (max. {shortNameMax} characters e.g. \"Tigers\"):");
-            result = await dmChannel.GetNextMessageAsync(context.Member);
-
-            if (!await result.CheckValidString(dmChannel, 5, shortNameMax)) return;
-            string shortName = result.Result.Content.Trim();
+            string shortName = await dmChannel.GetInputString(context.Member, $"Thanks! Now respond with a **shortened version** of the team's name (max. {shortNameMax} characters e.g. \"Tigers\"):", 5, shortNameMax);
+            if (shortName == null) return;
 
             // Abbreviation
-            string acceptEmojiName = ":white_check_mark:";
-            string rejectEmojiName = ":x:";
-            var acceptEmoji = DiscordEmoji.FromName(context.Client, acceptEmojiName);
-            var rejectEmoji = DiscordEmoji.FromName(context.Client, rejectEmojiName);
-
             string abbreviatedName = shortName.Substring(0, 3).ToUpper();
-
-            var abbreviationEmbed = new DiscordEmbedBuilder()
+            InputPrompt_BinaryChoice prompt = new InputPrompt_BinaryChoice()
             {
                 Title = "Abbreviated Team Name",
-                Description = $"Thanks! An abbreviated version of your team's name will sometimes be used.\n\nDefault: **{abbreviatedName}**."
-            }
-            .AddField(acceptEmojiName, "Accept default.")
-            .AddField(rejectEmojiName, "Reject and enter different abbreviation.");
+                PromptText = $"Thanks! An abbreviated version of your team's name will sometimes be used.\n\nDefault: **{abbreviatedName}**.",
+                AcceptPrompt = "Accept default.",
+                RejectPrompt = "Reject and enter different abbreviation."
+            };
+            DiscordEmoji emojiChosen = await dmChannel.GetInputBinaryChoice(context, prompt);
+            if (emojiChosen == null) return;
 
-            DiscordMessage pollMessage = await dmChannel.SendMessageAsync(embed: abbreviationEmbed);
-            await pollMessage.CreateReactionAsync(acceptEmoji);
-            await pollMessage.CreateReactionAsync(rejectEmoji);
-
-            // collect and check result
-            InteractivityResult<MessageReactionAddEventArgs> pollResult = await pollMessage.WaitForReactionAsync(context.Member);
-
-            if (!await pollResult.CheckValid(dmChannel, new DiscordEmoji[] { acceptEmoji, rejectEmoji })) return;
-            DiscordEmoji emojiChosen = pollResult.Result.Emoji;
-
-            if (emojiChosen == rejectEmoji)
+            if (emojiChosen == discordClient.RejectEmoji())
             {
                 // rejected, ask for different abbreviation
-                await dmChannel.SendMessageAsync($"Respond with your preferred abbreviation (max. 3 characters e.g. \"LEI\"):");
-                result = await dmChannel.GetNextMessageAsync(context.Member);
-
-                if (!await result.CheckValidString(dmChannel, 3, 3)) return;
-                abbreviatedName = result.Result.Content.Trim();
+                abbreviatedName = await dmChannel.GetInputString(context.Member, $"Respond with your preferred abbreviation (must be exactly 3 uppercase characters and numbers e.g. \"LEI\" or \"R92\"):", regexExp: "[A-Z0-9]{3}");
+                if (abbreviatedName == null) return;
             }
 
             // Colour
-            string skipEmojiName = ":leftwards_arrow_with_hook:";
-            var skipEmoji = DiscordEmoji.FromName(context.Client, skipEmojiName);
+            var skipEmoji = discordClient.SkipEmoji();
 
             var colourEmbed = new DiscordEmbedBuilder()
             {
@@ -92,12 +61,9 @@ namespace RugbyRoyale.Discord.App.Commands
             await dmChannel.SendMessageAsync(embed: colourEmbed);
 
             // primary
-            await dmChannel.SendMessageAsync($"Respond with your **primary** colour:");
-            result = await dmChannel.GetNextMessageAsync(context.Member);
-
             string regex = "#*[a-zA-Z0-9]{6}";
-            if (!await result.CheckValidString(dmChannel, regexExp: regex)) return;
-            string primaryColour = result.Result.Content.Trim();
+            string primaryColour = await dmChannel.GetInputString(context.Member, $"Respond with your **primary** colour:", regexExp: regex);
+            if (primaryColour == null) return;
 
             // secondary
             string secondaryColour;
@@ -118,7 +84,7 @@ namespace RugbyRoyale.Discord.App.Commands
             {
                 InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.MessageTask;
                 if (!await messageResult.CheckValidString(dmChannel, regexExp: regex)) return;
-                secondaryColour = result.Result.Content.Trim();
+                secondaryColour = messageResult.Result.Content.Trim();
             }
             else
             {
@@ -145,7 +111,7 @@ namespace RugbyRoyale.Discord.App.Commands
             {
                 InteractivityResult<DiscordMessage> messageResult = await reactionOrMessageResult.MessageTask;
                 if (!await messageResult.CheckValidString(dmChannel, regexExp: regex)) return;
-                tertiaryColour = result.Result.Content.Trim();
+                tertiaryColour = messageResult.Result.Content.Trim();
             }
             else
             {
