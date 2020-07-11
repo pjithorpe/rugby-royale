@@ -3,16 +3,19 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
 {
     static class Royale_NewTeam
     {
-        public static async Task ExecuteAsync(CommandContext context, Settings settings)
+        public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo, ITeamRepository teamRepo, IUserRepository userRepo, ILeagueUserRepository leagueUserRepo)
         {
             DiscordClient discordClient = context.Client;
             DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
@@ -119,6 +122,42 @@ namespace RugbyRoyale.Discord.App.Commands
                 return;
             }
 
+            // Register user if new
+            string discordID = context.User.Id.ToString();
+            if (!await userRepo.ExistsAsync(discordID))
+            {
+                var user = new User() { UserID = discordID };
+                if (!await userRepo.SaveAsync(user))
+                {
+                    await dmChannel.SendMessageAsync("Failed to register new user. Cancelling.");
+                    return;
+                }
+            }
+
+            // Check if part of a league
+            if (!await leagueUserRepo.ExistsAsync(discordID))
+            {
+                await dmChannel.SendMessageAsync("Please join a competition before creating a team. Cancelling.");
+                return;
+            }
+
+            // Get in-progress leagues
+            List<LeagueUser> leagueUsers = await leagueUserRepo.ListAsync(discordID);
+            if (leagueUsers == null || leagueUsers.Count < 1)
+            {
+                await dmChannel.SendMessageAsync("Failed to get competition. Cancelling.");
+                return;
+            }
+
+            // TODO: Deal with multiple leagues
+            LeagueUser leagueUser = leagueUsers.First();
+            League league = await leagueRepo.GetAsync(leagueUser.LeagueID);
+            if (league == null)
+            {
+                await dmChannel.SendMessageAsync("Failed to get competition. Cancelling.");
+                return;
+            }
+
             var newTeam = new Team()
             {
                 Name_Long = longName,
@@ -127,8 +166,16 @@ namespace RugbyRoyale.Discord.App.Commands
                 Colour_Primary = primaryColour,
                 Colour_Secondary = secondaryColour,
                 Colour_Tertiary = tertiaryColour,
-                UserID = context.User.Id.ToString()
+                UserID = discordID,
+                LeagueID = league.LeagueID
             };
+
+            // Save to DB
+            if (!await teamRepo.SaveAsync(newTeam))
+            {
+                await dmChannel.SendMessageAsync("Failed to save new team. Cancelling.");
+                return;
+            }
 
             await dmChannel.SendMessageAsync("Team created successfully.");
         }

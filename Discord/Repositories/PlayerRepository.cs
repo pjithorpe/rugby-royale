@@ -12,12 +12,12 @@ namespace RugbyRoyale.Discord.Repositories
         {
         }
 
-        public Task<bool> ExistsAsync(string playerId)
+        public async Task<bool> ExistsAsync(string playerId)
         {
             throw new NotImplementedException();
         }
 
-        public Task SaveAsync(Player player)
+        public async Task SaveAsync(Player player)
         {
             throw new NotImplementedException();
         }

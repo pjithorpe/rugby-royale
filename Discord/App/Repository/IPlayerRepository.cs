@@ -5,7 +5,7 @@ namespace RugbyRoyale.Discord.App.Repository
 {
     public interface IPlayerRepository
     {
-        Task<bool> ExistsAsync(string playerId);
+        Task<bool> ExistsAsync(string playerID);
 
         Task SaveAsync(Player player);
     }

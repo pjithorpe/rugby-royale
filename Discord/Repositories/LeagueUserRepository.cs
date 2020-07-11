@@ -29,11 +29,50 @@ namespace RugbyRoyale.Discord.Repositories
             }
         }
 
+        public async Task<bool> ExistsAsync(string userID)
+        {
+            try
+            {
+                return await db.LeagueUsers.AnyAsync(lu => lu.UserID == userID);
+            }
+            catch (Exception e)
+            {
+                // TODO: LOG ERROR
+                return false;
+            }
+        }
+
+        public async Task<int> CountAsync(Guid leagueID)
+        {
+            try
+            {
+                return await db.LeagueUsers.Where(lu => lu.LeagueID == leagueID).CountAsync();
+            }
+            catch (Exception e)
+            {
+                // TODO: LOG ERROR
+                return 0;
+            }
+        }
+
         public async Task<LeagueUser> GetAsync(Guid leagueID, string userID)
         {
             try
             {
                 return await db.LeagueUsers.FirstOrDefaultAsync(lu => lu.LeagueID == leagueID && lu.UserID == userID);
+            }
+            catch (Exception e)
+            {
+                // TODO: LOG ERROR
+                return null;
+            }
+        }
+
+        public async Task<List<LeagueUser>> ListAsync(string userID)
+        {
+            try
+            {
+                return await db.LeagueUsers.Where(lu => lu.UserID == userID).ToListAsync();
             }
             catch (Exception e)
             {
@@ -52,19 +91,6 @@ namespace RugbyRoyale.Discord.Repositories
             {
                 // TODO: LOG ERROR
                 return null;
-            }
-        }
-
-        public async Task<int> CountAsync(Guid leagueID)
-        {
-            try
-            {
-                return await db.LeagueUsers.Where(lu => lu.LeagueID == leagueID).CountAsync();
-            }
-            catch (Exception e)
-            {
-                // TODO: LOG ERROR
-                return 0;
             }
         }
     }
