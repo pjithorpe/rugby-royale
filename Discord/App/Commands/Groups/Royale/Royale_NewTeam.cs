@@ -134,6 +134,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 }
             }
 
+            /*
             // Check if part of a league
             if (!await leagueUserRepo.ExistsAsync(discordID))
             {
@@ -157,6 +158,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 await dmChannel.SendMessageAsync("Failed to get competition. Cancelling.");
                 return;
             }
+            */
 
             var newTeam = new Team()
             {
@@ -167,7 +169,6 @@ namespace RugbyRoyale.Discord.App.Commands
                 Colour_Secondary = secondaryColour,
                 Colour_Tertiary = tertiaryColour,
                 UserID = discordID,
-                LeagueID = league.LeagueID
             };
 
             // Save to DB

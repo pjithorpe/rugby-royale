@@ -21,8 +21,16 @@ namespace RugbyRoyale.Discord.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Relationships
+
+            // M-to-M
             modelBuilder.Entity<LeagueUser>()
                 .HasKey(lu => new { lu.LeagueID, lu.UserID });
+
+            // 0-to-1
+            modelBuilder.Entity<Team>()
+                .HasOne(t => t.League)
+                .WithMany(l => l.Teams)
+                .IsRequired(false);
         }
     }
 }
