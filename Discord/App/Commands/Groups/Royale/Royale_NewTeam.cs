@@ -129,7 +129,6 @@ namespace RugbyRoyale.Discord.App.Commands
             }
 
             // Register user if new
-            string discordID = context.User.Id.ToString();
             if (!await userRepo.ExistsAsync(discordID))
             {
                 var user = new User() { UserID = discordID };
