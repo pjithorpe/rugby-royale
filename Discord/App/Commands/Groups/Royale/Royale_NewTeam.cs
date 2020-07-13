@@ -5,10 +5,7 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Model;
-using RugbyRoyale.GameEngine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
@@ -20,6 +17,15 @@ namespace RugbyRoyale.Discord.App.Commands
             DiscordClient discordClient = context.Client;
             DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
 
+            // Check if part of a league
+            string discordID = context.User.Id.ToString();
+            if (!await teamRepo.ExistsAsync(discordID))
+            {
+                await dmChannel.SendMessageAsync("You already have a team. Cancelling.");
+                return;
+            }
+
+            // Get settings
             if (!int.TryParse(settings.TeamNameLongMaxLength, out int longNameMax)) throw new Exception("Failed to read setting: TeamNameLongMaxLength");
             if (!int.TryParse(settings.TeamNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: TeamNameShortMaxLength");
 
@@ -133,32 +139,6 @@ namespace RugbyRoyale.Discord.App.Commands
                     return;
                 }
             }
-
-            /*
-            // Check if part of a league
-            if (!await leagueUserRepo.ExistsAsync(discordID))
-            {
-                await dmChannel.SendMessageAsync("Please join a competition before creating a team. Cancelling.");
-                return;
-            }
-
-            // Get in-progress leagues
-            List<LeagueUser> leagueUsers = await leagueUserRepo.ListAsync(discordID);
-            if (leagueUsers == null || leagueUsers.Count < 1)
-            {
-                await dmChannel.SendMessageAsync("Failed to get competition. Cancelling.");
-                return;
-            }
-
-            // TODO: Deal with multiple leagues
-            LeagueUser leagueUser = leagueUsers.First();
-            League league = await leagueRepo.GetAsync(leagueUser.LeagueID);
-            if (league == null)
-            {
-                await dmChannel.SendMessageAsync("Failed to get competition. Cancelling.");
-                return;
-            }
-            */
 
             var newTeam = new Team()
             {

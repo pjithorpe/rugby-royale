@@ -23,6 +23,15 @@ namespace RugbyRoyale.Discord.App.Commands
             InteractivityExtension interactivity = discordClient.GetInteractivity();
             DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
 
+            // Check if part of a league
+            string discordID = context.User.Id.ToString();
+            if (!await leagueUserRepo.ExistsAsync(discordID))
+            {
+                await dmChannel.SendMessageAsync("You are already part of a competition. Cancelling.");
+                return;
+            }
+
+            // Get settings
             if (!int.TryParse(settings.LeagueNameLongMaxLength, out int longNameMax)) throw new Exception("Failed to read setting: LeagueNameLongMaxLength");
             if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: LeagueNameShortMaxLength");
 
@@ -153,7 +162,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 HasStarted = false,
                 Size_Min = minSize,
                 Size_Max = maxSize,
-                UserID = context.User.Id.ToString()
+                UserID = discordID
             };
 
             // Save to DB
