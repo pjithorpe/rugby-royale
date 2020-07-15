@@ -17,7 +17,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     static class Royale_NewLeague
     {
-        public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
+        public static async Task ExecuteAsync(CommandContext context, Settings settings, MessageTracker messageTracker, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
             DiscordClient discordClient = context.Client;
             InteractivityExtension interactivity = discordClient.GetInteractivity();
@@ -193,7 +193,7 @@ namespace RugbyRoyale.Discord.App.Commands
             }
 
             // Send an advert for the league to the main channel
-            await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo, leagueUserRepo);
+            await Royale_MyLeague.ExecuteAsync(context, settings, messageTracker, leagueRepo, leagueUserRepo);
         }
     }
 }

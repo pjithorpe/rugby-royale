@@ -60,9 +60,13 @@ namespace RugbyRoyale.Discord
             MatchCoordinator coordinator = MatchCoordinator.GetCoordinator();
             coordinator.Initialise(matchChannels);
 
+            messageTracker = MessageTracker.GetMessageTracker();
+            messageTracker.Initialise();
+
             dependencies = new ServiceCollection()
                 .AddSingleton(settings)
                 .AddSingleton(coordinator)
+                .AddSingleton(messageTracker)
                 .AddScoped<IClient, Client>()
                 .AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={Environment.CurrentDirectory}/players.db"))
                 .AddScoped<IPlayerRepository, PlayerRepository>()
@@ -88,9 +92,6 @@ namespace RugbyRoyale.Discord
 
             // Register all commands in the assembly
             commands.RegisterCommands(Assembly.GetExecutingAssembly());
-
-            messageTracker = MessageTracker.GetMessageTracker();
-            messageTracker.Initialise();
 
             // Register events and required services
             discord.MessageReactionAdded += Message_ReactionAdd;

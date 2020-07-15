@@ -17,7 +17,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     static class Royale_MyLeague
     {
-        public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
+        public static async Task ExecuteAsync(CommandContext context, Settings settings, MessageTracker messageTracker, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
             League league = await leagueRepo.GetAsync(context.User.Id.ToString());
             LeagueRules rules = league.LeagueType.GetRules();
@@ -50,13 +50,22 @@ namespace RugbyRoyale.Discord.App.Commands
                     Description = $"Introducing {context.Member.Nickname}'s new competition: **{league.Name_Long}**.",
                 }
                 .AddField("Format and Rules", $"{league.Name_Short} is a {rules.Name} competition. {rules.Description}")
-                .AddField("Requirements", $"This competition needs at least {rules.MinSize} to start. Players will be expected to play at least 1 game every {league.DaysPerRound}.")
-                .AddField("Players Joined", joinedString);
+                .AddField("Requirements", $"This competition needs at least {rules.MinSize} players to start. Players will be expected to play at least 1 game every {league.DaysPerRound} days.")
+                .AddField("Players Joined", joinedString)
+                .AddField(context.Client.AcceptEmoji().GetDiscordName(), "Join competition", true)
+                .AddField(context.Client.AcceptEmoji().GetDiscordName(), "Leave competition", true);
 
                 DiscordChannel mainChannel = context.Guild.GetChannel(ulong.Parse(settings.MainChannel));
                 DiscordMessage message = await mainChannel.SendMessageAsync(embed: leagueAdvert);
                 await message.CreateReactionAsync(DiscordEmoji.FromName(context.Client, ":white_check_mark:"));
                 await message.CreateReactionAsync(DiscordEmoji.FromName(context.Client, ":x:"));
+
+                // Add to advert tracker
+                if (!messageTracker.TryAddLeagueAdvert(message.Id, league.LeagueID))
+                {
+                    DiscordMessage errorMessage = await context.Channel.SendMessageAsync("Failed to create competition advert. Deleting.");
+                    await message.DeleteAsync();
+                }
             }
             // otherwise, show league table
             else
