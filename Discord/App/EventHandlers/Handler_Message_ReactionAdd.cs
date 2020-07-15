@@ -32,7 +32,10 @@ namespace RugbyRoyale.Discord.App.EventHandlers
                     LeagueID = leagueID,
                     UserID = e.User.Id.ToString()
                 };
-                await leagueUserRepo.SaveAsync(leagueUser);
+                if (!await leagueUserRepo.SaveAsync(leagueUser))
+                {
+                    await e.Channel.SendMessageAsync($"Failed to join competition.");
+                }
 
                 // Update message
                 DiscordEmbed embed = e.Message.Embeds.FirstOrDefault();
