@@ -28,9 +28,10 @@ namespace RugbyRoyale.Discord.Context
 
             // 0-to-1
             modelBuilder.Entity<Team>()
-                .HasOne(t => t.League)
-                .WithMany(l => l.Teams)
+                .Property(t => t.LeagueID)
                 .IsRequired(false);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

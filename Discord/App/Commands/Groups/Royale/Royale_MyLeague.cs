@@ -23,7 +23,7 @@ namespace RugbyRoyale.Discord.App.Commands
             LeagueRules rules = league.LeagueType.GetRules();
 
             // If not yet started, advertise for people to join
-            if (league.HasStarted)
+            if (!league.HasStarted)
             {
                 // Get joined users
                 string joinedString;

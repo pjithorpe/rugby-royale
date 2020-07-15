@@ -13,7 +13,7 @@ namespace RugbyRoyale.Entities.Model
         public string Colour_Tertiary { get; set; }
 
         public string UserID { get; set; }
-        public Guid LeagueID { get; set; }
+        public Guid? LeagueID { get; set; }
 
         public User User { get; set; }
         public League League { get; set; }
