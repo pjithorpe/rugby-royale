@@ -25,7 +25,7 @@ namespace RugbyRoyale.Discord.App.Commands
 
             // Check if part of a league
             string discordID = context.User.Id.ToString();
-            if (!await leagueUserRepo.ExistsAsync(discordID))
+            if (await leagueUserRepo.ExistsAsync(discordID))
             {
                 await dmChannel.SendMessageAsync("You are already part of a competition. Cancelling.");
                 return;
@@ -36,11 +36,11 @@ namespace RugbyRoyale.Discord.App.Commands
             if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: LeagueNameShortMaxLength");
 
             // Long name
-            string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new league (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):", 5, longNameMax);
+            string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new competition (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):", 5, longNameMax);
             if (longName == null) return;
 
             // Short name
-            string shortName = await dmChannel.GetInputString(context.Member, $"Thanks! Now respond with a shortened version of the league's name (max. {shortNameMax} characters, e.g. \"The Prem\"):", 5, shortNameMax);
+            string shortName = await dmChannel.GetInputString(context.Member, $"Thanks! Now respond with a shortened version of the competition's name (max. {shortNameMax} characters, e.g. \"The Prem\"):", 5, shortNameMax);
             if (shortName == null) return;
 
             // League Type
@@ -57,8 +57,8 @@ namespace RugbyRoyale.Discord.App.Commands
             // build embed
             var leaguesEmbed = new DiscordEmbedBuilder()
             {
-                Title = "Available League Types",
-                Description = "Thanks! Now choose a league type by reacting to this message."
+                Title = "Available Competition Types",
+                Description = "Thanks! Now choose a competition type by reacting to this message."
             };
             for (int i = 0; i < leagueTypeRules.Length; i++)
             {
@@ -99,7 +99,7 @@ namespace RugbyRoyale.Discord.App.Commands
             DiscordEmoji skipEmoji = discordClient.SkipEmoji();
 
             // minimum size
-            DiscordMessage sizeMessage = await dmChannel.SendMessageAsync($"Please respond with the **minimum size** (no. of teams) of the new league (default: {leagueRules.MinSize}). Cannot be less than the default value. {skipEmoji} to skip):");
+            DiscordMessage sizeMessage = await dmChannel.SendMessageAsync($"Please respond with the **minimum size** (no. of teams) of the new competition (default: {leagueRules.MinSize}). Cannot be less than the default value. {skipEmoji} to skip):");
             await sizeMessage.CreateReactionAsync(skipEmoji);
 
             ReactionOrMessageTask reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(sizeMessage, skipEmoji, context.Member);
@@ -127,7 +127,7 @@ namespace RugbyRoyale.Discord.App.Commands
 
 
             // maximum size
-            sizeMessage = await dmChannel.SendMessageAsync($"Thanks! Now respond with the **maximum size** of the new league (default: {leagueRules.MaxSize}). Cannot be more than the default value. {skipEmoji} to skip):");
+            sizeMessage = await dmChannel.SendMessageAsync($"Thanks! Now respond with the **maximum size** of the new competition (default: {leagueRules.MaxSize}). Cannot be more than the default value. {skipEmoji} to skip):");
             await sizeMessage.CreateReactionAsync(skipEmoji);
 
             reactionOrMessageResult = await dmChannel.WaitForReactionOrMessage(sizeMessage, skipEmoji, context.Member);
@@ -168,11 +168,29 @@ namespace RugbyRoyale.Discord.App.Commands
             // Save to DB
             if (!await leagueRepo.SaveAsync(newLeague))
             {
-                await dmChannel.SendMessageAsync("Failed to save new league. Cancelling.");
+                await dmChannel.SendMessageAsync("Failed to save new competition. Cancelling.");
                 return;
             }
 
             await dmChannel.SendMessageAsync("League created successfully.");
+
+            // Join league
+            League createdLeague = await leagueRepo.GetAsync(discordID);
+            if (createdLeague == null)
+            {
+                await dmChannel.SendMessageAsync("Failed to join new competition.");
+                return;
+            }
+
+            var leagueUser = new LeagueUser()
+            {
+                LeagueID = createdLeague.LeagueID,
+                UserID = discordID
+            };
+            if (!await leagueUserRepo.SaveAsync(leagueUser))
+            {
+                await dmChannel.SendMessageAsync($"Failed to join new competition.");
+            }
 
             // Send an advert for the league to the main channel
             await Royale_MyLeague.ExecuteAsync(context, settings, leagueRepo, leagueUserRepo);

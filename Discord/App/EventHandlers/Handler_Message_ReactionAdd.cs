@@ -24,6 +24,7 @@ namespace RugbyRoyale.Discord.App.EventHandlers
                 if (await leagueUserRepo.CountAsync(leagueID) == league.Size)
                 {
                     await e.Channel.SendMessageAsync($"Sorry {e.User.Mention}, that competition is full. 😥");
+                    return;
                 }
 
                 // Add user to league
@@ -35,6 +36,7 @@ namespace RugbyRoyale.Discord.App.EventHandlers
                 if (!await leagueUserRepo.SaveAsync(leagueUser))
                 {
                     await e.Channel.SendMessageAsync($"Failed to join competition.");
+                    return;
                 }
 
                 // Update message

@@ -19,7 +19,7 @@ namespace RugbyRoyale.Discord.App.Commands
 
             // Check if part of a league
             string discordID = context.User.Id.ToString();
-            if (!await teamRepo.ExistsAsync(discordID))
+            if (await teamRepo.ExistsAsync(discordID))
             {
                 await dmChannel.SendMessageAsync("You already have a team. Cancelling.");
                 return;
