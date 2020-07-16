@@ -44,7 +44,7 @@ namespace RugbyRoyale.Discord.App.Commands
         [Command("newteam"), Aliases("nt")]
         public async Task New(CommandContext context)
         {
-            await Royale_NewTeam.ExecuteAsync(context, settings, leagueRepo, teamRepo, userRepo, leagueUserRepo);
+            await Royale_NewTeam.ExecuteAsync(context, settings, teamRepo, userRepo);
         }
 
         [Command("newleague"), Aliases("nl")]

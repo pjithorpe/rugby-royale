@@ -12,7 +12,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     static class Royale_NewTeam
     {
-        public static async Task ExecuteAsync(CommandContext context, Settings settings, ILeagueRepository leagueRepo, ITeamRepository teamRepo, IUserRepository userRepo, ILeagueUserRepository leagueUserRepo)
+        public static async Task ExecuteAsync(CommandContext context, Settings settings, ITeamRepository teamRepo, IUserRepository userRepo)
         {
             DiscordClient discordClient = context.Client;
             DiscordDmChannel dmChannel = await context.Member.CreateDmChannelAsync();
