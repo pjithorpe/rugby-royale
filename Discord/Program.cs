@@ -103,6 +103,8 @@ namespace RugbyRoyale.Discord
 
         private async Task Message_ReactionAdd(MessageReactionAddEventArgs e)
         {
+            if (e.User.IsBot) return;
+
             ITeamRepository teamRepo = dependencies.GetService<ITeamRepository>();
             ILeagueRepository leagueRepo = dependencies.GetService<ILeagueRepository>();
             ILeagueUserRepository leagueUserRepo = dependencies.GetService<ILeagueUserRepository>();

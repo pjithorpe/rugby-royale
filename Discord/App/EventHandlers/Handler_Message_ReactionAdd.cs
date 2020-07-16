@@ -14,8 +14,6 @@ namespace RugbyRoyale.Discord.App.EventHandlers
     {
         public static async Task ExecuteAsync(MessageTracker messageTracker, MessageReactionAddEventArgs e, ITeamRepository teamRepo, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
-            if (e.User.IsBot) return;
-
             if (messageTracker.CheckMessageIsCurrentLeagueAdvert(e.Message))
             {
                 Guid leagueID = messageTracker.GetAdvertisedLeagueID(e.Message);
