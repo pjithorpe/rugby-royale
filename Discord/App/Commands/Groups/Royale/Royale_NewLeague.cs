@@ -192,7 +192,7 @@ namespace RugbyRoyale.Discord.App.Commands
 
             // Add team to league
             team.LeagueID = createdLeague.LeagueID;
-            if (!await teamRepo.SaveAsync(team))
+            if (!await teamRepo.EditAsync(team))
             {
                 await dmChannel.SendMessageAsync($"Failed to add team to competition.");
                 return;

@@ -14,6 +14,8 @@ namespace RugbyRoyale.Discord.App.EventHandlers
     {
         public static async Task ExecuteAsync(MessageTracker messageTracker, MessageReactionAddEventArgs e, ITeamRepository teamRepo, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
+            if (e.User.IsBot) return;
+
             if (messageTracker.CheckMessageIsCurrentLeagueAdvert(e.Message))
             {
                 Guid leagueID = messageTracker.GetAdvertisedLeagueID(e.Message);
@@ -37,7 +39,7 @@ namespace RugbyRoyale.Discord.App.EventHandlers
 
                 // Add team to league
                 team.LeagueID = leagueID;
-                if (!await teamRepo.SaveAsync(team))
+                if (!await teamRepo.EditAsync(team))
                 {
                     await e.Channel.SendMessageAsync($"Failed to add team to competition.");
                     return;
@@ -64,22 +66,29 @@ namespace RugbyRoyale.Discord.App.EventHandlers
                     return;
                 }
 
-                DiscordMember member = await e.Guild.GetMemberAsync(e.User.Id);
-
-                int lastField = embed.Fields.Count - 1;
-                string userList = embed.Fields[lastField].Value;
-                if (userList == "-")
+                List<LeagueUser> leagueUsers = await leagueUserRepo.ListAsync(leagueID);
+                if (leagueUsers == null || leagueUsers.Count < 1)
                 {
-                    userList = member.Nickname;
-                }
-                else
-                {
-                    userList += ", " + member.Nickname;
+                    await e.Channel.SendMessageAsync($"Failed to get participants.");
+                    return;
                 }
 
+                var leagueMembers = new List<DiscordMember>();
+                foreach (LeagueUser lgUser in leagueUsers)
+                {
+                    if (!ulong.TryParse(lgUser.UserID, out ulong discordID))
+                    {
+                        await e.Channel.SendMessageAsync($"Failed to get participants.");
+                    }
+                    leagueMembers.Add(await e.Guild.GetMemberAsync(discordID));
+                }
+
+                string userList = string.Join(", ", leagueMembers.Select(m => m.Nickname));
+
+                int usersFieldPos = embed.Fields.Count - 3;
                 var editedAdvert = new DiscordEmbedBuilder(embed)
-                    .RemoveFieldAt(lastField)
-                    .AddField(embed.Fields[lastField].Name, userList);
+                    .RemoveFieldAt(usersFieldPos)
+                    .AddField(embed.Fields[usersFieldPos].Name, userList);
                 Optional<DiscordEmbed> optionalEmbed = new Optional<DiscordEmbed>(editedAdvert);
 
                 await e.Message.ModifyAsync(embed: optionalEmbed);

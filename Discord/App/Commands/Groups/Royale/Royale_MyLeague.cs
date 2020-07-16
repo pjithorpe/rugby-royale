@@ -53,7 +53,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 .AddField("Requirements", $"This competition needs at least {rules.MinSize} players to start. Players will be expected to play at least 1 game every {league.DaysPerRound} days.")
                 .AddField("Players Joined", joinedString)
                 .AddField(context.Client.AcceptEmoji().GetDiscordName(), "Join competition", true)
-                .AddField(context.Client.AcceptEmoji().GetDiscordName(), "Leave competition", true);
+                .AddField(context.Client.RejectEmoji().GetDiscordName(), "Leave competition", true);
 
                 DiscordChannel mainChannel = context.Guild.GetChannel(ulong.Parse(settings.MainChannel));
                 DiscordMessage message = await mainChannel.SendMessageAsync(embed: leagueAdvert);

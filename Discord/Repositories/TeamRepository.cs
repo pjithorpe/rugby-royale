@@ -52,6 +52,20 @@ namespace RugbyRoyale.Discord.Repositories
             }
         }
 
+        public async Task<bool> EditAsync(Team team)
+        {
+            try
+            {
+                db.Update(team);
+                return (await db.SaveChangesAsync()) == 1;
+            }
+            catch (Exception e)
+            {
+                // TODO: LOG ERROR
+                return false;
+            }
+        }
+
         public async Task<bool> SaveAsync(Team team)
         {
             try

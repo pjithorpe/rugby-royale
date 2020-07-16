@@ -12,6 +12,8 @@ namespace RugbyRoyale.Discord.App.Repository
 
         Task<bool> ExistsAsync(string userID);
 
+        Task<bool> EditAsync(Team team);
+
         Task<bool> SaveAsync(Team team);
     }
 }
