@@ -103,10 +103,11 @@ namespace RugbyRoyale.Discord
 
         private async Task Message_ReactionAdd(MessageReactionAddEventArgs e)
         {
+            ITeamRepository teamRepo = dependencies.GetService<ITeamRepository>();
             ILeagueRepository leagueRepo = dependencies.GetService<ILeagueRepository>();
             ILeagueUserRepository leagueUserRepo = dependencies.GetService<ILeagueUserRepository>();
 
-            await Handler_Message_ReactionAdd.ExecuteAsync(messageTracker, e, leagueRepo, leagueUserRepo);
+            await Handler_Message_ReactionAdd.ExecuteAsync(messageTracker, e, teamRepo, leagueRepo, leagueUserRepo);
         }
     }
 }

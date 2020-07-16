@@ -17,7 +17,7 @@ namespace RugbyRoyale.Discord.App.Commands
 {
     static class Royale_NewLeague
     {
-        public static async Task ExecuteAsync(CommandContext context, Settings settings, MessageTracker messageTracker, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
+        public static async Task ExecuteAsync(CommandContext context, Settings settings, MessageTracker messageTracker, ITeamRepository teamRepo, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
             DiscordClient discordClient = context.Client;
             InteractivityExtension interactivity = discordClient.GetInteractivity();
@@ -28,6 +28,14 @@ namespace RugbyRoyale.Discord.App.Commands
             if (await leagueUserRepo.ExistsAsync(discordID))
             {
                 await dmChannel.SendMessageAsync("You are already part of a competition. Cancelling.");
+                return;
+            }
+
+            // Check if user has a team
+            Team team = await teamRepo.GetAsync(discordID);
+            if (team == null)
+            {
+                await dmChannel.SendMessageAsync($"You need to create a team before you can create a league.");
                 return;
             }
 
@@ -174,7 +182,7 @@ namespace RugbyRoyale.Discord.App.Commands
 
             await dmChannel.SendMessageAsync("League created successfully.");
 
-            // Join league
+            // Get newly created league
             League createdLeague = await leagueRepo.GetAsync(discordID);
             if (createdLeague == null)
             {
@@ -182,6 +190,15 @@ namespace RugbyRoyale.Discord.App.Commands
                 return;
             }
 
+            // Add team to league
+            team.LeagueID = createdLeague.LeagueID;
+            if (!await teamRepo.SaveAsync(team))
+            {
+                await dmChannel.SendMessageAsync($"Failed to add team to competition.");
+                return;
+            }
+
+            // Join league
             var leagueUser = new LeagueUser()
             {
                 LeagueID = createdLeague.LeagueID,

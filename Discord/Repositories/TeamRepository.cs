@@ -39,6 +39,19 @@ namespace RugbyRoyale.Discord.Repositories
             }
         }
 
+        public async Task<Team> GetAsync(string userID)
+        {
+            try
+            {
+                return await db.Teams.FirstOrDefaultAsync(t => t.UserID == userID);
+            }
+            catch (Exception e)
+            {
+                // TODO: LOG ERROR
+                return null;
+            }
+        }
+
         public async Task<bool> SaveAsync(Team team)
         {
             try

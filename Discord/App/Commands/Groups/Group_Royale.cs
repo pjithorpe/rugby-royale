@@ -50,7 +50,7 @@ namespace RugbyRoyale.Discord.App.Commands
         [Command("newleague"), Aliases("nl")]
         public async Task NewLeague(CommandContext context)
         {
-            await Royale_NewLeague.ExecuteAsync(context, settings, msgTracker, leagueRepo, leagueUserRepo);
+            await Royale_NewLeague.ExecuteAsync(context, settings, msgTracker, teamRepo, leagueRepo, leagueUserRepo);
         }
 
         [Command("myleague"), Aliases("ml")]

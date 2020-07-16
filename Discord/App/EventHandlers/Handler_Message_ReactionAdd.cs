@@ -12,7 +12,7 @@ namespace RugbyRoyale.Discord.App.EventHandlers
 {
     public static class Handler_Message_ReactionAdd
     {
-        public static async Task ExecuteAsync(MessageTracker messageTracker, MessageReactionAddEventArgs e, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
+        public static async Task ExecuteAsync(MessageTracker messageTracker, MessageReactionAddEventArgs e, ITeamRepository teamRepo, ILeagueRepository leagueRepo, ILeagueUserRepository leagueUserRepo)
         {
             if (messageTracker.CheckMessageIsCurrentLeagueAdvert(e.Message))
             {
@@ -24,6 +24,22 @@ namespace RugbyRoyale.Discord.App.EventHandlers
                 if (await leagueUserRepo.CountAsync(leagueID) == league.Size)
                 {
                     await e.Channel.SendMessageAsync($"Sorry {e.User.Mention}, that competition is full. 😥");
+                    return;
+                }
+
+                // Check if user has a team
+                Team team = await teamRepo.GetAsync(e.User.Id.ToString());
+                if (team == null)
+                {
+                    await e.Channel.SendMessageAsync($"{e.User.Mention}, you need to create a team before you can join a competition.");
+                    return;
+                }
+
+                // Add team to league
+                team.LeagueID = leagueID;
+                if (!await teamRepo.SaveAsync(team))
+                {
+                    await e.Channel.SendMessageAsync($"Failed to add team to competition.");
                     return;
                 }
 
