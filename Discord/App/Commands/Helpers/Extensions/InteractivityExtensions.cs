@@ -95,7 +95,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 return false;
             }
 
-            if (regexExp != null && !Regex.IsMatch(content, regexExp))
+            if (regexExp != null && !(Regex.Matches(content, regexExp).Count == 1))
             {
                 await channel.SendMessageAsync($"Response not valid. Cancelling.");
                 return false;

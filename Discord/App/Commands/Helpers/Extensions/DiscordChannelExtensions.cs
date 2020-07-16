@@ -13,7 +13,7 @@ namespace RugbyRoyale.Discord.App.Commands
             await channel.SendMessageAsync(inputPrompt);
             InteractivityResult<DiscordMessage> result = await channel.GetNextMessageAsync(member);
 
-            if (!await result.CheckValidString(channel, minLength, maxLength)) return null;
+            if (!await result.CheckValidString(channel, minLength, maxLength, regexExp)) return null;
 
             return result.Result.Content.Trim();
         }
