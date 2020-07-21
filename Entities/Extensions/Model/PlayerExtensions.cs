@@ -52,15 +52,6 @@ namespace RugbyRoyale.Entities.Extensions
             // Nuanced difference
             var allStats = new int[] { player.Attack, player.Defence, player.Physicality, player.Stamina, player.Handling, player.Kicking };
 
-            // Normalised
-            int weakestSkill = allStats.Min();
-            int normalisedAtt = player.Attack - weakestSkill;
-            int normalisedDef = player.Defence - weakestSkill;
-            int normalisedPhy = player.Physicality - weakestSkill;
-            int normalisedSta = player.Stamina - weakestSkill;
-            int normalisedHan = player.Handling - weakestSkill;
-            int normalisedKic = player.Kicking - weakestSkill;
-
             // Mean deviations
             double meanSkill = allStats.Average();
             double meanDevAtt = player.Attack - meanSkill;
@@ -73,52 +64,42 @@ namespace RugbyRoyale.Entities.Extensions
             double attackingScore = meanDevAtt;
             double defendingScore = meanDevDef;
 
-            // Physicality adds to good attack or defence
-            if ((meanDevDef < -5 && meanDevAtt > 5) || (meanDevAtt > meanSkill && player.Attack >= player.Defence + 15))
+            // Phy/Kic adds to good attack or defence
+            if ((meanDevDef < -5 && meanDevAtt > 5) || (meanDevAtt > 0 && player.Attack >= player.Defence + 15))
             {
-                // If physicality is good, it assists attack
                 if (meanDevPhy > 0 || player.Physicality > player.Attack)
                 {
-                    attackingScore += meanDevPhy;
+                    attackingScore += meanDevPhy * 0.5;
                 }
-            }
-            else if ((meanDevAtt < -5 && meanDevDef > 5) || (meanDevDef > meanSkill && player.Defence >= player.Attack + 15))
-            {
-                // If physicality is good, it assists defence
-                if (meanDevPhy > 0 || player.Physicality > player.Defence)
-                {
-                    defendingScore += meanDevPhy;
-                }
-            }
 
-            // Kicking adds to good attack or defence
-            if ((meanDevDef < -5 && meanDevAtt > 5) || (meanDevAtt > meanSkill && player.Attack >= player.Defence + 15))
-            {
-                // If physicality is good, it assists attack
                 if (meanDevKic > 0 || player.Kicking > player.Attack)
                 {
-                    attackingScore += meanDevKic;
+                    attackingScore += meanDevKic * 0.5;
                 }
             }
-            else if ((meanDevAtt < -5 && meanDevDef > 5) || (meanDevDef > meanSkill && player.Defence >= player.Attack + 15))
+            else if ((meanDevAtt < -5 && meanDevDef > 5) || (meanDevDef > 0 && player.Defence >= player.Attack + 15))
             {
-                // If physicality is good, it assists defence
+                if (meanDevPhy > 0 || player.Physicality > player.Defence)
+                {
+                    defendingScore += meanDevPhy * 0.5;
+                }
+
                 if (meanDevKic > 0 || player.Kicking > player.Defence)
                 {
-                    defendingScore += meanDevKic;
+                    defendingScore += meanDevKic * 0.5;
                 }
             }
 
-            defendingScore += meanDevSta;
-            attackingScore += meanDevHan;
+            attackingScore += meanDevHan * 0.5;
+            defendingScore += meanDevSta * 0.5;
 
-            if (defendingScore > attackingScore * 1.25)
+            if (defendingScore >= attackingScore + 5)
             {
                 return PlayerFocus.Defending;
             }
-            else if (attackingScore > defendingScore * 1.25)
+            else if (attackingScore >= defendingScore + 5)
             {
-                return PlayerFocus.Defending;
+                return PlayerFocus.Attacking;
             }
 
             return PlayerFocus.Versatile;

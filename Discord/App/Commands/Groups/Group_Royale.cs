@@ -104,7 +104,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 number++;
             }
 
-            await context.RespondAsync(output);
+            await context.RespondAsync(output.Substring(0, 2000));
         }
         /**/
     }
