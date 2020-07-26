@@ -14,6 +14,8 @@ namespace RugbyRoyale.Discord
         public string LeagueNameLongMaxLength { get; set; }
         public string LeagueNameShortMaxLength { get; set; }
         public string MainChannel { get; set; }
+        public string LogChannel { get; set; }
+        public string LogLevel { get; set; }
         public string TeamNameLongMaxLength { get; set; }
         public string TeamNameShortMaxLength { get; set; }
         public string TransferChannel { get; set; }
@@ -38,6 +40,8 @@ namespace RugbyRoyale.Discord
             BotToken = GetConfigItem(config, "BotToken");
             DBConnectionString = GetConfigItem(config, "DBConnectionString");
             MainChannel = GetConfigItem(config, "MainChannel");
+            LogChannel = GetConfigItem(config, "LogChannel");
+            LogLevel = GetConfigItem(config, "LogLevel");
             TransferChannel = GetConfigItem(config, "TransferChannel");
             MatchChannels = GetConfigItemList(config, "MatchChannels");
 

@@ -1,18 +1,17 @@
-﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RugbyRoyale.Discord.App;
 using RugbyRoyale.Discord.App.EventHandlers;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
+using RugbyRoyale.Discord.Logging;
 using RugbyRoyale.Discord.Repositories;
-using RugbyRoyale.Entities.Extensions;
-using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ namespace RugbyRoyale.Discord
         private CommandsNextExtension commands;
         private InteractivityExtension interactivity;
 
-        private DiscordClient discord;
+        private DSharpPlus.DiscordClient discord;
         private MessageTracker messageTracker;
 
         private ServiceProvider dependencies;
@@ -40,13 +39,12 @@ namespace RugbyRoyale.Discord
         private async Task MainAsync(string[] args)
         {
             Settings settings = Settings.GetSettings();
-
-            discord = new DiscordClient(new DiscordConfiguration
+            discord = new DSharpPlus.DiscordClient(new DSharpPlus.DiscordConfiguration
             {
                 Token = settings.BotToken,
-                TokenType = TokenType.Bot,
+                TokenType = DSharpPlus.TokenType.Bot,
                 UseInternalLogHandler = true,
-                LogLevel = LogLevel.Debug,
+                LogLevel = DSharpPlus.LogLevel.Debug,
             });
 
             // Connect and get match thread channels
@@ -63,11 +61,39 @@ namespace RugbyRoyale.Discord
             messageTracker = MessageTracker.GetMessageTracker();
             messageTracker.Initialise();
 
+            if (!ulong.TryParse(settings.LogChannel, out ulong logChannelID))
+            {
+                throw new Exception("Failed to read LogChannel setting.");
+            }
+
+            if (!Enum.TryParse(settings.LogLevel, out Microsoft.Extensions.Logging.LogLevel logLevel))
+            {
+                throw new Exception("Failed to read LogLevel setting.");
+            }
+
             dependencies = new ServiceCollection()
                 .AddSingleton(settings)
                 .AddSingleton(coordinator)
                 .AddSingleton(messageTracker)
                 .AddScoped<IClient, Client>()
+                .AddLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddProvider(new DiscordLoggerProvider(new DiscordLoggerConfiguration()
+                    {
+                        BotToken = settings.BotToken,
+                        LogChannelID = logChannelID,
+                        LogLevel = logLevel,
+                        LogLevelColours = new Dictionary<LogLevel, DiscordColor>()
+                        {
+                            { LogLevel.Trace, DiscordColor.White },
+                            { LogLevel.Debug, DiscordColor.SpringGreen },
+                            { LogLevel.Information, DiscordColor.CornflowerBlue },
+                            { LogLevel.Warning, DiscordColor.Yellow },
+                            { LogLevel.Error, DiscordColor.Orange },
+                            { LogLevel.Critical, DiscordColor.Red },
+                        }
+                    }));
+                })
                 .AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={Environment.CurrentDirectory}/players.db"))
                 .AddScoped<IPlayerRepository, PlayerRepository>()
                 .AddScoped<ILeagueRepository, LeagueRepository>()

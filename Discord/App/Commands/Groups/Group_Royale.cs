@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using Microsoft.Extensions.Logging;
 using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Enums;
@@ -23,6 +24,7 @@ namespace RugbyRoyale.Discord.App.Commands
     public class Group_Royale : BaseCommandModule
     {
         private IClient client;
+        private ILoggerProvider log;
         private Settings settings;
         private MessageTracker msgTracker;
         private ILeagueRepository leagueRepo;
@@ -30,9 +32,10 @@ namespace RugbyRoyale.Discord.App.Commands
         private IUserRepository userRepo;
         private ILeagueUserRepository leagueUserRepo;
 
-        public Group_Royale(IClient gameClient, Settings appSettings, MessageTracker messageTracker, ILeagueRepository leagueRepository, ITeamRepository teamRepository, IUserRepository userRepository, ILeagueUserRepository leagueUserRepository)
+        public Group_Royale(IClient gameClient, ILoggerProvider logger, Settings appSettings, MessageTracker messageTracker, ILeagueRepository leagueRepository, ITeamRepository teamRepository, IUserRepository userRepository, ILeagueUserRepository leagueUserRepository)
         {
             client = gameClient;
+            log = logger;
             settings = appSettings;
             msgTracker = messageTracker;
             leagueRepo = leagueRepository;
@@ -60,8 +63,15 @@ namespace RugbyRoyale.Discord.App.Commands
         }
 
         /* For dev purposes */
-        [Command("generate-team")]
+        [Command("test")]
         public async Task Test(CommandContext context)
+        {
+            log.CreateLogger("test category").LogError("Error");
+            await context.RespondAsync("test");
+        }
+
+        [Command("generate-team")]
+        public async Task GenerateTeam(CommandContext context)
         {
             await context.RespondAsync($"Generating random team...");
 

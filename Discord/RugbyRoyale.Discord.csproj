@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Entities\RugbyRoyale.Entities.csproj" />
     <ProjectReference Include="..\GameEngine\RugbyRoyale.GameEngine.csproj" />
+    <ProjectReference Include="..\RugbyRoyale.Logging\RugbyRoyale.Logging.csproj" />
   </ItemGroup>
 
   <ItemGroup>
