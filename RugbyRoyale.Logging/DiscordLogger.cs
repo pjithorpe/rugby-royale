@@ -17,7 +17,7 @@ namespace RugbyRoyale.Discord.Logging
 
         public DiscordLogger(string categoryName, DiscordLoggerConfiguration configuration)
         {
-            name = categoryName;
+            name = categoryName != "" ? categoryName : "Unknown";
             config = configuration;
 
             DiscordConfiguration discordConfig = new DiscordConfiguration
@@ -62,7 +62,39 @@ namespace RugbyRoyale.Discord.Logging
                 return;
             }
 
-            logChannel.SendMessageAsync($"a log message - {name}").Start();
+            var errorEmbed = new DiscordEmbedBuilder()
+            {
+                Timestamp = DateTime.UtcNow,
+                Title = $"{logLevel.ToString()}: {formatter(state, exception)}",
+                Footer = new DiscordEmbedBuilder.EmbedFooter()
+                {
+                    Text = $"Source: {name}"
+                },
+            };
+
+            if (!config.LogLevelColours.TryGetValue(logLevel, out DiscordColor color))
+            {
+                color = DiscordColor.White;
+            }
+            errorEmbed.WithColor(color);
+
+            string description = "";
+            if (exception != null)
+            {
+                Exception baseException = exception.GetBaseException();
+                if (baseException != null && !string.IsNullOrWhiteSpace(baseException.Message))
+                {
+                    description = $"{baseException.GetType().FullName}: {baseException.Message}";
+                }
+                
+                if (!string.IsNullOrWhiteSpace(exception.StackTrace))
+                {
+                    errorEmbed.AddField("Stack Trace", exception.StackTrace);
+                }
+            }
+            errorEmbed.WithDescription(description != "" ? description : "{No exception}");
+
+            Task.Run(() => logChannel.SendMessageAsync(embed: errorEmbed));
         }
 
         #region IDisposable Support

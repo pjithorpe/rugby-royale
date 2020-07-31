@@ -66,8 +66,45 @@ namespace RugbyRoyale.Discord.App.Commands
         [Command("test")]
         public async Task Test(CommandContext context)
         {
-            log.CreateLogger("test category").LogError("Error");
-            await context.RespondAsync("test");
+            ILogger logger = log.CreateLogger("Discord Client");
+            logger.LogTrace("Test trace level info.");
+            logger.LogDebug("A debug message.");
+            logger.LogInformation("An info message.");
+            logger.LogWarning("Uuuh, you should probably change this...");
+            logger.LogCritical(new NullReferenceException("This is a null ref exception."), "OH SHIT, IT'S ALL ON FIRE!!!");
+            try
+            {
+                await context.RespondAsync("running broken function...");
+                BreakingFunction();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Custom message");
+            }
+
+            void BreakingFunction()
+            {
+                MajorFunction();
+            }
+            void MajorFunction()
+            {
+                try
+                {
+                    BreakingFunction3();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Something went wrong in Function 2.", e);
+                }
+            }
+            void BreakingFunction3()
+            {
+                BreakingFunction4();
+            }
+            void BreakingFunction4()
+            {
+                throw new NullReferenceException("A thing caused an exception.");
+            }
         }
 
         [Command("generate-team")]
