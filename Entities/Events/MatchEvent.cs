@@ -13,7 +13,8 @@ namespace RugbyRoyale.Entities.Events
 
         public virtual List<string> EventMessages => new List<string>()
         {
-            string.Join(" ", new string[] { "A", Name, "happened." })
+            $"A {Name} happened.",
+            $"Oh look, a {Name}!"
         };
 
         public MatchEvent(Guid matchID, int minute)

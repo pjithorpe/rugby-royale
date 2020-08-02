@@ -1,23 +1,35 @@
 ﻿using DSharpPlus.Entities;
+using Microsoft.Extensions.Logging;
 using RugbyRoyale.Entities.Events;
 using RugbyRoyale.GameEngine;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App
 {
     public class Client : IClient
     {
+        ILogger log;
         private MatchCoordinator coordinator;
 
-        public Client()
+        public Client(ILoggerProvider loggerProvider)
         {
+            log = loggerProvider.CreateLogger("Client");
             coordinator = MatchCoordinator.GetCoordinator();
         }
 
         public void OutputMatchEvent(MatchEvent matchEvent)
         {
-            DiscordChannel channel = coordinator.GetMatchChannel(matchEvent.MatchID);
-            channel.SendMessageAsync(FormatMatchEventMessage(matchEvent));
+            try
+            {
+                DiscordChannel channel = coordinator.GetMatchChannel(matchEvent.MatchID);
+                Task.Run(() => channel.SendMessageAsync(FormatMatchEventMessage(matchEvent)));
+            }
+            catch (Exception e)
+            {
+                log.LogError(e, "Error while outputting match event.");
+            }
         }
 
         private string FormatMatchEventMessage(MatchEvent matchEvent)

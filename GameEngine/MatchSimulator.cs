@@ -16,8 +16,10 @@ namespace RugbyRoyale.GameEngine
         private Teamsheet teamHome;
         private Teamsheet teamAway;
         private IClient clientInterface;
+
         private List<MatchEvent> orderedMatchEvents;
         private Random randomGenerator;
+        private Timer timer;
 
         public MatchSimulator(Guid matchID, Teamsheet home, Teamsheet away, IClient client)
         {
@@ -32,20 +34,23 @@ namespace RugbyRoyale.GameEngine
         public async Task<MatchResult> SimulateMatch()
         {
             // Calculate duration of an in-game minute
-            double duration = Configuration.MATCH_DURATION / 80;
+            double duration = Configuration.MATCH_DURATION / 80.0;
 
             var startTimeSpan = TimeSpan.Zero;
+            var matchTimeSpan = TimeSpan.FromMinutes(Configuration.MATCH_DURATION);
             var periodTimeSpan = TimeSpan.FromMinutes(duration);
 
             // Run a simulated period for every in-game minute
             int minute = 0;
             var simTasks = new Queue<Task>();
-            var timer = new Timer((e) =>
+            timer = new Timer((e) =>
             {
                 SimulatePeriod(minute);
                 minute++;
             },
             null, startTimeSpan, periodTimeSpan);
+
+            Thread.Sleep(matchTimeSpan);
 
             return null;
         }

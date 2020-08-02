@@ -25,6 +25,7 @@ namespace RugbyRoyale.Discord.App.Commands
             var away = new Teamsheet();
 
             var simulator = new MatchSimulator(matchID, home, away, client);
+            await simulator.SimulateMatch();
 
             await context.Message.RespondAsync("Did a thing.");
         }

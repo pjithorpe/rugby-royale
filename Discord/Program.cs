@@ -75,7 +75,6 @@ namespace RugbyRoyale.Discord
                 .AddSingleton(settings)
                 .AddSingleton(coordinator)
                 .AddSingleton(messageTracker)
-                .AddScoped<IClient, Client>()
                 .AddLogging(loggingBuilder =>
                 {
                     loggingBuilder.AddProvider(new DiscordLoggerProvider(new DiscordLoggerConfiguration()
@@ -94,6 +93,7 @@ namespace RugbyRoyale.Discord
                         }
                     }));
                 })
+                .AddScoped<IClient, Client>()
                 .AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={Environment.CurrentDirectory}/players.db"))
                 .AddScoped<IPlayerRepository, PlayerRepository>()
                 .AddScoped<ILeagueRepository, LeagueRepository>()
