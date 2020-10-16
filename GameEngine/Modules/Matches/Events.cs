@@ -1,27 +1,26 @@
 ﻿using RugbyRoyale.Entities.Events;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace RugbyRoyale.GameEngine
 {
     internal static class Events
     {
+        public static MatchEvent GetRandomEvent()
+        {
+            Type[] types = AllMatchEventTypes();
+            object randomEvent = Activator.CreateInstance(types[new Random().Next(types.Length)]);
+
+            return randomEvent as MatchEvent;
+        }
+
         public static MatchEvent GetNextEventFromPrevious(MatchEvent previousEvent, int minute, Random randomGenerator)
         {
             // Check last event and use it to inform this event
             if (previousEvent is Event_Try)
             {
-                var conversionEvent = new Event_Conversion(previousEvent.MatchID, minute);
-
-                if (randomGenerator.NextDouble() <= ScoringChance.CalculateConversionSuccessChance())
-                {
-                    conversionEvent.Successful = true;
-                }
-                else
-                {
-                    conversionEvent.Successful = false;
-                }
-
-                return conversionEvent;
+                return new Event_Conversion(previousEvent.MatchID, minute);
             }
             else if (previousEvent is IScoreEvent scoreEvent) // Any score other than a try
             {
@@ -44,6 +43,13 @@ namespace RugbyRoyale.GameEngine
             }
 
             return null;
+        }
+
+        private static Type[] AllMatchEventTypes()
+        {
+            return Assembly.GetExecutingAssembly().DefinedTypes
+                .Where(t => !t.IsAbstract && t.IsClass && t.IsSubclassOf(typeof(MatchEvent)))
+                .ToArray();
         }
     }
 }

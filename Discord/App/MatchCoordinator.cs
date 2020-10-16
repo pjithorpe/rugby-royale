@@ -38,8 +38,9 @@ namespace RugbyRoyale.Discord.App
                     matchChannelPairings[matchID] = matchChannel;
                     memberMatchPairings[home] = matchID;
                     memberMatchPairings[away] = matchID;
+
+                    return true;
                 }
-                return true;
             }
             return false;
         }
@@ -56,7 +57,7 @@ namespace RugbyRoyale.Discord.App
             {
                 if (memberMatchPairings[member] == matchID)
                 {
-                    if (memberMatchPairings.TryRemove(member, out _))
+                    if(!memberMatchPairings.TryRemove(member, out _))
                     {
                         return false;
                     }

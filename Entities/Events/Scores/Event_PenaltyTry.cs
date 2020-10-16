@@ -8,7 +8,7 @@ namespace RugbyRoyale.Entities.Events
         {
         }
 
-        public override string Name { get => "Conversion Attempt"; }
+        public override string Name { get => "Penalty Try"; }
 
         public string Abbreviation => "PEN TRY";
         public int Points => 7;

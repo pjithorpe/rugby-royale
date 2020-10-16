@@ -11,11 +11,12 @@ namespace RugbyRoyale.Discord.App.Commands
     {
         public static async Task ExecuteAsync(CommandContext context, DiscordMember opponent, IClient client, MatchCoordinator coordinator)
         {
-            var matchID = new Guid();
+            var matchID = Guid.NewGuid();
 
             if (!coordinator.TryAddMatch(matchID, context.Member, opponent))
             {
-                await context.Message.RespondAsync("Couldn't start a new match (match threads might be full).");
+                await context.Message.RespondAsync("Couldn't start a new match (one of players might be already in a match, or the match threads might be full).");
+                return;
             }
 
             // home teamsheet
@@ -27,7 +28,7 @@ namespace RugbyRoyale.Discord.App.Commands
             var simulator = new MatchSimulator(matchID, home, away, client);
             await simulator.SimulateMatch();
 
-            await context.Message.RespondAsync("Did a thing.");
+            await context.Message.RespondAsync("Match concluded.");
         }
     }
 }
