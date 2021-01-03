@@ -34,10 +34,10 @@ namespace RugbyRoyale.GameEngine
         public async Task<MatchResult> SimulateMatch()
         {
             // Calculate duration of an in-game minute
-            double duration = Configuration.MATCH_DURATION / 80.0;
+            double duration = Configuration.MATCH_DURATION_MINS / 80.0;
 
             var startTimeSpan = TimeSpan.Zero;
-            var matchTimeSpan = TimeSpan.FromMinutes(Configuration.MATCH_DURATION);
+            var matchTimeSpan = TimeSpan.FromMinutes(Configuration.MATCH_DURATION_MINS);
             var periodTimeSpan = TimeSpan.FromMinutes(duration);
 
             // Run a simulated period for every in-game minute
@@ -69,29 +69,18 @@ namespace RugbyRoyale.GameEngine
                 previousEvent = matchHistory.Last();
             }
 
-            MatchEvent nextEvent;
+            MatchEvent nextEvent = null;
             // First, check if we must constrict the set of possible next events based on the last event
             if (previousEvent != null)
             {
-                Events.GetNextEventFromPrevious(previousEvent, minute, randomGenerator);
+                nextEvent = Events.GetNextEventFromPrevious(previousEvent, minute, randomGenerator);
             }
 
-            //TEST
-            clientInterface.OutputMatchEvent(new Event_Try(id, minute) { Successful = true });
-
-            // Try
-
-            // Penalty
-
-            // Penalty Try
-
-            // Drop Goal
-
-            // Knock On
-
-            // Forward Pass
-
-            // Free Kick
+            if (nextEvent != null)
+            {
+                matchHistory.Add(nextEvent);
+                clientInterface.OutputMatchEvent(nextEvent);
+            }
         }
 
         private Dictionary<TeamsheetPosition, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)
