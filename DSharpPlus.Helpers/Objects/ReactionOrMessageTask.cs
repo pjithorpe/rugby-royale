@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.Discord.App.Commands
+namespace DSharpPlus.Helpers
 {
-    internal class ReactionOrMessageTask
+    public class ReactionOrMessageTask
     {
         public ReactionOrMessageTask(Task reactionOrMessageTask)
         {

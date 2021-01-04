@@ -2,11 +2,12 @@
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.Discord.App.Commands
+namespace DSharpPlus.Helpers
 {
-    internal static class DiscordChannelExtensions
+    public static class DiscordChannelExtensions
     {
         public async static Task<string> GetInputString(this DiscordChannel channel, DiscordMember member, string inputPrompt, int? minLength = null, int? maxLength = null, string regexExp = null)
         {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RugbyRoyale.Discord.App.Commands
+namespace DSharpPlus.Helpers
 {
-    internal class InputPrompt_BinaryChoice
+    public class InputPrompt_BinaryChoice
     {
         public string Title { get; set; }
         public string PromptText { get; set; }

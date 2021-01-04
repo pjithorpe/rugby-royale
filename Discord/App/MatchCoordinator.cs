@@ -1,5 +1,5 @@
-﻿using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Concurrency;
+﻿using ConcurrentCollections;
+using DSharpPlus.Entities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
