@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RugbyRoyale.Entities.Enums;
+﻿using RugbyRoyale.Entities.Enums;
 
 namespace RugbyRoyale.Entities.LeagueTypes
 {

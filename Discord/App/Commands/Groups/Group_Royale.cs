@@ -1,18 +1,13 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
-using DSharpPlus.Interactivity;
 using Microsoft.Extensions.Logging;
 using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Extensions;
-using RugbyRoyale.Entities.LeagueTypes;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -119,7 +114,7 @@ namespace RugbyRoyale.Discord.App.Commands
                 Nationality.Russian, Nationality.Welsh, Nationality.Romanian
             };
 
-            var testGen = new PlayerGenerator(50,  nationalities[new Random().Next(0, nationalities.Length)]);
+            var testGen = new PlayerGenerator(50, nationalities[new Random().Next(0, nationalities.Length)]);
             var testTeam = new Teamsheet()
             {
                 LooseheadProp = await testGen.GeneratePlayer(Position.Prop),
@@ -141,7 +136,7 @@ namespace RugbyRoyale.Discord.App.Commands
 
             string output = "";
             int number = 1;
-            foreach(Player player in testTeam.GetPlayers())
+            foreach (Player player in testTeam.GetPlayers())
             {
                 output += $"{number}. {player.FirstName} {player.LastName}";
                 output += $"\n   Primary: {string.Join(' ', player.Positions_Primary.Select(p => p.ToString()))}";

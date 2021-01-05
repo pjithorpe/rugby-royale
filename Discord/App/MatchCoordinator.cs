@@ -57,7 +57,7 @@ namespace RugbyRoyale.Discord.App
             {
                 if (memberMatchPairings[member] == matchID)
                 {
-                    if(!memberMatchPairings.TryRemove(member, out _))
+                    if (!memberMatchPairings.TryRemove(member, out _))
                     {
                         return false;
                     }

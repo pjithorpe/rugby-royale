@@ -3,9 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Discord.App.Repository;
-using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
-using System;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands

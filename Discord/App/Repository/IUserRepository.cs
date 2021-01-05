@@ -1,5 +1,4 @@
 ﻿using RugbyRoyale.Entities.Model;
-using System;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Repository

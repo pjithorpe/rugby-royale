@@ -69,10 +69,10 @@ namespace RugbyRoyale.Discord
 
             var startupLogger = new DiscordLogger(typeof(Program).FullName, loggingConfig);
 
-            discord = new DSharpPlus.DiscordClient(new DSharpPlus.DiscordConfiguration
+            discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = settings.BotToken,
-                TokenType = DSharpPlus.TokenType.Bot,
+                TokenType = TokenType.Bot,
                 LoggerFactory = new DiscordLoggerFactory(loggingConfig),
                 MinimumLogLevel = LogLevel.Trace,
             });

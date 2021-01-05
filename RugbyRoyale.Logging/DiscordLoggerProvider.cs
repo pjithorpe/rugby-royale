@@ -1,9 +1,5 @@
-﻿using DSharpPlus;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RugbyRoyale.Discord.Logging
 {

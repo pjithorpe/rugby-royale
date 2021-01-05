@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DSharpPlus.Helpers
+﻿namespace DSharpPlus.Helpers
 {
     public class InputPrompt_BinaryChoice
     {

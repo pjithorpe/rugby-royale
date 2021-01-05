@@ -3,7 +3,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.Logging
@@ -20,7 +19,7 @@ namespace RugbyRoyale.Discord.Logging
         {
             name = categoryName != "" ? categoryName : "Unknown";
             config = configuration;
-            
+
             DiscordConfiguration discordConfig = new DiscordConfiguration
             {
                 Token = config.BotToken,
@@ -77,7 +76,7 @@ namespace RugbyRoyale.Discord.Logging
                 {
                     description = $"{baseException.GetType().FullName}: {baseException.Message}";
                 }
-                
+
                 if (!string.IsNullOrWhiteSpace(exception.StackTrace))
                 {
                     stackTrace = exception.StackTrace;
