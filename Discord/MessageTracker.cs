@@ -1,5 +1,4 @@
 ﻿using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Concurrency;
 using RugbyRoyale.Entities.Model;
 using System;
 using System.Collections.Concurrent;

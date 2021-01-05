@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace RugbyRoyale.Discord.App.Commands
+namespace DSharpPlus.Helpers
 {
-    internal static class InteractivityExtensions
+    public static class InteractivityExtensions
     {
         public async static Task<bool> CheckValid(this InteractivityResult<DiscordMessage> result, DiscordChannel channel)
         {

@@ -1,9 +1,9 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
 
-namespace RugbyRoyale.Discord.App.Commands
+namespace DSharpPlus.Helpers
 {
-    internal static class DiscordClientExtensions
+    public static class DiscordClientExtensions
     {
         public static DiscordEmoji AcceptEmoji(this DiscordClient client) => DiscordEmoji.FromName(client, ":white_check_mark:");
         public static DiscordEmoji RejectEmoji(this DiscordClient client) => DiscordEmoji.FromName(client, ":x:");

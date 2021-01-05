@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,11 @@ namespace RugbyRoyale.Discord.Logging
         {
             name = categoryName != "" ? categoryName : "Unknown";
             config = configuration;
-
+            
             DiscordConfiguration discordConfig = new DiscordConfiguration
             {
                 Token = config.BotToken,
-                TokenType = TokenType.Bot,
-                UseInternalLogHandler = true,
-                LogLevel = DSharpPlus.LogLevel.Debug,
+                TokenType = TokenType.Bot
             };
             discord = new DiscordClient(discordConfig);
             if (!discord.ConnectAsync().Wait(TimeSpan.FromSeconds(30))) // Blocking action
@@ -50,35 +49,27 @@ namespace RugbyRoyale.Discord.Logging
             return null;
         }
 
-        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
+        public bool IsEnabled(LogLevel logLevel)
         {
             return config.LogLevel <= logLevel;
         }
 
-        public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             if (!IsEnabled(logLevel))
             {
                 return;
             }
 
-            var errorEmbed = new DiscordEmbedBuilder()
-            {
-                Timestamp = DateTime.UtcNow,
-                Title = $"{logLevel.ToString()}: {formatter(state, exception)}",
-                Footer = new DiscordEmbedBuilder.EmbedFooter()
-                {
-                    Text = $"Source: {name}"
-                },
-            };
-
             if (!config.LogLevelColours.TryGetValue(logLevel, out DiscordColor color))
             {
                 color = DiscordColor.White;
             }
-            errorEmbed.WithColor(color);
 
-            string description = "";
+            string title = $"{logLevel}: {formatter(state, exception)}";
+
+            string description = null;
+            string stackTrace = null;
             if (exception != null)
             {
                 Exception baseException = exception.GetBaseException();
@@ -89,10 +80,19 @@ namespace RugbyRoyale.Discord.Logging
                 
                 if (!string.IsNullOrWhiteSpace(exception.StackTrace))
                 {
-                    errorEmbed.AddField("Stack Trace", exception.StackTrace);
+                    stackTrace = exception.StackTrace;
                 }
             }
-            errorEmbed.WithDescription(description != "" ? description : "{No exception}");
+
+            var errorEmbed = new DiscordEmbedBuilder()
+                .ConstructSafely(title, description ?? "{No exception}", footer: $"Source: {name}")
+                .WithColor(color)
+                .WithTimestamp(DateTime.UtcNow);
+
+            if (stackTrace != null)
+            {
+                errorEmbed.AddFieldSafely("Stack Trace", stackTrace);
+            }
 
             Task.Run(() => logChannel.SendMessageAsync(embed: errorEmbed));
         }

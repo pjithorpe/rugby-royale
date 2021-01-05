@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using DSharpPlus.Helpers;
 using DSharpPlus.Interactivity;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Model;
