@@ -36,7 +36,7 @@ namespace RugbyRoyale.Discord
         {
             new Program().MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
         }
-        
+
         private async Task MainAsync(string[] args)
         {
             Settings settings = Settings.GetSettings();
@@ -53,21 +53,21 @@ namespace RugbyRoyale.Discord
 
             var loggingConfig = new DiscordLoggerConfiguration()
             {
-                BotToken = settings.BotToken,
+                BotToken = settings.LoggingBotToken,
                 LogChannelID = logChannelID,
                 LogLevel = logLevel,
                 LogLevelColours = new Dictionary<LogLevel, DiscordColor>()
-                        {
-                            { LogLevel.Trace, DiscordColor.White },
-                            { LogLevel.Debug, DiscordColor.SpringGreen },
-                            { LogLevel.Information, DiscordColor.CornflowerBlue },
-                            { LogLevel.Warning, DiscordColor.Yellow },
-                            { LogLevel.Error, DiscordColor.Orange },
-                            { LogLevel.Critical, DiscordColor.Red },
-                        }
+                {
+                    { LogLevel.Trace, DiscordColor.White },
+                    { LogLevel.Debug, DiscordColor.SpringGreen },
+                    { LogLevel.Information, DiscordColor.CornflowerBlue },
+                    { LogLevel.Warning, DiscordColor.Yellow },
+                    { LogLevel.Error, DiscordColor.Orange },
+                    { LogLevel.Critical, DiscordColor.Red },
+                }
             };
 
-            var startupLogger = new DiscordLogger("Program Startup", loggingConfig);
+            var startupLogger = new DiscordLogger(typeof(Program).FullName, loggingConfig);
 
             discord = new DSharpPlus.DiscordClient(new DSharpPlus.DiscordConfiguration
             {
