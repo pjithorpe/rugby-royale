@@ -67,6 +67,8 @@ namespace RugbyRoyale.Discord
                         }
             };
 
+            var startupLogger = new DiscordLogger("Program Startup", loggingConfig);
+
             discord = new DSharpPlus.DiscordClient(new DSharpPlus.DiscordConfiguration
             {
                 Token = settings.BotToken,
@@ -86,8 +88,12 @@ namespace RugbyRoyale.Discord
             MatchCoordinator coordinator = MatchCoordinator.GetCoordinator();
             coordinator.Initialise(matchChannels);
 
+            startupLogger.LogInformation("Match coordinator initialised.", matchChannels.Select(x => x.Id));
+
             messageTracker = MessageTracker.GetMessageTracker();
             messageTracker.Initialise();
+
+            startupLogger.LogInformation("Message tracker initialised.");
 
             dependencies = new ServiceCollection()
                 .AddSingleton(settings)
@@ -106,6 +112,8 @@ namespace RugbyRoyale.Discord
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<ILeagueUserRepository, LeagueUserRepository>()
                 .BuildServiceProvider();
+
+            startupLogger.LogInformation("Service collection built.");
 
             discord.UseInteractivity(new InteractivityConfiguration
             {
@@ -127,10 +135,12 @@ namespace RugbyRoyale.Discord
             // Register events and required services
             discord.MessageReactionAdded += Message_ReactionAdd;
 
+            startupLogger.LogInformation("Commands and events registered.");
+
             // Wait for events
             await discord.ConnectAsync();
 
-            new DiscordLogger("Program Startup", loggingConfig).LogInformation("Finished startup. Ready to recieve commands.");
+            startupLogger.LogInformation("Finished startup. Ready to recieve commands.");
 
             await Task.Delay(-1);
         }
