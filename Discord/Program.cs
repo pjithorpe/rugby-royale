@@ -140,7 +140,7 @@ namespace RugbyRoyale.Discord
             // Wait for events
             await discord.ConnectAsync();
 
-            startupLogger.LogInformation("Finished startup. Ready to recieve commands.");
+            startupLogger.LogInformation("Finished startup. Ready to receive commands.");
 
             await Task.Delay(-1);
         }
