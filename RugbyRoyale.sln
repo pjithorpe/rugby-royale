@@ -9,9 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.GameEngine", "G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Discord", "Discord\RugbyRoyale.Discord.csproj", "{C6F92345-C653-4EB8-B84F-2DF18C29DA1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Logging", "RugbyRoyale.Logging\RugbyRoyale.Logging.csproj", "{64D51693-C7AE-4532-9893-A328E238DF95}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSharpPlus.Helpers", "DSharpPlus.Helpers\DSharpPlus.Helpers.csproj", "{878C2FE5-2220-4318-88C1-9E661370F8E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlus.Helpers", "DSharpPlus.Helpers\DSharpPlus.Helpers.csproj", "{878C2FE5-2220-4318-88C1-9E661370F8E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +29,6 @@ Global
 		{C6F92345-C653-4EB8-B84F-2DF18C29DA1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6F92345-C653-4EB8-B84F-2DF18C29DA1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6F92345-C653-4EB8-B84F-2DF18C29DA1C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64D51693-C7AE-4532-9893-A328E238DF95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64D51693-C7AE-4532-9893-A328E238DF95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64D51693-C7AE-4532-9893-A328E238DF95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64D51693-C7AE-4532-9893-A328E238DF95}.Release|Any CPU.Build.0 = Release|Any CPU
 		{878C2FE5-2220-4318-88C1-9E661370F8E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{878C2FE5-2220-4318-88C1-9E661370F8E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{878C2FE5-2220-4318-88C1-9E661370F8E6}.Release|Any CPU.ActiveCfg = Release|Any CPU

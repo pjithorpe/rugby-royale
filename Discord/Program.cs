@@ -1,4 +1,5 @@
-﻿using DSharpPlus;
+﻿using CXuesong.Uel.Serilog.Sinks.Discord;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -12,9 +13,9 @@ using RugbyRoyale.Discord.App;
 using RugbyRoyale.Discord.App.EventHandlers;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
-using RugbyRoyale.Discord.Logging;
 using RugbyRoyale.Discord.Repositories;
 using RugbyRoyale.GameEngine;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,39 +42,18 @@ namespace RugbyRoyale.Discord
         {
             Settings settings = Settings.GetSettings();
 
-            if (!ulong.TryParse(settings.LogChannel, out ulong logChannelID))
-            {
-                throw new Exception("Failed to read LogChannel setting.");
-            }
+            var logMessenger = new DiscordWebhookMessenger(ulong.Parse(settings.WebhookID), settings.WebhookToken);
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Discord(logMessenger)
+                .CreateLogger();
 
-            if (!Enum.TryParse(settings.LogLevel, out LogLevel logLevel))
-            {
-                throw new Exception("Failed to read LogLevel setting.");
-            }
-
-            var loggingConfig = new DiscordLoggerConfiguration()
-            {
-                BotToken = settings.LoggingBotToken,
-                LogChannelID = logChannelID,
-                LogLevel = logLevel,
-                LogLevelColours = new Dictionary<LogLevel, DiscordColor>()
-                {
-                    { LogLevel.Trace, DiscordColor.White },
-                    { LogLevel.Debug, DiscordColor.SpringGreen },
-                    { LogLevel.Information, DiscordColor.CornflowerBlue },
-                    { LogLevel.Warning, DiscordColor.Yellow },
-                    { LogLevel.Error, DiscordColor.Orange },
-                    { LogLevel.Critical, DiscordColor.Red },
-                }
-            };
-
-            var startupLogger = new DiscordLogger(typeof(Program).FullName, loggingConfig);
+            var logFactory = new LoggerFactory().AddSerilog();
 
             discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = settings.BotToken,
                 TokenType = TokenType.Bot,
-                LoggerFactory = new DiscordLoggerFactory(loggingConfig),
+                LoggerFactory = logFactory,
                 MinimumLogLevel = LogLevel.Trace,
             });
 
@@ -88,22 +68,18 @@ namespace RugbyRoyale.Discord
             MatchCoordinator coordinator = MatchCoordinator.GetCoordinator();
             coordinator.Initialise(matchChannels);
 
-            startupLogger.LogInformation("Match coordinator initialised.", matchChannels.Select(x => x.Id));
+            Log.Information("Match coordinator initialised.", matchChannels.Select(x => x.Id));
 
             messageTracker = MessageTracker.GetMessageTracker();
             messageTracker.Initialise();
 
-            startupLogger.LogInformation("Message tracker initialised.");
+            Log.Information("Message tracker initialised.");
 
             dependencies = new ServiceCollection()
                 .AddSingleton(settings)
                 .AddSingleton(coordinator)
                 .AddSingleton(messageTracker)
-                .AddLogging(loggingBuilder =>
-                {
-                    loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-                    loggingBuilder.AddProvider(new DiscordLoggerProvider(loggingConfig));
-                })
+                .AddSingleton(logMessenger)
                 .AddScoped<IClient, Client>()
                 .AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={Environment.CurrentDirectory}/players.db"))
                 .AddScoped<IPlayerRepository, PlayerRepository>()
@@ -113,7 +89,7 @@ namespace RugbyRoyale.Discord
                 .AddScoped<ILeagueUserRepository, LeagueUserRepository>()
                 .BuildServiceProvider();
 
-            startupLogger.LogInformation("Service collection built.");
+            Log.Information("Service collection built.");
 
             discord.UseInteractivity(new InteractivityConfiguration
             {
@@ -135,12 +111,12 @@ namespace RugbyRoyale.Discord
             // Register events and required services
             discord.MessageReactionAdded += Message_ReactionAdd;
 
-            startupLogger.LogInformation("Commands and events registered.");
+            Log.Information("Commands and events registered.");
 
             // Wait for events
             await discord.ConnectAsync();
 
-            startupLogger.LogInformation("Finished startup. Ready to receive commands.");
+            Log.Information("Finished startup. Ready to receive commands.");
 
             await Task.Delay(-1);
         }

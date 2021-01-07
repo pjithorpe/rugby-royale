@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CXuesong.Uel.Serilog.Sinks.Discord" Version="0.5.0" />
     <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00771" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00771" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00771" />
@@ -22,13 +23,14 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DSharpPlus.Helpers\DSharpPlus.Helpers.csproj" />
     <ProjectReference Include="..\Entities\RugbyRoyale.Entities.csproj" />
     <ProjectReference Include="..\GameEngine\RugbyRoyale.GameEngine.csproj" />
-    <ProjectReference Include="..\RugbyRoyale.Logging\RugbyRoyale.Logging.csproj" />
   </ItemGroup>
 
   <ItemGroup>

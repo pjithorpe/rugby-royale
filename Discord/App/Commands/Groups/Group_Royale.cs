@@ -7,6 +7,7 @@ using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
+using Serilog;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -19,7 +20,6 @@ namespace RugbyRoyale.Discord.App.Commands
     public class Group_Royale : BaseCommandModule
     {
         private IClient client;
-        private ILoggerProvider log;
         private Settings settings;
         private MessageTracker msgTracker;
         private ILeagueRepository leagueRepo;
@@ -27,10 +27,9 @@ namespace RugbyRoyale.Discord.App.Commands
         private IUserRepository userRepo;
         private ILeagueUserRepository leagueUserRepo;
 
-        public Group_Royale(IClient gameClient, ILoggerProvider logger, Settings appSettings, MessageTracker messageTracker, ILeagueRepository leagueRepository, ITeamRepository teamRepository, IUserRepository userRepository, ILeagueUserRepository leagueUserRepository)
+        public Group_Royale(IClient gameClient, Settings appSettings, MessageTracker messageTracker, ILeagueRepository leagueRepository, ITeamRepository teamRepository, IUserRepository userRepository, ILeagueUserRepository leagueUserRepository)
         {
             client = gameClient;
-            log = logger;
             settings = appSettings;
             msgTracker = messageTracker;
             leagueRepo = leagueRepository;
@@ -61,12 +60,11 @@ namespace RugbyRoyale.Discord.App.Commands
         [Command("test")]
         public async Task Test(CommandContext context)
         {
-            ILogger logger = log.CreateLogger("Discord Client");
-            logger.LogTrace("Test trace level info.");
-            logger.LogDebug("A debug message.");
-            logger.LogInformation("An info message.");
-            logger.LogWarning("Uuuh, you should probably change this...");
-            logger.LogCritical(new NullReferenceException("This is a null ref exception."), "OH SHIT, IT'S ALL ON FIRE!!!");
+            Log.Verbose("Test trace level info.");
+            Log.Debug("A debug message.");
+            Log.Information("An info message.");
+            Log.Warning("Uuuh, you should probably change this...");
+            Log.Fatal(new NullReferenceException("This is a null ref exception."), "OH SHIT, IT'S ALL ON FIRE!!!");
             try
             {
                 await context.RespondAsync("running broken function...");
@@ -74,7 +72,7 @@ namespace RugbyRoyale.Discord.App.Commands
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Custom message");
+                Log.Error(e, "Custom message");
             }
 
             void BreakingFunction()

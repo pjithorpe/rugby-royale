@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using RugbyRoyale.Entities.Events;
 using RugbyRoyale.GameEngine;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,12 +11,10 @@ namespace RugbyRoyale.Discord.App
 {
     public class Client : IClient
     {
-        ILogger log;
         private MatchCoordinator coordinator;
 
-        public Client(ILoggerProvider loggerProvider)
+        public Client()
         {
-            log = loggerProvider.CreateLogger("Client");
             coordinator = MatchCoordinator.GetCoordinator();
         }
 
@@ -28,7 +27,7 @@ namespace RugbyRoyale.Discord.App
             }
             catch (Exception e)
             {
-                log.LogError(e, "Error while outputting match event.");
+                Log.Error(e, "Error while outputting match event.");
             }
         }
 
