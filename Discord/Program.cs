@@ -16,6 +16,7 @@ using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Discord.Repositories;
 using RugbyRoyale.GameEngine;
 using Serilog;
+using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +43,20 @@ namespace RugbyRoyale.Discord
         {
             Settings settings = Settings.GetSettings();
 
-            var logMessenger = new DiscordWebhookMessenger(ulong.Parse(settings.WebhookID), settings.WebhookToken);
+            if (!ulong.TryParse(settings.WebhookID, out ulong webhookID))
+            {
+                throw new Exception("Failed to read WebhookID setting.");
+            }
+
+            if (!Enum.TryParse(settings.LogLevel, out LogEventLevel logLevel))
+            {
+                throw new Exception("Failed to read LogLevel setting.");
+            }
+
+            var logMessenger = new DiscordWebhookMessenger(webhookID, settings.WebhookToken);
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Discord(logMessenger)
+                .MinimumLevel.Is(logLevel)
                 .CreateLogger();
 
             var logFactory = new LoggerFactory().AddSerilog();
