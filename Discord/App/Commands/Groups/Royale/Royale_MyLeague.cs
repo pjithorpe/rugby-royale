@@ -5,7 +5,6 @@ using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.LeagueTypes;
 using RugbyRoyale.Entities.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

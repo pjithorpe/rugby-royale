@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RugbyRoyale.Entities.Enums
+﻿namespace RugbyRoyale.Entities.Enums
 {
     public enum Nationality
     {

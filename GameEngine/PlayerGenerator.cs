@@ -1,10 +1,8 @@
-﻿using Redzen.Numerics.Distributions.Double;
-using RugbyRoyale.Entities.Enums;
+﻿using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine.Modules;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.GameEngine

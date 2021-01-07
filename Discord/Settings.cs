@@ -9,13 +9,13 @@ namespace RugbyRoyale.Discord
     public sealed class Settings
     {
         public string BotToken { get; set; }
-        public string LoggingBotToken { get; set; }
+        public string WebhookID { get; set; }
+        public string WebhookToken { get; set; }
         public string CommandPrefix { get; set; }
         public string DBConnectionString { get; set; }
         public string LeagueNameLongMaxLength { get; set; }
         public string LeagueNameShortMaxLength { get; set; }
         public string MainChannel { get; set; }
-        public string LogChannel { get; set; }
         public string LogLevel { get; set; }
         public string TeamNameLongMaxLength { get; set; }
         public string TeamNameShortMaxLength { get; set; }
@@ -39,10 +39,10 @@ namespace RugbyRoyale.Discord
                 .GetChildren();
 
             BotToken = GetConfigItem(config, "BotToken");
-            LoggingBotToken = GetConfigItem(config, "LoggingBotToken");
+            WebhookID = GetConfigItem(config, "WebhookID");
+            WebhookToken = GetConfigItem(config, "WebhookToken");
             DBConnectionString = GetConfigItem(config, "DBConnectionString");
             MainChannel = GetConfigItem(config, "MainChannel");
-            LogChannel = GetConfigItem(config, "LogChannel");
             LogLevel = GetConfigItem(config, "LogLevel");
             TransferChannel = GetConfigItem(config, "TransferChannel");
             MatchChannels = GetConfigItemList(config, "MatchChannels");

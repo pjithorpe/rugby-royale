@@ -1,9 +1,6 @@
 ﻿using DSharpPlus.Entities;
-using RugbyRoyale.Entities.Model;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RugbyRoyale.Discord.App
 {
