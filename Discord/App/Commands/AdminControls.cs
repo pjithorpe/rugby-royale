@@ -5,6 +5,8 @@ using DSharpPlus.Entities;
 using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.GameEngine;
+using Serilog;
+using System;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
@@ -22,6 +24,11 @@ namespace RugbyRoyale.Discord.App.Commands
         [MainChannel]
         public async Task Start(CommandContext context)
         {
+            Log.Information("Stopping Discord client...");
+            await context.Client.DisconnectAsync();
+            context.Client.Dispose();
+
+            Log.Information("Stopping logging service...");
             await logMessenger.ShutdownAsync();
             logMessenger.Dispose();
         }
