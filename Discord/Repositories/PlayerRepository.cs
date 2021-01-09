@@ -1,6 +1,7 @@
 ﻿using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
+using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -12,14 +13,30 @@ namespace RugbyRoyale.Discord.Repositories
         {
         }
 
-        public async Task<bool> ExistsAsync(string playerId)
+        public async Task<bool> ExistsAsync(string playerID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "DB Error checking for Player with playerID {PlayerID}", playerID);
+                return false;
+            }
         }
 
-        public async Task SaveAsync(Player player)
+        public async Task<bool> SaveAsync(Player player)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "DB Error saving player: {@Player}", player);
+                return false;
+            }
         }
     }
 }

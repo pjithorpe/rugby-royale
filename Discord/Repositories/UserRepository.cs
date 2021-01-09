@@ -2,6 +2,7 @@
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
+using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error getting user with userID {UserID}", userID);
                 return null;
             }
         }
@@ -34,7 +35,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error checking for user with userID {UserID}", userID);
                 return false;
             }
         }
@@ -48,7 +49,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error saving user: {@User}", user);
                 return false;
             }
         }

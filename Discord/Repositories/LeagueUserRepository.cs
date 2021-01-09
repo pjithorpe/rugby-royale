@@ -2,6 +2,7 @@
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error saving leagueUser: {@LeagueUser}", leagueUser);
                 return false;
             }
         }
@@ -37,7 +38,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error checking for LeagueUser with userID {UserID}", userID);
                 return false;
             }
         }
@@ -50,7 +51,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error counting LeagueUsers with leagueID {LeagueID}", leagueID);
                 return 0;
             }
         }
@@ -63,7 +64,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error getting LeagueUser with leagueID {LeagueID} and userID {UserID}", leagueID, userID);
                 return null;
             }
         }
@@ -76,7 +77,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error getting LeagueUsers with userID {UserID}", userID);
                 return null;
             }
         }
@@ -89,7 +90,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error getting LeagueUsers with leagueID {LeagueID}", leagueID);
                 return null;
             }
         }

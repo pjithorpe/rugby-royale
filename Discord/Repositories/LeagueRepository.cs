@@ -2,6 +2,7 @@
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
+using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error saving league: {@League}", league);
                 return false;
             }
         }
@@ -35,7 +36,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error getting League with leagueID {LeagueID}", leagueID);
                 return null;
             }
         }
@@ -48,7 +49,7 @@ namespace RugbyRoyale.Discord.Repositories
             }
             catch (Exception e)
             {
-                // TODO: LOG ERROR
+                Log.Error(e, "DB Error getting League with userID {UserID}", userID);
                 return null;
             }
         }
