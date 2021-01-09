@@ -2,6 +2,7 @@
 using DSharpPlus.Entities;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
+using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -27,6 +28,11 @@ namespace RugbyRoyale.Discord.App.Commands
 
             var simulator = new MatchSimulator(matchID, home, away, client);
             await simulator.SimulateMatch();
+
+            if (!coordinator.TryRemoveMatch(matchID))
+            {
+                Log.Warning("Failed to remove match from coordinator");
+            }
 
             await context.Message.RespondAsync("Match concluded.");
         }
