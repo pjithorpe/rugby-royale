@@ -1,6 +1,5 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using Microsoft.Extensions.Logging;
 using RugbyRoyale.Discord.App.Attributes;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Entities.Enums;

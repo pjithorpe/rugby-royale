@@ -1,4 +1,11 @@
-﻿using CXuesong.Uel.Serilog.Sinks.Discord;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
@@ -6,22 +13,15 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using CXuesong.Uel.Serilog.Sinks.Discord;
 using RugbyRoyale.Discord.App;
 using RugbyRoyale.Discord.App.EventHandlers;
 using RugbyRoyale.Discord.App.Repository;
 using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Discord.Repositories;
 using RugbyRoyale.GameEngine;
-using Serilog;
-using Serilog.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord
 {
@@ -45,18 +45,18 @@ namespace RugbyRoyale.Discord
 
             if (!ulong.TryParse(settings.WebhookID, out ulong webhookID))
             {
-                throw new Exception("Failed to read WebhookID setting.");
+                Log.Error("Failed to read WebhookID setting.");
             }
 
             if (!Enum.TryParse(settings.LogLevel, out LogEventLevel logLevel))
             {
-                throw new Exception("Failed to read LogLevel setting.");
+                Log.Warning("Failed to read WebhookID setting.");
             }
 
             var logMessenger = new DiscordWebhookMessenger(webhookID, settings.WebhookToken);
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Discord(logMessenger)
-                .MinimumLevel.Is(logLevel)
+                .WriteTo.Console()
+                .WriteTo.Discord(logMessenger, logLevel)
                 .CreateLogger();
 
             var logFactory = new LoggerFactory().AddSerilog();
