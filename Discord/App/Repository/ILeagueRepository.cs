@@ -1,5 +1,6 @@
 ﻿using RugbyRoyale.Entities.Model;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Repository
@@ -11,5 +12,7 @@ namespace RugbyRoyale.Discord.App.Repository
         Task<League> GetAsync(Guid leagueID);
 
         Task<League> GetAsync(string userID);
+
+        Task<List<League>> ListAllAsync();
     }
 }

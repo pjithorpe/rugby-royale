@@ -4,6 +4,7 @@ using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.Repositories
@@ -78,6 +79,19 @@ namespace RugbyRoyale.Discord.Repositories
             {
                 Log.Error(e, "DB Error saving team: {@Team}", team);
                 return false;
+            }
+        }
+
+        public async Task<List<Team>> ListAllAsync()
+        {
+            try
+            {
+                return await db.Teams.ToListAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "DB Error getting all teams");
+                return null;
             }
         }
     }
