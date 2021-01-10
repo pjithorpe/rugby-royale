@@ -4,6 +4,7 @@ using RugbyRoyale.Discord.Context;
 using RugbyRoyale.Entities.Model;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.Repositories
@@ -50,6 +51,19 @@ namespace RugbyRoyale.Discord.Repositories
             catch (Exception e)
             {
                 Log.Error(e, "DB Error getting League with userID {UserID}", userID);
+                return null;
+            }
+        }
+
+        public async Task<List<League>> ListAllAsync()
+        {
+            try
+            {
+                return await db.Leagues.ToListAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "DB Error getting all leagues");
                 return null;
             }
         }
