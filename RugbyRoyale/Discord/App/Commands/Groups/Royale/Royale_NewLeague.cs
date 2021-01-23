@@ -48,7 +48,7 @@ namespace RugbyRoyale.Discord.App.Commands
             if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: LeagueNameShortMaxLength");
 
             // Get all leagues in db
-            List<League> allLeagues = await leagueRepo.ListAllAsync();
+            List<League> allLeagues = await repos.Leagues.ListAllAsync();
 
             // Long name
             string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new competition (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):", 5, longNameMax);

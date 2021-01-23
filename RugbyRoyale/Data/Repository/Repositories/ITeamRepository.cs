@@ -12,5 +12,7 @@ namespace RugbyRoyale.Data.Repository
         Task<Team> GetAsync(string userID);
 
         Task<bool> ExistsAsync(string userID);
+
+        Task<List<Team>> ListAllAsync();
     }
 }

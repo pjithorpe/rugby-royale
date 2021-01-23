@@ -1,5 +1,6 @@
 ﻿using RugbyRoyale.Entities.Model;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Data.Repository
@@ -20,5 +21,7 @@ namespace RugbyRoyale.Data.Repository
         Task<League> GetWithUsersAsync(Guid leagueID);
 
         Task<League> GetWithUsersAsync(string userID);
+
+        Task<List<League>> ListAllAsync();
     }
 }

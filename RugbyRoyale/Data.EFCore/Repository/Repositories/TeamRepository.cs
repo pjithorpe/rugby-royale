@@ -53,5 +53,18 @@ namespace RugbyRoyale.Data.EFCore.Repository
                 return null;
             }
         }
+
+        public async Task<List<Team>> ListAllAsync()
+        {
+            try
+            {
+                return await db.Teams.ToListAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "DB Error getting all teams");
+                return null;
+            }
+        }
     }
 }

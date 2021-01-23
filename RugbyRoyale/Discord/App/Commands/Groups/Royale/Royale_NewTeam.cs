@@ -32,7 +32,7 @@ namespace RugbyRoyale.Discord.App.Commands
             if (!int.TryParse(settings.TeamNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: TeamNameShortMaxLength");
 
             // Get all teams in db
-            List<Team> allTeams = await teamRepo.ListAllAsync();
+            List<Team> allTeams = await repos.Teams.ListAllAsync();
 
             // Long name
             string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new team (max. {longNameMax} characters, e.g. \"Leicester Tigers\"):", 5, longNameMax);

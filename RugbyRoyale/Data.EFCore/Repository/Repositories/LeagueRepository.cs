@@ -4,6 +4,7 @@ using RugbyRoyale.Data.Repository;
 using RugbyRoyale.Entities.Model;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -81,6 +82,19 @@ namespace RugbyRoyale.Data.EFCore.Repository
             catch (Exception e)
             {
                 Log.Error(e, "DB Error getting League+Users with owner with UserID {UserID}", ownerID);
+                return null;
+            }
+        }
+
+        public async Task<List<League>> ListAllAsync()
+        {
+            try
+            {
+                return await db.Leagues.ToListAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "DB Error getting all leagues");
                 return null;
             }
         }
