@@ -47,13 +47,28 @@ namespace RugbyRoyale.Discord.App.Commands
             if (!int.TryParse(settings.LeagueNameLongMaxLength, out int longNameMax)) throw new Exception("Failed to read setting: LeagueNameLongMaxLength");
             if (!int.TryParse(settings.LeagueNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: LeagueNameShortMaxLength");
 
+            // Get all leagues in db
+            List<League> allLeagues = await leagueRepo.ListAllAsync();
+
             // Long name
             string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new competition (max. {longNameMax} characters, e.g. \"The Gallagher Premiership\"):", 5, longNameMax);
             if (longName == null) return;
 
+            if (allLeagues.Exists(x => x.Name_Long.Replace(" ", "").ToLower() == longName.Replace(" ", "").ToLower()))
+            {
+                await dmChannel.SendMessageAsync("Name is too similar to an already existing name. Cancelling.");
+                return;
+            }
+
             // Short name
             string shortName = await dmChannel.GetInputString(context.Member, $"Thanks! Now respond with a shortened version of the competition's name (max. {shortNameMax} characters, e.g. \"The Prem\"):", 5, shortNameMax);
             if (shortName == null) return;
+
+            if (allLeagues.Exists(x => x.Name_Short.Replace(" ", "").ToLower() == shortName.Replace(" ", "").ToLower()))
+            {
+                await dmChannel.SendMessageAsync("Name is too similar to an already existing name. Cancelling.");
+                return;
+            }
 
             // League Type
             DiscordEmoji[] pollEmojis = settings.PollReactions

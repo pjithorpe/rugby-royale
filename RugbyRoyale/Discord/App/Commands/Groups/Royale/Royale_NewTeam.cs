@@ -7,6 +7,7 @@ using DSharpPlus.Interactivity;
 using RugbyRoyale.Data.Repository;
 using RugbyRoyale.Entities.Model;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RugbyRoyale.Discord.App.Commands
@@ -30,13 +31,28 @@ namespace RugbyRoyale.Discord.App.Commands
             if (!int.TryParse(settings.TeamNameLongMaxLength, out int longNameMax)) throw new Exception("Failed to read setting: TeamNameLongMaxLength");
             if (!int.TryParse(settings.TeamNameShortMaxLength, out int shortNameMax)) throw new Exception("Failed to read setting: TeamNameShortMaxLength");
 
+            // Get all teams in db
+            List<Team> allTeams = await teamRepo.ListAllAsync();
+
             // Long name
             string longName = await dmChannel.GetInputString(context.Member, $"Please respond with the **full name** of the new team (max. {longNameMax} characters, e.g. \"Leicester Tigers\"):", 5, longNameMax);
             if (longName == null) return;
 
+            if (allTeams.Exists(x => x.Name_Long.Replace(" ", "").ToLower() == longName.Replace(" ", "").ToLower()))
+            {
+                await dmChannel.SendMessageAsync("Name is too similar to an already existing name. Cancelling.");
+                return;
+            }
+
             // Short name
             string shortName = await dmChannel.GetInputString(context.Member, $"Thanks! Now respond with a **shortened version** of the team's name (max. {shortNameMax} characters e.g. \"Tigers\"):", 5, shortNameMax);
             if (shortName == null) return;
+
+            if (allTeams.Exists(x => x.Name_Short.Replace(" ", "").ToLower() == shortName.Replace(" ", "").ToLower()))
+            {
+                await dmChannel.SendMessageAsync("Name is too similar to an already existing name. Cancelling.");
+                return;
+            }
 
             // Abbreviation
             string abbreviatedName = shortName.Substring(0, 3).ToUpper();
@@ -55,6 +71,12 @@ namespace RugbyRoyale.Discord.App.Commands
                 // rejected, ask for different abbreviation
                 abbreviatedName = await dmChannel.GetInputString(context.Member, $"Respond with your preferred abbreviation (must be exactly 3 uppercase characters and numbers e.g. \"LEI\" or \"R92\"):", regexExp: "[A-Z0-9]{3}");
                 if (abbreviatedName == null) return;
+            }
+
+            if (allTeams.Exists(x => x.Name_Abbreviated == abbreviatedName))
+            {
+                await dmChannel.SendMessageAsync("That abbreviation is already in use. Cancelling.");
+                return;
             }
 
             // Colour

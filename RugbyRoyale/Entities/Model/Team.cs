@@ -1,5 +1,6 @@
 ﻿using Destructurama.Attributed;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace RugbyRoyale.Entities.Model
 {
