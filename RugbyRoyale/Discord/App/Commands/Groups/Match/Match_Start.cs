@@ -16,7 +16,7 @@ namespace RugbyRoyale.Discord.App.Commands
 
             if (!coordinator.TryAddMatch(matchID, context.Member, opponent))
             {
-                await context.Message.RespondAsync("Couldn't start a new match (one of players might be already in a match, or the match threads might be full).");
+                await context.Message.RespondAsync("Couldn't start a new match (one of the players might be already in a match, or the match threads might be full).");
                 return;
             }
 
