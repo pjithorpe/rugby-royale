@@ -11,11 +11,7 @@ namespace RugbyRoyale.Entities.Events
 
         private Random randomGenerator = new Random();
 
-        public virtual List<string> EventMessages => new List<string>()
-        {
-            $"A {Name} happened.",
-            $"Oh look, a {Name}!"
-        };
+        public virtual List<string> EventMessages => new List<string>() { $"{Name}." };
 
         public MatchEvent(Guid matchID, int minute)
         {
@@ -23,9 +19,6 @@ namespace RugbyRoyale.Entities.Events
             Minute = minute;
         }
 
-        public virtual string GetRandomEventMessage()
-        {
-            return EventMessages[randomGenerator.Next(EventMessages.Count)];
-        }
+        public virtual string GetRandomEventMessage() => EventMessages[randomGenerator.Next(EventMessages.Count)];
     }
 }

@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Discord", "Rugb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlus.Helpers", "DSharpPlus.Helpers\DSharpPlus.Helpers.csproj", "{878C2FE5-2220-4318-88C1-9E661370F8E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RugbyRoyale.Data", "RugbyRoyale\Data\RugbyRoyale.Data.csproj", "{F2E1E968-50D0-4D92-9FBA-1CC039B8C73C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Data", "RugbyRoyale\Data\RugbyRoyale.Data.csproj", "{F2E1E968-50D0-4D92-9FBA-1CC039B8C73C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RugbyRoyale.Data.EFCore", "RugbyRoyale\Data.EFCore\RugbyRoyale.Data.EFCore.csproj", "{66ED0DD0-02DF-46BD-B01C-93410D57CC41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Data.EFCore", "RugbyRoyale\Data.EFCore\RugbyRoyale.Data.EFCore.csproj", "{66ED0DD0-02DF-46BD-B01C-93410D57CC41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RugbyRoyale.Console", "RugbyRoyale\Console\RugbyRoyale.Console\RugbyRoyale.Console.csproj", "{EA585617-BEEC-416F-8464-05F41CC4DEA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{66ED0DD0-02DF-46BD-B01C-93410D57CC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66ED0DD0-02DF-46BD-B01C-93410D57CC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66ED0DD0-02DF-46BD-B01C-93410D57CC41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA585617-BEEC-416F-8464-05F41CC4DEA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA585617-BEEC-416F-8464-05F41CC4DEA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA585617-BEEC-416F-8464-05F41CC4DEA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA585617-BEEC-416F-8464-05F41CC4DEA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
