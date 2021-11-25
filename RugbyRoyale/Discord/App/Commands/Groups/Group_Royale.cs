@@ -106,24 +106,7 @@ namespace RugbyRoyale.Discord.App.Commands
             };
 
             var testGen = new PlayerGenerator(50, nationalities[new Random().Next(0, nationalities.Length)]);
-            var testTeam = new Teamsheet()
-            {
-                LooseheadProp = await testGen.GeneratePlayer(Position.Prop),
-                Hooker = await testGen.GeneratePlayer(Position.Hooker),
-                TightheadProp = await testGen.GeneratePlayer(Position.Prop),
-                Number4Lock = await testGen.GeneratePlayer(Position.Lock),
-                Number5Lock = await testGen.GeneratePlayer(Position.Lock),
-                BlindsideFlanker = await testGen.GeneratePlayer(Position.Flanker),
-                OpensideFlanker = await testGen.GeneratePlayer(Position.Flanker),
-                Number8 = await testGen.GeneratePlayer(Position.Number8),
-                ScrumHalf = await testGen.GeneratePlayer(Position.ScrumHalf),
-                FlyHalf = await testGen.GeneratePlayer(Position.FlyHalf),
-                InsideCentre = await testGen.GeneratePlayer(Position.Centre),
-                OutsideCentre = await testGen.GeneratePlayer(Position.Centre),
-                LeftWing = await testGen.GeneratePlayer(Position.Wing),
-                RightWing = await testGen.GeneratePlayer(Position.Wing),
-                FullBack = await testGen.GeneratePlayer(Position.FullBack),
-            };
+            Teamsheet testTeam = await testGen.GenerateTeamsheet();
 
             string output = "";
             int number = 1;

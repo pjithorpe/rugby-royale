@@ -39,6 +39,13 @@ namespace RugbyRoyale.GameEngine.Modules
 
         public static async Task<Player> GenerateRandomName(Player player, Nationality nationality)
         {
+            // TODO
+            // Temporary code. Previously used API seems to be gone
+            player.FirstName = "John";
+            player.LastName = "Smith";
+            return player;
+            //
+
             string[] codes = nationalityCodes[nationality];
             string code;
             if (codes.Length == 1)
