@@ -4,7 +4,7 @@ namespace RugbyRoyale.Entities.Events
 {
     public class Event_Try : MatchEvent, IScoreEvent
     {
-        public Event_Try(Guid matchID, int minute) : base(matchID, minute)
+        public Event_Try(Guid matchID, int second) : base(matchID, second)
         {
         }
 

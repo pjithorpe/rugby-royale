@@ -7,7 +7,7 @@ namespace RugbyRoyale.Entities.Events
     {
         public PenaltyOffence Offence { get; set; }
 
-        public Event_PenaltyAwarded(Guid matchID, int minute) : base(matchID, minute)
+        public Event_PenaltyAwarded(Guid matchID, int second) : base(matchID, second)
         {
         }
 

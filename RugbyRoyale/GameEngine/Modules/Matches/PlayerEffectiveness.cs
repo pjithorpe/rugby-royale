@@ -55,6 +55,19 @@ namespace RugbyRoyale.GameEngine.Modules
             return 0.2f;
         }
 
+        public static Dictionary<TeamsheetPosition, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)
+        {
+            var teamEffectiveness = new Dictionary<TeamsheetPosition, float>();
+
+            Dictionary<TeamsheetPosition, Player> starters = teamsheet.GetStartersDict();
+            foreach (TeamsheetPosition tp in starters.Keys)
+            {
+                teamEffectiveness[tp] = CalculateEffectiveness(starters[tp], tp.ToPosition());
+            }
+
+            return teamEffectiveness;
+        }
+
         private static bool ContainsPositionOrCommonAlternative(IEnumerable<Position> positionCollection, Position positionToCheck)
         {
             return positionCollection.Contains(positionToCheck) || positionCollection.Any(x => x.CommonAlternatives().Contains(positionToCheck));

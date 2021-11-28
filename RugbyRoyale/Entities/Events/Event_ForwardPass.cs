@@ -4,7 +4,7 @@ namespace RugbyRoyale.Entities.Events
 {
     public class Event_ForwardPass : MatchEvent
     {
-        public Event_ForwardPass(Guid matchID, int minute) : base(matchID, minute)
+        public Event_ForwardPass(Guid matchID, int second) : base(matchID, second)
         {
         }
 

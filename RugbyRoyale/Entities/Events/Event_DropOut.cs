@@ -4,7 +4,7 @@ namespace RugbyRoyale.Entities.Events
 {
     public class Event_DropOut : MatchEvent
     {
-        public Event_DropOut(Guid matchID, int minute) : base(matchID, minute)
+        public Event_DropOut(Guid matchID, int second) : base(matchID, second)
         {
         }
 

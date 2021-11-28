@@ -4,7 +4,7 @@ namespace RugbyRoyale.Entities.Events
 {
     public class Event_Turnover : MatchEvent
     {
-        public Event_Turnover(Guid matchID, int minute) : base(matchID, minute)
+        public Event_Turnover(Guid matchID, int second) : base(matchID, second)
         {
         }
 

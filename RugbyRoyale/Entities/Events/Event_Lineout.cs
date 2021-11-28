@@ -4,7 +4,7 @@ namespace RugbyRoyale.Entities.Events
 {
     public class Event_Lineout : MatchEvent
     {
-        public Event_Lineout(Guid matchID, int minute) : base(matchID, minute)
+        public Event_Lineout(Guid matchID, int second) : base(matchID, second)
         {
         }
 

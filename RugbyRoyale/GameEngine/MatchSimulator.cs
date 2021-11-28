@@ -1,8 +1,8 @@
 ﻿using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Events;
-using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine.Modules;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +13,23 @@ namespace RugbyRoyale.GameEngine
 {
     public class MatchSimulator
     {
+        // Inputs
         private Guid id;
         private Teamsheet teamHome;
         private Teamsheet teamAway;
         private IClient clientInterface;
 
-        private List<MatchEvent> matchHistory;
+        // Local variables
+        private List<MatchEvent> eventHistory;
+        private Queue<MatchEvent> futureEventQueue;
         private Random randomGenerator;
         private Timer timer;
+
+        // Modifiers
+        private Dictionary<TeamsheetPosition, float> homeTeamEffectiveness;
+        private Dictionary<TeamsheetPosition, float> awayTeamEffectiveness;
+        private Dictionary<TeamsheetPosition, float> homeTeamScoringChance;
+        private Dictionary<TeamsheetPosition, float> awayTeamScoringChance;
 
         public MatchSimulator(Guid matchID, Teamsheet home, Teamsheet away, IClient client)
         {
@@ -28,8 +37,12 @@ namespace RugbyRoyale.GameEngine
             teamHome = home;
             teamAway = away;
             clientInterface = client;
-            matchHistory = new List<MatchEvent>();
+
+            eventHistory = new List<MatchEvent>();
+            futureEventQueue = new Queue<MatchEvent>();
             randomGenerator = new Random();
+
+            InitialiseModifiers();
         }
 
         public async Task<MatchResult> SimulateMatch()
@@ -41,11 +54,14 @@ namespace RugbyRoyale.GameEngine
             var matchTimeSpan = TimeSpan.FromMinutes(Configuration.MATCH_DURATION_MINS);
             var periodTimeSpan = TimeSpan.FromMinutes(duration);
 
-            // Run a simulated period for every in-game minute
+            // Generate a series of match events ending in a "halting" event
+            GenerateMatchEvents();
+
+            // Each in game minute, send queued events to the client
             int minute = 0;
             timer = new Timer((e) =>
             {
-                SimulatePeriod(minute);
+                OutputMatchEventsForCurrentMinute(minute);
                 minute++;
             },
             null, startTimeSpan, periodTimeSpan);
@@ -56,58 +72,82 @@ namespace RugbyRoyale.GameEngine
             return null;
         }
 
-        private void SimulatePeriod(int minute)
+        /*
+         * Generate entire match future immediately?
+         * Some indication ona match event whether it is a "stopping" event which requires user input
+         * Keep calulating and adding events until we reach a stopping event or HT or FT
+         * 
+         */
+
+        private void InitialiseModifiers()
         {
-            var eventsInPeriod = new List<MatchEvent>();
-            // Look at history, teamsheets, effectiveness, scoring chances to inform next event
-            MatchEvent previousEvent = null; // Null if first event
-            if (eventsInPeriod.Count > 0)
-            {
-                previousEvent = eventsInPeriod.Last();
-            }
-            else if (matchHistory.Count > 0)
-            {
-                previousEvent = matchHistory.Last();
-            }
+            homeTeamEffectiveness = PlayerEffectiveness.CalculateEffectivenessOfTeamsheet(teamHome);
+            awayTeamEffectiveness = PlayerEffectiveness.CalculateEffectivenessOfTeamsheet(teamAway);
+            homeTeamScoringChance = ScoringChance.CalculateTryScoringChanceForTeamsheet(teamHome);
+            awayTeamScoringChance = ScoringChance.CalculateTryScoringChanceForTeamsheet(teamHome);
+        }
 
-            MatchEvent nextEvent = null;
-            // First, check if we must constrict the set of possible next events based on the last event
-            if (previousEvent != null)
-            {
-                nextEvent = Events.GetNextEventFromPrevious(previousEvent, minute, randomGenerator);
-            }
+        private void GenerateMatchEvents()
+        {
+            MatchEvent previousEvent = eventHistory.Last();
 
-            if (nextEvent != null)
+            MatchEvent nextEvent;
+            do
             {
-                matchHistory.Add(nextEvent);
-                clientInterface.OutputMatchEvent(nextEvent);
+                nextEvent = Events.GetNextEvent(previousEvent, randomGenerator);
+            } while (!nextEvent.IsHalting);
+        }
+
+        private void OutputMatchEventsForCurrentMinute(int minute)
+        {
+            if (futureEventQueue.Count > 0)
+            {
+                if (futureEventQueue.TryPeek(out MatchEvent nextEvent))
+                {
+                    // Check if next queued event is within this game minute
+                    while (nextEvent.Minute == minute)
+                    {
+                        if (futureEventQueue.TryDequeue(out MatchEvent matchEvent))
+                        {
+                            clientInterface.OutputMatchEvent(matchEvent);
+                        }
+                        else
+                        {
+                            Log.Warning("Failed to dequeue next match event. Match ID: {@matchID}", id);
+                        }
+                    }
+                }
+                else
+                {
+                    Log.Warning("Failed to peek at next match event. Match ID: {@matchID}", id);
+                }
+            }
+            else
+            {
+                Log.Warning("Expected another match event in the queue, but queue was empty. Match ID: {@matchID}", id);
             }
         }
 
-        private Dictionary<TeamsheetPosition, float> CalculateEffectivenessOfTeamsheet(Teamsheet teamsheet)
-        {
-            var teamEffectiveness = new Dictionary<TeamsheetPosition, float>();
+        //private void SimulatePeriod(int minute)
+        //{
+        //    var eventsInPeriod = new List<MatchEvent>();
+        //    // Look at history, teamsheets, effectiveness, scoring chances to inform next event
+        //    MatchEvent previousEvent = null; // Null if first event
+        //    if (eventsInPeriod.Count > 0)
+        //    {
+        //        previousEvent = eventsInPeriod.Last();
+        //    }
+        //    else if (eventHistory.Count > 0)
+        //    {
+        //        previousEvent = eventHistory.Last();
+        //    }
 
-            Dictionary<TeamsheetPosition, Player> starters = teamsheet.GetStartersDict();
-            foreach (TeamsheetPosition tp in starters.Keys)
-            {
-                teamEffectiveness[tp] = PlayerEffectiveness.CalculateEffectiveness(starters[tp], tp.ToPosition());
-            }
-
-            return teamEffectiveness;
-        }
-
-        private Dictionary<TeamsheetPosition, float> CalculateTryScoringChanceForTeamsheet(Teamsheet teamsheet)
-        {
-            var teamTryChance = new Dictionary<TeamsheetPosition, float>();
-
-            Dictionary<TeamsheetPosition, Player> starters = teamsheet.GetStartersDict();
-            foreach (TeamsheetPosition ts in starters.Keys)
-            {
-                teamTryChance[ts] = ScoringChance.CalculateTryScoringChance(starters[ts], ts);
-            }
-
-            return teamTryChance;
-        }
+        //    MatchEvent nextEvent = null;
+        //    // First, check if we must constrict the set of possible next events based on the last event
+        //    if (previousEvent != null)
+        //    {
+        //        nextEvent = Events.GetNextEventFromPrevious(previousEvent, minute, randomGenerator);
+        //    }
+        //}
     }
 }

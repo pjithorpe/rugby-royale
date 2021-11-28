@@ -15,34 +15,41 @@ namespace RugbyRoyale.GameEngine.Modules
             return randomEvent as MatchEvent;
         }
 
-        public static MatchEvent GetNextEventFromPrevious(MatchEvent previousEvent, int minute, Random randomGenerator)
+        public static MatchEvent GetNextEvent(MatchEvent previousEvent, Random randomGenerator)
         {
             // Check last event and use it to inform this event
             if (previousEvent is Event_Try)
             {
-                return new Event_Conversion(previousEvent.MatchID, minute);
+                return new Event_Conversion(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(10, 90));
             }
             else if (previousEvent is IScoreEvent scoreEvent) // Any score other than a try
             {
                 if (scoreEvent.Successful || scoreEvent is Event_Conversion)
                 {
-                    return new Event_Restart(previousEvent.MatchID, minute);
+                    return new Event_Restart(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(10, 30));
                 }
                 else
                 {
-                    return new Event_DropOut(previousEvent.MatchID, minute);
+                    //TODO: Add goal line dropout
+                    return new Event_DropOut(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(5, 30));
                 }
             }
             else if (previousEvent is Event_KnockOn || previousEvent is Event_ForwardPass)
             {
-                return new Event_Scrum(previousEvent.MatchID, minute);
+                return new Event_Scrum(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(30, 60));
             }
-            else if (previousEvent is Event_PenaltyAwarded || previousEvent is Event_DropGoal)
+            else if (previousEvent is Event_PenaltyAwarded penaltyAwarded)
             {
-                return new Event_PenaltyGoal(previousEvent.MatchID, minute);
+                // TODO: return penalty decsion event
             }
 
             return null;
+        }
+
+        private static MatchEvent CreateFutureEventInTimeRange(MatchEvent previousEvent, MatchEvent nextEvent, int secondsMin, int secondsMax, Random random)
+        {
+            nextEvent.Second = previousEvent.Second + random.Next(secondsMin, secondsMax);
+            return nextEvent;
         }
 
         private static Type[] AllMatchEventTypes()

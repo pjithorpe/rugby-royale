@@ -4,7 +4,7 @@ namespace RugbyRoyale.Entities.Events
 {
     public class Event_FreeKick : MatchEvent
     {
-        public Event_FreeKick(Guid matchID, int minute) : base(matchID, minute)
+        public Event_FreeKick(Guid matchID, int second) : base(matchID, second)
         {
         }
 

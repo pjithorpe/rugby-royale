@@ -4,7 +4,7 @@ namespace RugbyRoyale.Entities.Events
 {
     public class Event_DropGoal : MatchEvent, IScoreEvent
     {
-        public Event_DropGoal(Guid matchID, int minute) : base(matchID, minute)
+        public Event_DropGoal(Guid matchID, int second) : base(matchID, second)
         {
         }
 

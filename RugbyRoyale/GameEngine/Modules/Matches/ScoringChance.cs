@@ -1,6 +1,8 @@
 ﻿using RugbyRoyale.Entities.Enums;
+using RugbyRoyale.Entities.Extensions;
 using RugbyRoyale.Entities.Model;
 using System;
+using System.Collections.Generic;
 
 namespace RugbyRoyale.GameEngine.Modules
 {
@@ -14,6 +16,19 @@ namespace RugbyRoyale.GameEngine.Modules
         public static double CalculateConversionSuccessChance()
         {
             return 0.5f;
+        }
+
+        public static Dictionary<TeamsheetPosition, float> CalculateTryScoringChanceForTeamsheet(Teamsheet teamsheet)
+        {
+            var teamTryChance = new Dictionary<TeamsheetPosition, float>();
+
+            Dictionary<TeamsheetPosition, Player> starters = teamsheet.GetStartersDict();
+            foreach (TeamsheetPosition ts in starters.Keys)
+            {
+                teamTryChance[ts] = CalculateTryScoringChance(starters[ts], ts);
+            }
+
+            return teamTryChance;
         }
 
         private static float GetTryScoringChanceForPosition(TeamsheetPosition position)
