@@ -40,10 +40,14 @@ namespace RugbyRoyale.GameEngine.Modules
             }
             else if (previousEvent is Event_PenaltyAwarded penaltyAwarded)
             {
-                // TODO: return penalty decsion event
+                // TODO: return penalty decision event
+            }
+            else if (previousEvent is Event_KickOff)
+            {
+                return new Event_Try(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(60, 120));
             }
 
-            return null;
+            return new Event_FinalWhistle(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(60, 120));
         }
 
         private static MatchEvent CreateFutureEventInTimeRange(MatchEvent previousEvent, MatchEvent nextEvent, int secondsMin, int secondsMax, Random random)

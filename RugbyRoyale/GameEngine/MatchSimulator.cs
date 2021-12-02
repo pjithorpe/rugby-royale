@@ -24,6 +24,7 @@ namespace RugbyRoyale.GameEngine
         private Queue<MatchEvent> futureEventQueue;
         private Random randomGenerator;
         private Timer timer;
+        private TimeSpan inGameMinuteDuration;
 
         // Modifiers
         private Dictionary<TeamsheetPosition, float> homeTeamEffectiveness;
@@ -42,89 +43,91 @@ namespace RugbyRoyale.GameEngine
             futureEventQueue = new Queue<MatchEvent>();
             randomGenerator = new Random();
 
-            InitialiseModifiers();
+            inGameMinuteDuration = CalculateInGameMinuteDuration(Configuration.MATCH_DURATION_MINS);
+
+            InitialiseModifiers(teamHome, teamAway);
         }
 
         public async Task<MatchResult> SimulateMatch()
         {
-            // Calculate duration of an in-game minute
-            double duration = Configuration.MATCH_DURATION_MINS / 80.0;
-
-            var startTimeSpan = TimeSpan.Zero;
-            var matchTimeSpan = TimeSpan.FromMinutes(Configuration.MATCH_DURATION_MINS);
-            var periodTimeSpan = TimeSpan.FromMinutes(duration);
-
-            // Generate a series of match events ending in a "halting" event
-            GenerateMatchEvents();
-
-            // Each in game minute, send queued events to the client
             int minute = 0;
-            timer = new Timer((e) =>
+
+            // Perform kickoff
+            futureEventQueue.Enqueue(new Event_KickOff(id, 0));
+            ConsumeMatchEventsForCurrentMinute(minute);
+
+            // Keep generating and outputting match events until match is concluded
+            while (!(eventHistory.Last() is Event_FinalWhistle))
             {
-                OutputMatchEventsForCurrentMinute(minute);
-                minute++;
-            },
-            null, startTimeSpan, periodTimeSpan);
+                // Generate a series of match events ending in a "halting" event
+                GenerateMatchEvents();
 
-            Thread.Sleep(matchTimeSpan);
-            await timer.DisposeAsync();
+                // Work out how long the period we will be outputting is
+                TimeSpan eventSeriesDuration = CalculateDurationOfNextEventSeries();
 
-            return null;
+                // Each in game minute, send queued events to the client if they occur within that minute
+                timer = new Timer((e) =>
+                {
+                    ConsumeMatchEventsForCurrentMinute(minute);
+                    minute++;
+                },
+                null, TimeSpan.Zero, inGameMinuteDuration);
+
+                // Sleep the thread for the duration of the series of events
+                Thread.Sleep(eventSeriesDuration);
+                await timer.DisposeAsync();
+            }
+
+            return null; //TODO: Output match summary
         }
 
         /*
-         * Generate entire match future immediately?
-         * Some indication ona match event whether it is a "stopping" event which requires user input
          * Keep calulating and adding events until we reach a stopping event or HT or FT
-         * 
          */
 
-        private void InitialiseModifiers()
+        private void InitialiseModifiers(Teamsheet homeTeam, Teamsheet awayTeam)
         {
-            homeTeamEffectiveness = PlayerEffectiveness.CalculateEffectivenessOfTeamsheet(teamHome);
-            awayTeamEffectiveness = PlayerEffectiveness.CalculateEffectivenessOfTeamsheet(teamAway);
-            homeTeamScoringChance = ScoringChance.CalculateTryScoringChanceForTeamsheet(teamHome);
-            awayTeamScoringChance = ScoringChance.CalculateTryScoringChanceForTeamsheet(teamHome);
+            homeTeamEffectiveness = PlayerEffectiveness.CalculateEffectivenessOfTeamsheet(homeTeam);
+            awayTeamEffectiveness = PlayerEffectiveness.CalculateEffectivenessOfTeamsheet(awayTeam);
+            homeTeamScoringChance = ScoringChance.CalculateTryScoringChanceForTeamsheet(homeTeam);
+            awayTeamScoringChance = ScoringChance.CalculateTryScoringChanceForTeamsheet(awayTeam);
         }
+
+        private TimeSpan CalculateInGameMinuteDuration(int matchDurationMinutes) => TimeSpan.FromMinutes(matchDurationMinutes / 80.0);
+
+        private TimeSpan CalculateDurationOfNextEventSeries() => TimeSpan.FromMinutes(futureEventQueue.Last().Minute - eventHistory.Last().Minute);
 
         private void GenerateMatchEvents()
         {
+            // TODO: Use entire match history to inform next event
+            // e.g. if a yellow card happens and the player has already had a yellow
+            //      card event, then we need to convert it to a red
             MatchEvent previousEvent = eventHistory.Last();
 
             MatchEvent nextEvent;
             do
             {
                 nextEvent = Events.GetNextEvent(previousEvent, randomGenerator);
+                futureEventQueue.Enqueue(nextEvent);
+                previousEvent = nextEvent;
             } while (!nextEvent.IsHalting);
         }
 
-        private void OutputMatchEventsForCurrentMinute(int minute)
+        private void ConsumeMatchEventsForCurrentMinute(int minute)
         {
-            if (futureEventQueue.Count > 0)
+            // Check if next queued event is within this game minute
+            while (futureEventQueue.Count > 0 && futureEventQueue.TryPeek(out MatchEvent nextEvent) && nextEvent.Minute == minute)
             {
-                if (futureEventQueue.TryPeek(out MatchEvent nextEvent))
+                // If so, dequeue event, send to client to output, and add to match history
+                if (futureEventQueue.TryDequeue(out MatchEvent matchEvent))
                 {
-                    // Check if next queued event is within this game minute
-                    while (nextEvent.Minute == minute)
-                    {
-                        if (futureEventQueue.TryDequeue(out MatchEvent matchEvent))
-                        {
-                            clientInterface.OutputMatchEvent(matchEvent);
-                        }
-                        else
-                        {
-                            Log.Warning("Failed to dequeue next match event. Match ID: {@matchID}", id);
-                        }
-                    }
+                    clientInterface.OutputMatchEvent(matchEvent);
+                    eventHistory.Add(matchEvent);
                 }
                 else
                 {
-                    Log.Warning("Failed to peek at next match event. Match ID: {@matchID}", id);
+                    Log.Warning("Failed to dequeue next match event. Match ID: {@matchID}", id);
                 }
-            }
-            else
-            {
-                Log.Warning("Expected another match event in the queue, but queue was empty. Match ID: {@matchID}", id);
             }
         }
 
