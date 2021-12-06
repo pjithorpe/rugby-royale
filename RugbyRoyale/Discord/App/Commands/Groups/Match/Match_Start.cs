@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using RugbyRoyale.Entities.Enums;
 using RugbyRoyale.Entities.Model;
 using RugbyRoyale.GameEngine;
 using Serilog;
@@ -20,11 +21,15 @@ namespace RugbyRoyale.Discord.App.Commands
                 return;
             }
 
+            /* TEMP: randomly generate teams */
             // home teamsheet
-            var home = new Teamsheet();
+            var testGenHome = new PlayerGenerator(50, Nationality.Welsh);
+            Teamsheet home = await testGenHome.GenerateTeamsheet();
 
             // away teamsheet
-            var away = new Teamsheet();
+            var testGenAway = new PlayerGenerator(50, Nationality.Scottish);
+            Teamsheet away = await testGenAway.GenerateTeamsheet();
+            /* END TEMP */
 
             var simulator = new MatchSimulator(matchID, home, away, client);
             await simulator.SimulateMatch();
