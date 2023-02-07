@@ -66,6 +66,7 @@ namespace RugbyRoyale.Discord
                 TokenType = TokenType.Bot,
                 LoggerFactory = logFactory,
                 MinimumLogLevel = LogLevel.Trace,
+                Intents = DiscordIntents.AllUnprivileged.AddIntent(DiscordIntents.MessageContents)
             });
 
             // Connect and get match thread channels
@@ -108,7 +109,7 @@ namespace RugbyRoyale.Discord
             // Use CommandsNext package for command management
             commands = discord.UseCommandsNext(new CommandsNextConfiguration
             {
-                StringPrefixes = new List<string>() { settings.CommandPrefix },
+                StringPrefixes = new[] { settings.CommandPrefix },
                 Services = dependencies
             });
 
