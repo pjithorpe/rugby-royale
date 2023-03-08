@@ -2,12 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_Scrum : MatchEvent
+    public class Event_Scrum : IMatchEventType
     {
-        public Event_Scrum(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Scrum"; }
+        const string _name = "Scrum";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
     }
 }

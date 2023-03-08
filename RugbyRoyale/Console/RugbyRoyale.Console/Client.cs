@@ -1,4 +1,5 @@
 ﻿using RugbyRoyale.Entities.Events;
+using RugbyRoyale.Entities.Extensions.Event;
 using RugbyRoyale.GameEngine;
 using Serilog;
 using System;
@@ -9,7 +10,9 @@ namespace RugbyRoyale.Console
 {
     public class Client : IClient
     {
-        public void OutputMatchEvent(MatchEvent matchEvent)
+        private Random randomGenerator = new();
+
+        public void OutputMatchEvent(MatchEvent matchEvent, Guid matchID)
         {
             try
             {
@@ -25,16 +28,16 @@ namespace RugbyRoyale.Console
         {
             var eventInfo = new List<string>() { matchEvent.Minute + "'" };
 
-            if (matchEvent is IScoreEvent scoreEvent)
+            if (matchEvent.EventType is IScoreEvent scoreEvent)
             {
                 eventInfo.Add("**" + scoreEvent.Abbreviation + "**");
             }
             else
             {
-                eventInfo.Add("**" + matchEvent.Name + "**");
+                eventInfo.Add("**" + matchEvent.EventType.DisplayName + "**");
             }
 
-            eventInfo.Add(matchEvent.GetRandomEventMessage());
+            eventInfo.Add(matchEvent.GetEventMessage(randomGenerator));
 
             return string.Join(" ", eventInfo);
         }

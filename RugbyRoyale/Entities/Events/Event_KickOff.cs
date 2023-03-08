@@ -2,12 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_KickOff : MatchEvent
+    public class Event_KickOff : IMatchEventType
     {
-        public Event_KickOff(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Kick Off"; }
+        const string _name = "Kick Off";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
     }
 }

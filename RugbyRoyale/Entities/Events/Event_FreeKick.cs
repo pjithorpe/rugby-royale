@@ -2,12 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_FreeKick : MatchEvent
+    public class Event_FreeKick : IMatchEventType
     {
-        public Event_FreeKick(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Conversion Attempt"; }
+        const string _name = "Free Kick";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
     }
 }

@@ -6,7 +6,7 @@ namespace RugbyRoyale.Entities.Extensions
 {
     public static class PlayerBadgeExtensions
     {
-        private static readonly Dictionary<PlayerBadge, PlayerBadgeProfile> badgeProfileMappings = new Dictionary<PlayerBadge, PlayerBadgeProfile>()
+        private static readonly Dictionary<PlayerBadge, PlayerBadgeProfile> badgeProfileMappings = new()
         {
             { PlayerBadge.Fast, new PlayerBadgeProfile(PlayerBadge.Fast, "🏃") },
             { PlayerBadge.Finisher, new PlayerBadgeProfile(PlayerBadge.Finisher, "🚩", "Born Finisher") },
@@ -16,7 +16,7 @@ namespace RugbyRoyale.Entities.Extensions
             { PlayerBadge.LineoutSpecialist, new PlayerBadgeProfile(PlayerBadge.LineoutSpecialist, "🙌", "Lineout Specialist") },
             { PlayerBadge.Magician, new PlayerBadgeProfile(PlayerBadge.Magician, "🧙") },
             { PlayerBadge.PlaceKicker, new PlayerBadgeProfile(PlayerBadge.PlaceKicker, "🎯", "Accurate Kicker") },
-            { PlayerBadge.ScrumSpecialist, new PlayerBadgeProfile(PlayerBadge.ScrumSpecialist, "🤼", "Scrummager") },
+            { PlayerBadge.ScrumSpecialist, new PlayerBadgeProfile(PlayerBadge.ScrumSpecialist, "🤼", "Scrum Specialist") },
             { PlayerBadge.TacticalKicker, new PlayerBadgeProfile(PlayerBadge.TacticalKicker, "↕", "Tactical Kicker") },
             { PlayerBadge.Versatile, new PlayerBadgeProfile(PlayerBadge.Versatile, "🌐") },
             { PlayerBadge.Workhorse, new PlayerBadgeProfile(PlayerBadge.Workhorse, "🐴") },

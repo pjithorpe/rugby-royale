@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Entities\RugbyRoyale.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Enums\" />
+  </ItemGroup>
+
 </Project>

@@ -53,11 +53,12 @@ namespace RugbyRoyale.GameEngine
             int minute = 0;
 
             // Perform kickoff
-            futureEventQueue.Enqueue(new Event_KickOff(id, 0));
+            var kickoffEvent = new MatchEvent(new Event_KickOff(), 0);
+            futureEventQueue.Enqueue(kickoffEvent);
             ConsumeMatchEventsForCurrentMinute(minute);
 
             // Keep generating and outputting match events until match is concluded
-            while (!(eventHistory.Last() is Event_FinalWhistle))
+            while (eventHistory.Last().EventType is not Event_FinalWhistle)
             {
                 // Generate a series of match events ending in a "halting" event
                 GenerateMatchEvents();
@@ -110,7 +111,8 @@ namespace RugbyRoyale.GameEngine
                 nextEvent = Events.GetNextEvent(previousEvent, randomGenerator);
                 futureEventQueue.Enqueue(nextEvent);
                 previousEvent = nextEvent;
-            } while (!nextEvent.IsHalting);
+
+            } while (!Events.IsHalting(nextEvent));
         }
 
         private void ConsumeMatchEventsForCurrentMinute(int minute)
@@ -121,7 +123,7 @@ namespace RugbyRoyale.GameEngine
                 // If so, dequeue event, send to client to output, and add to match history
                 if (futureEventQueue.TryDequeue(out MatchEvent matchEvent))
                 {
-                    clientInterface.OutputMatchEvent(matchEvent);
+                    clientInterface.OutputMatchEvent(matchEvent, id);
                     eventHistory.Add(matchEvent);
                 }
                 else
@@ -130,27 +132,5 @@ namespace RugbyRoyale.GameEngine
                 }
             }
         }
-
-        //private void SimulatePeriod(int minute)
-        //{
-        //    var eventsInPeriod = new List<MatchEvent>();
-        //    // Look at history, teamsheets, effectiveness, scoring chances to inform next event
-        //    MatchEvent previousEvent = null; // Null if first event
-        //    if (eventsInPeriod.Count > 0)
-        //    {
-        //        previousEvent = eventsInPeriod.Last();
-        //    }
-        //    else if (eventHistory.Count > 0)
-        //    {
-        //        previousEvent = eventHistory.Last();
-        //    }
-
-        //    MatchEvent nextEvent = null;
-        //    // First, check if we must constrict the set of possible next events based on the last event
-        //    if (previousEvent != null)
-        //    {
-        //        nextEvent = Events.GetNextEventFromPrevious(previousEvent, minute, randomGenerator);
-        //    }
-        //}
     }
 }

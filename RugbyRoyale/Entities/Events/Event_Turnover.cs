@@ -2,12 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_Turnover : MatchEvent
+    public class Event_Turnover : IMatchEventType
     {
-        public Event_Turnover(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Turnover"; }
+        const string _name = "Turnover";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
     }
 }

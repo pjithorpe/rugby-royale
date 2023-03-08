@@ -2,12 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_Lineout : MatchEvent
+    public class Event_Lineout : IMatchEventType
     {
-        public Event_Lineout(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Conversion Attempt"; }
+        const string _name = "Lineout";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
     }
 }

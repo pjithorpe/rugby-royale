@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30002.166
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Entities", "RugbyRoyale\Entities\RugbyRoyale.Entities.csproj", "{F0B6B1C7-F7A8-4139-8B49-BD295E16CD03}"
 EndProject
@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Data", "RugbyRo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Data.EFCore", "RugbyRoyale\Data.EFCore\RugbyRoyale.Data.EFCore.csproj", "{66ED0DD0-02DF-46BD-B01C-93410D57CC41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RugbyRoyale.Console", "RugbyRoyale\Console\RugbyRoyale.Console\RugbyRoyale.Console.csproj", "{EA585617-BEEC-416F-8464-05F41CC4DEA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RugbyRoyale.Console", "RugbyRoyale\Console\RugbyRoyale.Console\RugbyRoyale.Console.csproj", "{EA585617-BEEC-416F-8464-05F41CC4DEA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RugbyRoyale.Entities.Test", "Test\RugbyRoyale.Entities.Test\RugbyRoyale.Entities.Test.csproj", "{3491166E-FC8F-4884-816B-0E94C86F94E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{EA585617-BEEC-416F-8464-05F41CC4DEA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA585617-BEEC-416F-8464-05F41CC4DEA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA585617-BEEC-416F-8464-05F41CC4DEA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3491166E-FC8F-4884-816B-0E94C86F94E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3491166E-FC8F-4884-816B-0E94C86F94E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3491166E-FC8F-4884-816B-0E94C86F94E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3491166E-FC8F-4884-816B-0E94C86F94E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

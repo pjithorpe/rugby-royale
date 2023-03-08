@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace RugbyRoyale.Entities.Events
 {
-    public abstract class MatchEvent
+    public sealed class MatchEvent
     {
-        public Guid MatchID { get; set; }
-        public int Second { get; set; }
-        public int Minute { get { return Second / 60; } }
-        public virtual bool IsHalting { get; set; }
-        public abstract string Name { get; }
-
-        private Random randomGenerator = new Random();
-
-        public virtual List<string> EventMessages => new List<string>() { $"{Name}." };
-
-        public MatchEvent(Guid matchID, int second)
+        public int Second { get; }
+        public int Minute
         {
-            MatchID = matchID;
-            Second = second;
-
-            IsHalting = false;
+            get
+            {
+                return (Second / 60) + 1;
+            }
         }
+        public int LocationXMetres { get; }
+        public int LocationYMetres { get; }
+        public IMatchEventType EventType { get; set; }
 
-        public virtual string GetRandomEventMessage() => EventMessages[randomGenerator.Next(EventMessages.Count)];
+        public MatchEvent(IMatchEventType eventType, int second)
+        {
+            if (second < 0) throw new ArgumentOutOfRangeException(nameof(second));
+
+            Second = second;
+            EventType = eventType;
+        }
     }
 }

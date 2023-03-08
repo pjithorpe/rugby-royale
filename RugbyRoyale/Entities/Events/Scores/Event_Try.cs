@@ -2,13 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_Try : MatchEvent, IScoreEvent
+    public class Event_Try : IMatchEventType, IScoreEvent
     {
-        public Event_Try(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Try"; }
+        public string DisplayName => "Try";
+        public string[] EventMessages => throw new NotImplementedException();
 
         public string Abbreviation => "TRY";
         public int Points => 5;

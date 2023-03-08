@@ -2,12 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_ForwardPass : MatchEvent
+    public class Event_ForwardPass : IMatchEventType
     {
-        public Event_ForwardPass(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Conversion Attempt"; }
+        const string _name = "Forward Pass";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
     }
 }

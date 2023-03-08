@@ -3,14 +3,17 @@ using System;
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_PenaltyAwarded : MatchEvent
+    public class Event_PenaltyAwarded : IMatchEventType
     {
-        public PenaltyOffence Offence { get; set; }
+        const string _name = "Penalty Awarded";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
 
-        public Event_PenaltyAwarded(Guid matchID, int second) : base(matchID, second)
+        public PenaltyOffence Offence { get; }
+
+        public Event_PenaltyAwarded(PenaltyOffence penaltyOffence)
         {
+            Offence = penaltyOffence;
         }
-
-        public override string Name { get => "Penalty Awarded"; }
     }
 }

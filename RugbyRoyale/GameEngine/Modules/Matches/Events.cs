@@ -1,66 +1,58 @@
 ﻿using RugbyRoyale.Entities.Events;
 using System;
-using System.Linq;
-using System.Reflection;
 
 namespace RugbyRoyale.GameEngine.Modules
 {
     internal static class Events
     {
-        public static MatchEvent GetRandomEvent()
-        {
-            Type[] types = AllMatchEventTypes();
-            object randomEvent = Activator.CreateInstance(types[new Random().Next(types.Length)]);
-
-            return randomEvent as MatchEvent;
-        }
-
         public static MatchEvent GetNextEvent(MatchEvent previousEvent, Random randomGenerator)
         {
+            IMatchEventType eventType;
+            Range secondsRange;
+
             // Check last event and use it to inform this event
-            if (previousEvent is Event_Try)
+            if (previousEvent.EventType is Event_Try)
             {
-                return new Event_Conversion(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(10, 90));
+                eventType = new Event_Conversion();
+                secondsRange = new Range(10, 90);
             }
-            else if (previousEvent is IScoreEvent scoreEvent) // Any score other than a try
+            else if (previousEvent.EventType is IScoreEvent scoreEvent) // Any score other than a try
             {
                 if (scoreEvent.Successful || scoreEvent is Event_Conversion)
                 {
-                    return new Event_Restart(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(10, 30));
+                    eventType = new Event_Restart();
+                    secondsRange = new Range(10, 30);
                 }
                 else
                 {
-                    //TODO: Add goal line dropout
-                    return new Event_DropOut(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(5, 30));
+                    eventType = new Event_DropOut();
+                    secondsRange = new Range(5, 30);
                 }
             }
-            else if (previousEvent is Event_KnockOn || previousEvent is Event_ForwardPass)
+            else if (previousEvent.EventType is Event_KnockOn || previousEvent.EventType is Event_ForwardPass)
             {
-                return new Event_Scrum(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(30, 60));
+                eventType = new Event_Scrum();
+                secondsRange = new Range(30, 60);
             }
-            else if (previousEvent is Event_PenaltyAwarded penaltyAwarded)
+            else
             {
-                // TODO: return penalty decision event
-            }
-            else if (previousEvent is Event_KickOff)
-            {
-                return new Event_Try(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(60, 120));
+                eventType = new Event_FinalWhistle();
+                secondsRange = new Range(60, 120);
             }
 
-            return new Event_FinalWhistle(previousEvent.MatchID, previousEvent.Second + randomGenerator.Next(60, 120));
+            int seconds = previousEvent.Second + randomGenerator.Next(secondsRange.Start.Value, secondsRange.End.Value);
+
+            return new MatchEvent(eventType, seconds);
         }
 
-        private static MatchEvent CreateFutureEventInTimeRange(MatchEvent previousEvent, MatchEvent nextEvent, int secondsMin, int secondsMax, Random random)
+        public static bool IsHalting(MatchEvent matchEvent)
         {
-            nextEvent.Second = previousEvent.Second + random.Next(secondsMin, secondsMax);
-            return nextEvent;
-        }
+            if (matchEvent.EventType is IScoreEvent)
+            {
+                return true;
+            }
 
-        private static Type[] AllMatchEventTypes()
-        {
-            return Assembly.GetExecutingAssembly().DefinedTypes
-                .Where(t => !t.IsAbstract && t.IsClass && t.IsSubclassOf(typeof(MatchEvent)))
-                .ToArray();
+            return false;
         }
     }
 }

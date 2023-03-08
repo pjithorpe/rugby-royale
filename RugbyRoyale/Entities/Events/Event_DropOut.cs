@@ -1,13 +1,9 @@
-﻿using System;
-
-namespace RugbyRoyale.Entities.Events
+﻿namespace RugbyRoyale.Entities.Events
 {
-    public class Event_DropOut : MatchEvent
+    public class Event_DropOut : IMatchEventType
     {
-        public Event_DropOut(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Conversion Attempt"; }
+        const string _name = "Drop Out";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => new string[] { "A goal line drop-out" };
     }
 }

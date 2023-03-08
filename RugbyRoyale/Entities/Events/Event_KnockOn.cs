@@ -2,12 +2,10 @@
 
 namespace RugbyRoyale.Entities.Events
 {
-    public class Event_KnockOn : MatchEvent
+    public class Event_KnockOn : IMatchEventType
     {
-        public Event_KnockOn(Guid matchID, int second) : base(matchID, second)
-        {
-        }
-
-        public override string Name { get => "Conversion Attempt"; }
+        const string _name = "Knock On";
+        public string DisplayName { get => _name; }
+        public string[] EventMessages => throw new NotImplementedException();
     }
 }
