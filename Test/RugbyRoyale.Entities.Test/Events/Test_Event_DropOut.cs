@@ -1,6 +1,4 @@
-using FluentAssertions;
 using RugbyRoyale.Entities.Events;
-using System.Reflection;
 using Xunit;
 
 namespace RugbyRoyale.Entities.Test.Events
@@ -12,12 +10,7 @@ namespace RugbyRoyale.Entities.Test.Events
         {
             var dropOut = new Event_DropOut();
 
-            dropOut.EventMessages.Should().NotBeEmpty();
-
-            foreach (var message in dropOut.EventMessages)
-            {
-                message.Should().NotBeNullOrWhiteSpace();
-            }
+            TestHelper_MatchEvent.MatchEventTypeReturnsNonEmptyEventStrings(dropOut);
         }
 
         [Fact]
@@ -25,7 +18,7 @@ namespace RugbyRoyale.Entities.Test.Events
         {
             var dropOut = new Event_DropOut();
 
-            dropOut.DisplayName.Should().NotBeNullOrWhiteSpace();
+            TestHelper_MatchEvent.MatchEventTypeHasNonEmptyDisplayName(dropOut);
         }
     }
 }

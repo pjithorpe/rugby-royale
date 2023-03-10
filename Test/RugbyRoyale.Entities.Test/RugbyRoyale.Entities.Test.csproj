@@ -28,8 +28,4 @@
     <ProjectReference Include="..\..\RugbyRoyale\Entities\RugbyRoyale.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Events\Scores\" />
-  </ItemGroup>
-
 </Project>
