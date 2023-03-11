@@ -5,6 +5,6 @@ namespace RugbyRoyale.Entities.Events
     public interface IMatchEventType
     {
         string DisplayName { get; }
-        string[] EventMessages { get; }
+        IList<string> EventMessages { get; }
     }
 }

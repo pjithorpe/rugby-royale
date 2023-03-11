@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RugbyRoyale.Entities.Events
 {
     public class Event_DropGoal : IMatchEventType, IScoreEvent
     {
-        public string DisplayName => "Drop Goal Attempt";
-        public string[] EventMessages => throw new NotImplementedException();
+        const string _name = "Drop Goal Attempt";
+        public string DisplayName { get => _name; }
+        public IList<string> EventMessages => new string[] { "They try for a drop goal!" };
 
         public string Abbreviation => "DROP";
         public int Points => 3;

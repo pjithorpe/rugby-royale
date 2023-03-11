@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace RugbyRoyale.Entities.Events
 {
@@ -6,6 +6,6 @@ namespace RugbyRoyale.Entities.Events
     {
         const string _name = "Final Whistle";
         public string DisplayName { get => _name; }
-        public string[] EventMessages => throw new NotImplementedException();
+        public IList<string> EventMessages => new string[] { "That's the final whistle!" };
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RugbyRoyale.Entities.Events
 {
     public class Event_PenaltyTry : IMatchEventType, IScoreEvent
     {
-        public string DisplayName => "Penalty Try";
-        public string[] EventMessages => throw new NotImplementedException();
+        const string _name = "Penalty Try";
+        public string DisplayName { get => _name; }
+        public IList<string> EventMessages => new string[] { "The referee awards a penalty try!" };
 
         public string Abbreviation => "PEN TRY";
         public int Points => 7;

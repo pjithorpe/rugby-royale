@@ -1,5 +1,5 @@
-﻿using RugbyRoyale.Entities.Enums;
-using System;
+﻿using System.Collections.Generic;
+using RugbyRoyale.Entities.Enums;
 
 namespace RugbyRoyale.Entities.Events
 {
@@ -7,7 +7,7 @@ namespace RugbyRoyale.Entities.Events
     {
         const string _name = "Penalty Awarded";
         public string DisplayName { get => _name; }
-        public string[] EventMessages => throw new NotImplementedException();
+        public IList<string> EventMessages => new string[] { "The referee blows his whistle for a penalty." };
 
         public PenaltyOffence Offence { get; }
 

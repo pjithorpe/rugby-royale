@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RugbyRoyale.Entities.Events
 {
     public class Event_Try : IMatchEventType, IScoreEvent
     {
-        public string DisplayName => "Try";
-        public string[] EventMessages => throw new NotImplementedException();
+        const string _name = "Try";
+        public string DisplayName { get => _name; }
+        public IList<string> EventMessages => new string[] { "A great try!", "They scored a try!" };
 
         public string Abbreviation => "TRY";
         public int Points => 5;

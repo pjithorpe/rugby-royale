@@ -1,13 +1,13 @@
-﻿using RugbyRoyale.Entities.Enums;
-using RugbyRoyale.Entities.Events;
-using RugbyRoyale.Entities.Model;
-using RugbyRoyale.GameEngine.Modules;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using RugbyRoyale.Entities.Enums;
+using RugbyRoyale.Entities.Events;
+using RugbyRoyale.Entities.Model;
+using RugbyRoyale.GameEngine.Modules;
+using Serilog;
 
 namespace RugbyRoyale.GameEngine
 {

@@ -10,7 +10,7 @@ namespace RugbyRoyale.Entities.Extensions.Event
         /// </summary>
         public static string GetEventMessage(this MatchEvent matchEvent, Random randomGenerator)
         {
-            int randomIndex = randomGenerator.Next(matchEvent.EventType.EventMessages.Length);
+            int randomIndex = randomGenerator.Next(matchEvent.EventType.EventMessages.Count);
             return matchEvent.EventType.EventMessages[randomIndex];
         }
     }
